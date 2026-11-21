@@ -52,6 +52,15 @@
 ## Phase 4
 - [x] Sitemap/robots/hreflang  - [ ] performance pass
 - [ ] Switch to real domain (remove noindex, new cert, NEXT_PUBLIC_SITE_URL)
+## Phase 5 — "Feels real, not AI-built" (proposed, awaiting approval; build on a `redesign` branch)
+- A (no new assets): logo system (white mono on dark, full colour on light, no chips; PEMCO cut-out);
+  remove AI tells (01/02 section numbers, mono eyebrows everywhere, italic-serif accent words, uniform navy
+  photo overlays, scroll-greyed text, outlined marquee, giant footer wordmark); motion audit (keep few,
+  meaningful); specific EN/AR headlines; page transitions (company card → company hero); live strip
+  (latest announcement + open roles from DB).
+- B (needs client assets): hero video loop, real photography (people, workshops, sites), publishable
+  project references, named people.
+- C (after listing): live QSE share price, IR calendar.
 ## Content gaps to confirm with client
 - Chairman & President messages, full Board list + photos (only MD & CEO seeded)
 - PEMCO services detail, workforce figure
