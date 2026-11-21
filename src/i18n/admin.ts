@@ -121,6 +121,7 @@ const ar: AdminDict = {
     dashboard: "لوحة التحكم",
     posts: "الأخبار والمقالات",
     people: "القيادة",
+    jobs: "الوظائف الشاغرة",
     documents: "وثائق المستثمرين",
     inbox: "صندوق الوارد",
     subscribers: "المشتركون",

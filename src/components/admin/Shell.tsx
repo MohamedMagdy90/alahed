@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BriefcaseBusiness,
   ExternalLink,
   FileText,
   Inbox,
@@ -58,6 +59,7 @@ export function AdminShell({
         { href: base, label: d.nav.dashboard, icon: LayoutGrid, exact: true },
         { href: `${base}/posts`, label: d.nav.posts, icon: Newspaper },
         { href: `${base}/people`, label: d.nav.people, icon: UsersRound },
+        { href: `${base}/jobs`, label: d.nav.jobs, icon: BriefcaseBusiness },
         { href: `${base}/documents`, label: d.nav.documents, icon: FileText },
       ],
     },

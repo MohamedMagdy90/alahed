@@ -116,9 +116,12 @@ model Message {
   position   String   @default("")
   message    String   @default("")
   attachment String?
+  jobId      String? // set when a career application targets a listed role (Job.id)
   locale     String   @default("en")
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
+
+  @@index([jobId])
 }
 
 model Subscriber {
