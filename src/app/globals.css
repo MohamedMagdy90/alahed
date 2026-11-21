@@ -244,6 +244,24 @@
   }
 }
 
+/* Home hero: progress bar under the active verb, and the matching logo arc drawing itself. */
+@keyframes heroprogress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes arcdraw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 @keyframes scrollcue {
   0% {
     transform: translateY(-100%);

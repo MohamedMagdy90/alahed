@@ -6,14 +6,14 @@ import { useEffect } from "react";
 import { useSafeReducedMotion } from "@/components/motion";
 import { cn } from "@/lib/utils";
 
-const C = 400;
-const pt = (r: number, deg: number) => {
+export const C = 400;
+export const pt = (r: number, deg: number) => {
   const a = (deg * Math.PI) / 180;
   // Rounded so server and browser render identical attribute strings.
   return [Math.round((C + r * Math.cos(a)) * 100) / 100, Math.round((C + r * Math.sin(a)) * 100) / 100] as const;
 };
 /** Counter-clockwise arc (screen space) from `start` spanning `len` degrees — opens to the upper right like the logo. */
-const arc = (r: number, start: number, len: number) => {
+export const arc = (r: number, start: number, len: number) => {
   const [x0, y0] = pt(r, start);
   const [x1, y1] = pt(r, start - len);
   return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${len > 180 ? 1 : 0} 0 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
@@ -21,7 +21,7 @@ const arc = (r: number, start: number, len: number) => {
 
 export type ArcLabel = { index: string; name: string; meta: string; href?: string };
 
-const ARCS = [
+export const ARCS = [
   { r: 330, start: -88, len: 238, color: "#8EAAE0", width: 2.5 },
   { r: 250, start: -48, len: 258, color: "#3B74DB", width: 3 },
   { r: 170, start: -22, len: 258, color: "#5DB543", width: 3.5 },
