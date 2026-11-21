@@ -39,6 +39,16 @@
 - Host key pinned in /home/project/.deploy-keys/known_hosts; deploy.sh re-chmods the key itself.
 - Shell heredocs are unreliable here: write scripts to files instead.
 - Other server services: bungee-fly, estate-crm-web, estate-crm-worker (all running).
+- 2026-11-21 13:08 a container restart DELETED every file 5+ folders deep (all inner pages, admin, admin APIs)
+  and corrupted dev.db. Restored from the user's GitHub Archive.zip (verified identical to live release).
+## Source control (mandatory)
+- Git repo in this folder, branch `develop`, remote `origin` = github.com/MohamedMagdy90/alahed (PUBLIC repo).
+- After EVERY meaningful change: `git add -A && git commit` (message via file, not heredoc) and `git push`.
+- Never deploy uncommitted work: the live release must always match a pushed commit.
+- [ ] Push blocked: workspace GitHub account `AmrDNAERP` has read-only access to the repo → owner must add
+  it as collaborator (Write), or reconnect GitHub as the owner. Then `git push -u origin develop`.
+- [ ] Ask owner to make the repo private and remove `Archive.zip` from `main` (it contains a local .env + dev.db;
+  prod secrets verified different, but it should not be public).
 ## Phase 4
 - [x] Sitemap/robots/hreflang  - [ ] performance pass
 - [ ] Switch to real domain (remove noindex, new cert, NEXT_PUBLIC_SITE_URL)
