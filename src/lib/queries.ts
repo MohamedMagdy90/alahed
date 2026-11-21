@@ -91,6 +91,16 @@ export async function getDocuments(category?: string) {
   }
 }
 
+/** Open roles for the Careers page and the home page (newest first). */
+export async function getOpenJobs(limit?: number) {
+  try {
+    return await db.job.findMany({ where: { open: true }, orderBy: [{ postedAt: "desc" }], ...(limit ? { take: limit } : {}) });
+  } catch (e) {
+    console.error("[queries] getOpenJobs", e);
+    return [];
+  }
+}
+
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {
   try {
     const row = await db.setting.findUnique({ where: { key } });

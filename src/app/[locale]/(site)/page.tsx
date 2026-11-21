@@ -1,4 +1,4 @@
-import { CareersCta } from "@/components/home/CareersCta";
+import { CareersCta, type CtaRole } from "@/components/home/CareersCta";
 import { Companies } from "@/components/home/Companies";
 import { Footprint } from "@/components/home/Footprint";
 import { Hero, type HeroLatest } from "@/components/home/Hero";
@@ -6,15 +6,22 @@ import { Intro } from "@/components/home/Intro";
 import { InvestorTeaser } from "@/components/home/InvestorTeaser";
 import { LatestNews } from "@/components/home/LatestNews";
 import { Partners } from "@/components/home/Partners";
-import { postTypes } from "@/content/site";
+import { companyLabels, postTypes } from "@/content/site";
 import { type Locale, formatDate, isLocale, pick } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
-import { getLatestPosts, getShareInfo } from "@/lib/queries";
+import { getLatestPosts, getOpenJobs, getShareInfo } from "@/lib/queries";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
-  const [posts, share] = await Promise.all([getLatestPosts({ limit: 5, featuredFirst: false }), getShareInfo()]);
+  const [posts, share, jobs] = await Promise.all([getLatestPosts({ limit: 5, featuredFirst: false }), getShareInfo(), getOpenJobs()]);
+  const ar = locale === "ar";
+  const roles: CtaRole[] = jobs.slice(0, 3).map((j) => ({
+    id: j.id,
+    title: ar && j.titleAr ? j.titleAr : j.titleEn,
+    meta: [companyLabels[j.company]?.[locale], ar ? j.locationAr || j.locationEn : j.locationEn].filter(Boolean).join(" · "),
+    href: `${href(locale, "/careers")}?role=${j.id}#apply`,
+  }));
 
   // The hero's live strip shows the newest newsroom item, so the page visibly changes whenever the team publishes.
   const first = posts[0];
@@ -29,14 +36,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      <Hero locale={locale} latest={latest} />
+      <Hero locale={locale} latest={latest} openRoles={jobs.length} />
       <Intro locale={locale} />
       <Companies locale={locale} />
       <Footprint locale={locale} />
       <Partners locale={locale} />
       <InvestorTeaser locale={locale} share={share} />
       <LatestNews locale={locale} posts={posts} />
-      <CareersCta locale={locale} />
+      <CareersCta locale={locale} roles={roles} total={jobs.length} />
     </>
   );
 }

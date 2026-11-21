@@ -6,7 +6,9 @@ import { useRef, useState } from "react";
 import { Field, Honeypot, inputCls, textareaCls } from "@/components/site/form";
 import { Arrow, btnClass } from "@/components/site/primitives";
 import type { Locale } from "@/i18n/config";
-import { CAREER_AREAS, areaLabels } from "@/lib/forms";
+import { CAREER_AREAS, JOB_POSITION_PREFIX, areaLabels } from "@/lib/forms";
+
+export type FormRole = { id: string; title: string; company: string };
 import { formatBytes } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -19,8 +21,9 @@ const MAX = 20 * 1024 * 1024;
 
 type Errors = Partial<Record<"name" | "email" | "phone" | "position" | "cv" | "consent", string>>;
 
-export function CareersForm({ locale }: { locale: Locale }) {
+export function CareersForm({ locale, roles = [], initialRole }: { locale: Locale; roles?: FormRole[]; initialRole?: string }) {
   const ar = locale === "ar";
+  const preset = initialRole && roles.some((r) => r.id === initialRole) ? `${JOB_POSITION_PREFIX}${initialRole}` : "";
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [errors, setErrors] = useState<Errors>({});
   const [serverError, setServerError] = useState("");
@@ -32,7 +35,7 @@ export function CareersForm({ locale }: { locale: Locale }) {
     name: ar ? "الاسم الكامل" : "Full name",
     email: ar ? "البريد الإلكتروني" : "Email",
     phone: ar ? "رقم الهاتف" : "Phone",
-    position: ar ? "مجال الاهتمام" : "Area of interest",
+    position: roles.length ? (ar ? "الوظيفة أو المجال" : "Role or area") : ar ? "مجال الاهتمام" : "Area of interest",
     message: ar ? "رسالة تعريفية" : "Cover note",
     cv: ar ? "السيرة الذاتية" : "CV / résumé",
     drop: ar ? "اسحب ملفك وأفلته هنا، أو" : "Drag and drop your file here, or",
@@ -45,6 +48,9 @@ export function CareersForm({ locale }: { locale: Locale }) {
     tooLarge: ar ? "حجم الملف يتجاوز 20 ميغابايت." : "The file is larger than 20 MB.",
     rate: ar ? "تم إرسال عدد كبير من الطلبات. يرجى المحاولة لاحقًا." : "Too many submissions. Please try again later.",
     fail: ar ? "تعذّر إرسال طلبك. يرجى المحاولة مرة أخرى." : "We couldn't submit your application. Please try again.",
+    closed: ar
+      ? "أُغلق التقديم على هذه الوظيفة. يمكنك اختيار مجال عام لتنضم إلى قاعدة المواهب."
+      : "This role has just closed. Choose a general area to join the talent pool instead.",
   };
 
   const pick = (f: File | undefined | null) => {
@@ -81,7 +87,17 @@ export function CareersForm({ locale }: { locale: Locale }) {
       setState("done");
     } catch (err) {
       const code = err instanceof Error ? err.message : "";
-      setServerError(code === "RATE_LIMIT" ? t.rate : code === "INVALID_TYPE" ? t.badType : code === "TOO_LARGE" ? t.tooLarge : t.fail);
+      setServerError(
+        code === "RATE_LIMIT"
+          ? t.rate
+          : code === "INVALID_TYPE"
+            ? t.badType
+            : code === "TOO_LARGE"
+              ? t.tooLarge
+              : code === "ROLE_CLOSED"
+                ? t.closed
+                : t.fail,
+      );
       setState("error");
     }
   }
@@ -113,15 +129,26 @@ export function CareersForm({ locale }: { locale: Locale }) {
         <input id="a-phone" name="phone" type="tel" autoComplete="tel" dir="ltr" className={inputCls} aria-invalid={!!errors.phone} />
       </Field>
       <Field label={t.position} htmlFor="a-position" required error={errors.position}>
-        <select id="a-position" name="position" defaultValue="" className={inputCls} aria-invalid={!!errors.position}>
+        <select key={preset} id="a-position" name="position" defaultValue={preset} className={inputCls} aria-invalid={!!errors.position}>
           <option value="" disabled>
-            {ar ? "اختر المجال" : "Select an area"}
+            {roles.length ? (ar ? "اختر وظيفة أو مجالًا" : "Select a role or area") : ar ? "اختر المجال" : "Select an area"}
           </option>
-          {CAREER_AREAS.map((a) => (
-            <option key={a} value={a}>
-              {areaLabels[a][locale]}
-            </option>
-          ))}
+          {roles.length > 0 && (
+            <optgroup label={ar ? "الوظائف الشاغرة" : "Open roles"}>
+              {roles.map((r) => (
+                <option key={r.id} value={`${JOB_POSITION_PREFIX}${r.id}`}>
+                  {r.title} · {r.company}
+                </option>
+              ))}
+            </optgroup>
+          )}
+          <optgroup label={ar ? "طلب عام (قاعدة المواهب)" : "General application (talent pool)"}>
+            {CAREER_AREAS.map((a) => (
+              <option key={a} value={a}>
+                {areaLabels[a][locale]}
+              </option>
+            ))}
+          </optgroup>
         </select>
       </Field>
       <Field label={t.message} htmlFor="a-message" className="md:col-span-2">
