@@ -1,0 +1,117 @@
+// Al-Ahed Holding — data model
+// SQLite for development / single-droplet deployments.
+// To move to PostgreSQL (e.g. DigitalOcean Managed DB): change provider to "postgresql"
+// and DATABASE_URL — the schema uses only portable types.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         String    @default("editor") // admin | editor
+  locale       String    @default("en")
+  active       Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  posts        Post[]
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  type        String   @default("news") // news | blog | event | press | award
+  company     String   @default("holding") // holding | aatc | dopet | pemco
+  status      String   @default("draft") // draft | published
+  featured    Boolean  @default(false)
+  titleEn     String
+  titleAr     String   @default("")
+  excerptEn   String   @default("")
+  excerptAr   String   @default("")
+  bodyEn      String   @default("")
+  bodyAr      String   @default("")
+  coverImage  String?
+  seoTitleEn  String   @default("")
+  seoTitleAr  String   @default("")
+  seoDescEn   String   @default("")
+  seoDescAr   String   @default("")
+  publishedAt DateTime @default(now())
+  views       Int      @default(0)
+  authorId    String?
+  author      User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, publishedAt])
+}
+
+model Person {
+  id        String   @id @default(cuid())
+  group     String   @default("board") // board | management
+  nameEn    String
+  nameAr    String   @default("")
+  roleEn    String
+  roleAr    String   @default("")
+  bioEn     String   @default("")
+  bioAr     String   @default("")
+  photo     String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  category    String   @default("financial") // financial | disclosure | governance | presentation | agm | sustainability
+  titleEn     String
+  titleAr     String   @default("")
+  year        Int
+  fileUrl     String
+  fileSize    Int      @default(0)
+  published   Boolean  @default(true)
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  kind       String   @default("contact") // contact | career
+  name       String
+  email      String
+  phone      String   @default("")
+  company    String   @default("")
+  subject    String   @default("")
+  position   String   @default("")
+  message    String   @default("")
+  attachment String?
+  locale     String   @default("en")
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  locale    String   @default("en")
+  list      String   @default("news") // news | ir
+  createdAt DateTime @default(now())
+}
+
+/// Key/value site settings (JSON string values), e.g. "share" (listing status / ticker), "irContact".
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}

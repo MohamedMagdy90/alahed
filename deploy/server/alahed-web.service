@@ -1,0 +1,25 @@
+# Al-Ahed Holding website: /etc/systemd/system/alahed-web.service (installed by deploy/server-setup.sh)
+[Unit]
+Description=Al-Ahed Holding website (Next.js standalone)
+After=network.target
+
+[Service]
+Type=simple
+User=alahed
+Group=alahed
+WorkingDirectory=/srv/alahed/current
+EnvironmentFile=/etc/alahed/env
+Environment=NODE_ENV=production
+Environment=NODE_OPTIONS=--max-old-space-size=384
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=3
+MemoryMax=600M
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/srv/alahed/shared
+
+[Install]
+WantedBy=multi-user.target
