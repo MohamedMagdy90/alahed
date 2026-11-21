@@ -3,7 +3,6 @@ import { companies, contact } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import { getDict, href } from "@/i18n/dictionary";
 import { Logo } from "./Logo";
-import { ArcsMark } from "./OrbitArcs";
 import { Arrow, Btn } from "./primitives";
 import { SubscribeForm } from "./SubscribeForm";
 
@@ -43,16 +42,16 @@ export function Footer({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-ink-900 text-white">
-      <div className="grid-lines pointer-events-none absolute inset-0 opacity-60" />
-      <ArcsMark className="pointer-events-none absolute -end-40 -top-40 h-[640px] w-[640px] opacity-[0.07]" />
+    <footer className="relative bg-ink-900 text-white">
 
       {/* CTA row */}
       <div className="container relative grid gap-12 border-b border-white/10 py-20 lg:grid-cols-12 lg:py-24">
         <div className="lg:col-span-7">
-          <p className="eyebrow mb-6 text-leaf-300">{ar ? "لنعمل معًا" : "Work with us"}</p>
+          <p className="mb-5 text-[0.9rem] font-medium text-leaf-300">{ar ? "تواصل معنا" : "Work with us"}</p>
           <h2 className="max-w-2xl text-balance font-display text-display-md font-normal leading-[1.08]">
-            {ar ? "شريك قطري موثوق لمشاريع الطاقة الأكثر أهمية." : "A trusted Qatari partner for the energy sector's most critical work."}
+            {ar
+              ? "تخطط لمشروع أو عملية إيقاف أو برنامج فحص؟ تحدّث مع فريقنا في الدوحة."
+              : "Planning a project, a shutdown or an inspection programme? Talk to our team in Doha."}
           </h2>
           <div className="mt-10 flex flex-wrap gap-3">
             <Btn href={href(locale, "/contact")}>{t.contactUs}</Btn>
@@ -80,7 +79,7 @@ export function Footer({ locale }: { locale: Locale }) {
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-9 items-center rounded-full border border-white/15 px-4 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-white/70 transition-colors hover:border-leaf hover:text-white"
+                className="inline-flex h-9 items-center rounded-full border border-white/15 px-4 text-[0.82rem] text-white/70 transition-colors hover:border-leaf hover:text-white"
               >
                 {s.label}
               </a>
@@ -89,7 +88,7 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
         {cols.map((col) => (
           <div key={col.title} className="lg:col-span-2">
-            <p className="eyebrow mb-5 text-white/40">{col.title}</p>
+            <p className="mb-5 text-[0.85rem] font-medium text-white/45">{col.title}</p>
             <ul className="space-y-3">
               {col.links.map((l) => (
                 <li key={l.href}>
@@ -102,10 +101,10 @@ export function Footer({ locale }: { locale: Locale }) {
           </div>
         ))}
         <div className="lg:col-span-2">
-          <p className="eyebrow mb-5 text-white/40">{t.footer.headquarters}</p>
+          <p className="mb-5 text-[0.85rem] font-medium text-white/45">{t.footer.headquarters}</p>
           <address className="space-y-3 text-[0.92rem] not-italic text-white/75">
             <p>{contact.holding.address[locale]}</p>
-            <p className="num font-mono text-[0.85rem]" dir="ltr">
+            <p className="num" dir="ltr">
               <a href={`tel:${contact.holding.phone.replace(/\s/g, "")}`} className="hover:text-white">
                 {contact.holding.phone}
               </a>
@@ -116,18 +115,6 @@ export function Footer({ locale }: { locale: Locale }) {
               </a>
             </p>
           </address>
-        </div>
-      </div>
-
-      {/* Wordmark */}
-      <div className="container relative select-none" aria-hidden>
-        <div className="flex items-end justify-between gap-6 border-t border-white/10 pt-8">
-          <span className="block bg-gradient-to-b from-white/[0.16] to-white/[0.02] bg-clip-text font-display text-[18vw] font-medium leading-[0.78] tracking-[-0.05em] text-transparent lg:text-[15rem]">
-            AL-AHED
-          </span>
-          <span className="hidden bg-gradient-to-b from-leaf/40 to-leaf/[0.04] bg-clip-text pb-2 font-arabic text-[9vw] font-bold leading-none text-transparent md:block lg:text-[8rem]">
-            العهد
-          </span>
         </div>
       </div>
 

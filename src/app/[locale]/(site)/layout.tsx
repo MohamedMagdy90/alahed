@@ -1,4 +1,4 @@
-import { MotionProvider, SmoothScroll } from "@/components/motion";
+import { MotionProvider } from "@/components/motion";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { type Locale, isLocale } from "@/i18n/config";
@@ -13,7 +13,6 @@ export default async function SiteLayout({ children, params }: { children: React
   const share = await getShareInfo();
   return (
     <MotionProvider>
-      <SmoothScroll />
       <Header locale={locale} listed={share.status === "listed"} />
       <main id="main" className="relative">
         {children}

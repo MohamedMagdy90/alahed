@@ -10,6 +10,7 @@ import { companies } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import { getDict, href } from "@/i18n/dictionary";
 import { cn } from "@/lib/utils";
+import { CompanyLogo } from "./CompanyLogo";
 import { Logo } from "./Logo";
 import { Arrow } from "./primitives";
 
@@ -101,13 +102,10 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
             scrolled ? "h-0 opacity-0" : "h-9 opacity-100",
           )}
         >
-          <div className="container flex h-9 items-center justify-between gap-6 font-mono rtl:font-arabic">
-            <Link href={href(locale, "/investors")} className="group inline-flex items-center gap-2.5 hover:text-white">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping2 rounded-full bg-leaf" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-leaf" />
-              </span>
-              <span className="uppercase tracking-[0.12em] rtl:normal-case rtl:tracking-normal">{listed ? t.listed : t.listingStatus}</span>
+          <div className="container flex h-9 items-center justify-between gap-6 text-[0.78rem]">
+            <Link href={href(locale, "/investors")} className="group inline-flex items-center gap-2 hover:text-white">
+              <span className="h-1.5 w-1.5 rounded-full bg-leaf" />
+              <span className="link-underline">{listed ? t.listed : t.listingStatus}</span>
             </Link>
             <div className="hidden items-center gap-6 md:flex">
               <DohaClock locale={locale} />
@@ -126,7 +124,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                 href={switchHref}
                 hrefLang={other}
                 aria-label={t.switchLangLabel}
-                className={cn("inline-flex items-center gap-1.5 text-white hover:text-leaf-300", other === "ar" ? "font-arabic" : "font-mono")}
+                className={cn("inline-flex items-center gap-1.5 text-white hover:text-leaf-300", other === "ar" && "font-arabic")}
                 onClick={() => {
                   document.cookie = `ah_locale=${other};path=/;max-age=31536000`;
                 }}
@@ -196,8 +194,8 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                   document.cookie = `ah_locale=${other};path=/;max-age=31536000`;
                 }}
                 className={cn(
-                  "grid h-10 w-10 place-items-center rounded-full border text-[0.8rem] transition-colors md:hidden",
-                  other === "ar" ? "font-arabic" : "font-mono",
+                  "grid h-10 w-10 place-items-center rounded-full border text-[0.8rem] font-medium transition-colors md:hidden",
+                  other === "ar" && "font-arabic",
                   solid ? "border-ink/15 text-ink" : "border-white/25 text-white",
                 )}
               >
@@ -243,7 +241,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                     <>
                       <div className="col-span-3 flex flex-col justify-between border-e border-ink/10 pe-10">
                         <div>
-                          <p className="eyebrow mb-4 text-leaf-700">{t.nav.companies}</p>
+                          <p className="mb-3 text-[0.85rem] font-medium text-leaf-700">{t.nav.companies}</p>
                           <p className="font-display text-2xl leading-tight text-ink">{t.nav.companiesDesc}</p>
                         </div>
                         <Link href={href(locale, "/companies")} className="group mt-8 inline-flex items-center gap-2 text-sm font-medium text-ink">
@@ -254,21 +252,19 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                       <div className="col-span-9 grid grid-cols-3 gap-6">
                         {companies.map((c) => (
                           <Link key={c.id} href={href(locale, `/companies/${c.slug}`)} className="group block">
-                            <div className="relative aspect-[16/9] overflow-hidden rounded-[2px] bg-ink">
+                            <div className="relative aspect-[16/9] overflow-hidden rounded-[2px] bg-pearl-100">
                               <Image
                                 src={c.image}
                                 alt=""
                                 fill
                                 sizes="300px"
-                                className="object-cover opacity-90 transition-transform duration-1200 ease-out-expo group-hover:scale-105"
+                                className="object-cover transition-transform duration-1200 ease-out-expo group-hover:scale-105"
                               />
-                              <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent" />
-                              <span className="num absolute start-3 top-3 font-mono text-[0.68rem] text-white/80">{c.index}</span>
-                              <div className="absolute bottom-3 start-3 grid h-10 w-16 place-items-center rounded-[2px] bg-white p-1.5">
-                                <Image src={c.logo} alt="" width={64} height={40} className="max-h-full w-auto object-contain" />
-                              </div>
                             </div>
-                            <div className="mt-4 flex items-start justify-between gap-3">
+                            <div className="mt-4 flex h-9 items-center">
+                              <CompanyLogo id={c.id} locale={locale} size={30} decorative />
+                            </div>
+                            <div className="mt-3 flex items-start justify-between gap-3">
                               <div>
                                 <p className="font-display text-[1.05rem] text-ink">{c.name[locale]}</p>
                                 <p className="mt-1 line-clamp-2 text-[0.85rem] leading-snug text-haze">{c.tagline[locale]}</p>
@@ -282,7 +278,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                   ) : (
                     <>
                       <div className="col-span-3 border-e border-ink/10 pe-10">
-                        <p className="eyebrow mb-4 text-leaf-700">{t.nav.about}</p>
+                        <p className="mb-3 text-[0.85rem] font-medium text-leaf-700">{t.nav.about}</p>
                         <p className="font-display text-2xl leading-tight text-ink">
                           {locale === "ar" ? "مجموعة قطرية في خدمة قطاع الطاقة منذ عام 1975." : "A Qatari group serving the energy sector since 1975."}
                         </p>
@@ -304,7 +300,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                         <div className="relative aspect-[4/3] overflow-hidden rounded-[2px] bg-pearl-100">
                           <Image src="/images/hq.png" alt="" fill sizes="320px" className="object-cover" />
                         </div>
-                        <p className="mt-3 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-haze rtl:font-arabic rtl:tracking-normal">
+                        <p className="mt-3 text-[0.82rem] text-haze">
                           {locale === "ar" ? "المقر الرئيسي للمجموعة · الدوحة" : "Group headquarters · Doha"}
                         </p>
                       </div>
@@ -358,7 +354,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                   transition={{ delay: 0.05 + gi * 0.05 }}
                   className="border-b border-white/10 py-5"
                 >
-                  <p className="eyebrow mb-3 text-leaf-300">{g.label}</p>
+                  <p className="mb-3 text-[0.85rem] font-medium text-leaf-300">{g.label}</p>
                   <ul className="space-y-2">
                     {g.children.map((c) => (
                       <li key={c.href}>
@@ -393,8 +389,10 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
               ))}
             </nav>
             <div className="container flex items-center justify-between border-t border-white/10 py-6 text-sm text-white/70">
-              <span className="font-mono">+974 4441 4022</span>
-              <Link href={switchHref} hrefLang={other} className={cn("text-white", other === "ar" ? "font-arabic" : "font-mono")}>
+              <span className="num" dir="ltr">
+                +974 4441 4022
+              </span>
+              <Link href={switchHref} hrefLang={other} className={cn("text-white", other === "ar" && "font-arabic")}>
                 {t.switchLang}
               </Link>
             </div>
