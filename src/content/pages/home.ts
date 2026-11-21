@@ -58,6 +58,19 @@ export const sectorsSentence: L10n = {
   ar: "نعمل في قطاعات النفط والغاز، والغاز الطبيعي المسال، والبتروكيماويات، والتكرير، والمرافق، والعمليات البحرية.",
 };
 
+/**
+ * Public geographic coordinates of each location (Wikipedia / Wikidata, WGS 84) — used for the coordinates
+ * shown on the map, straight-line distances from Group HQ and live local conditions. Photography is illustrative
+ * except Doha, which is the Group's headquarters building.
+ */
+export const siteGeo: Record<string, { lat: number; lon: number; image: string }> = {
+  doha: { lat: 25.2867, lon: 51.5333, image: "/images/hq.png" },
+  salwa: { lat: 25.1675, lon: 51.4394, image: "/images/fabrication.jpg" },
+  raslaffan: { lat: 25.8575, lon: 51.5389, image: "/images/refinery-towers.jpg" },
+  mesaieed: { lat: 24.99, lon: 51.55, image: "/images/refinery-pipes.jpg" },
+  dukhan: { lat: 25.43, lon: 50.78, image: "/images/wellhead-dukhan.jpg" },
+};
+
 /** What actually happens at each location (facilities and projects listed in src/content/site.ts). */
 export const siteDetails: Record<string, { company: CompanyId | "holding"; text: L10n }[]> = {
   doha: [

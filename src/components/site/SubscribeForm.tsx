@@ -63,14 +63,14 @@ export function SubscribeForm({
           }}
           placeholder={t.emailPlaceholder}
           className={cn(
-            "min-w-0 flex-1 bg-transparent px-5 text-[0.95rem] outline-none",
+            "w-0 min-w-0 flex-1 bg-transparent px-4 text-[0.95rem] outline-none sm:px-5",
             dark ? "text-white placeholder:text-white/40" : "text-ink placeholder:text-haze-300",
           )}
         />
         <button
           type="submit"
           disabled={state === "loading"}
-          className="group inline-flex items-center gap-3 bg-leaf px-5 text-[0.88rem] font-medium text-ink-900 transition-colors hover:bg-[#6cc951] disabled:opacity-70"
+          className="group inline-flex shrink-0 items-center gap-3 bg-leaf px-4 text-[0.88rem] sm:px-5 font-medium text-ink-900 transition-colors hover:bg-[#6cc951] disabled:opacity-70"
         >
           {t.subscribe}
           {state === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : state === "done" ? <Check className="h-4 w-4" /> : <Arrow />}

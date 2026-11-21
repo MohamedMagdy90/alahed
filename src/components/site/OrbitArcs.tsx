@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { useSafeReducedMotion } from "@/components/motion";
 import { cn } from "@/lib/utils";
+import { BANDS, MARK_TONES, type MarkTone } from "./LogoMark";
 
 export const C = 400;
 export const pt = (r: number, deg: number) => {
@@ -197,19 +198,20 @@ export function OrbitArcs({
   );
 }
 
-/** Small static arcs mark for decoration (e.g. inner page heroes, footer). */
-export function ArcsMark({ className, strokeOpacity = 1 }: { className?: string; strokeOpacity?: number }) {
+/**
+ * Decorative brand mark for inner pages (heroes, dark panels): the real logo crescents, not generic rings.
+ * The 128-unit mark is padded so it sits in its box the way the previous decoration did.
+ */
+export function ArcsMark({
+  className,
+  strokeOpacity = 1,
+  tone = "light",
+}: { className?: string; strokeOpacity?: number; tone?: MarkTone }) {
+  const colors = MARK_TONES[tone];
   return (
-    <svg viewBox="0 0 800 800" className={className} aria-hidden fill="none">
-      {ARCS.map((a) => (
-        <path
-          key={a.r}
-          d={arc(a.r, a.start, a.len)}
-          stroke={a.color}
-          strokeOpacity={strokeOpacity}
-          strokeWidth={a.width * 1.6}
-          strokeLinecap="round"
-        />
+    <svg viewBox="-14 -14 156 156" className={className} aria-hidden>
+      {BANDS.map((b, i) => (
+        <path key={b.d} d={b.d} fill={colors[i]} fillOpacity={strokeOpacity} />
       ))}
     </svg>
   );

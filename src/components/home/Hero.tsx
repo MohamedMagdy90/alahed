@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { useSafeReducedMotion } from "@/components/motion";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
-import { ARCS, arc, pt } from "@/components/site/OrbitArcs";
+import { BANDS, BOWL, MARK_VIEWBOX } from "@/components/site/LogoMark";
 import { Arrow } from "@/components/site/primitives";
 import { heroCaption, heroHeadline, heroOrder } from "@/content/pages/home";
 import { type Company, companyById } from "@/content/site";
@@ -15,8 +15,11 @@ import type { Locale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
 import { cn } from "@/lib/utils";
 
-/** heroOrder index → logo arc (ARCS[0] outer, [1] middle, [2] inner green). AATC is the founding, inner arc. */
-const ARC_FOR = [2, 1, 0];
+/**
+ * heroOrder index → logo band (BANDS[0] is the outer band = the Group). AATC, the founding company, is the
+ * innermost band; DOPET the next; PEMCO the third.
+ */
+const BAND_FOR = [3, 2, 1];
 /** Company accents tuned for legibility on dark photography. */
 const ACCENT: Record<string, string> = { aatc: "#6CC951", dopet: "#EC4B43", pemco: "#8EAAE0" };
 
@@ -82,48 +85,54 @@ export function Hero({ locale, latest }: { locale: Locale; latest: HeroLatest })
       <div className="absolute inset-0 -z-20 from-ink-900/80 via-ink-900/30 to-transparent ltr:bg-gradient-to-r rtl:bg-gradient-to-l" />
       <div className="absolute inset-x-0 top-0 -z-20 h-48 bg-gradient-to-b from-ink-900/75 to-transparent" />
 
-      {/* The logo's three arcs: one per company. The active arc draws itself as the story progresses. */}
+      {/* The Al-Ahed mark itself: four crescents traced from the logo. The outer band is the Group, holding the
+          three companies; the active company's band fills along its taper, tip to tip, as the story progresses. */}
       <div
-        className="absolute -end-[6%] top-1/2 hidden aspect-square w-[min(46vw,760px)] -translate-y-[46%] lg:block"
+        className="absolute -end-[3%] top-1/2 hidden aspect-square w-[min(40vw,660px)] -translate-y-[44%] lg:block"
         {...pauseHandlers}
       >
-        <svg viewBox="0 0 800 800" className={cn("absolute inset-0 h-full w-full overflow-visible", ar && "-scale-x-100")} aria-hidden>
+        <svg viewBox={MARK_VIEWBOX} className="absolute inset-0 h-full w-full overflow-visible" aria-hidden>
+          <defs>
+            <filter id="hero-band-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2.4" result="b" />
+              <feMerge>
+                <feMergeNode in="b" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          {/* The Group: the embracing outer band, always present */}
+          <path d={BANDS[0].d} fill="white" fillOpacity={0.2} />
           {companies.map((c, i) => {
-            const a = ARCS[ARC_FOR[i]];
-            const d = arc(a.r, a.start, a.len);
+            const b = BANDS[BAND_FOR[i]];
             const on = i === active;
-            const [sx, sy] = pt(a.r, a.start);
             return (
               <g key={c.id}>
-                <path d={d} fill="none" stroke="white" strokeOpacity={on ? 0.2 : 0.14} strokeWidth={a.width} strokeLinecap="round" />
+                <path d={b.d} fill="white" fillOpacity={on ? 0.2 : 0.12} className="transition-[fill-opacity] duration-500" />
                 {on && (
-                  <path
-                    key={run}
-                    d={d}
-                    pathLength={1}
-                    fill="none"
-                    stroke={accent}
-                    strokeWidth={a.width + 1.5}
-                    strokeLinecap="round"
-                    strokeDasharray="1 1"
-                    className={auto ? "animate-[arcdraw_7s_linear_forwards]" : undefined}
-                    style={{ strokeDashoffset: auto ? 1 : 0, ...(auto ? playState : {}) }}
-                  />
+                  <g filter="url(#hero-band-glow)">
+                    <mask id={`hero-fill-${c.id}`} maskUnits="userSpaceOnUse" x="-10" y="-10" width="148" height="148">
+                      <path
+                        key={run}
+                        d={b.sweep}
+                        pathLength={1}
+                        fill="none"
+                        stroke="white"
+                        strokeWidth={b.sweepWidth}
+                        strokeDasharray="1 1"
+                        className={auto ? "animate-[arcdraw_7s_linear_forwards]" : undefined}
+                        style={{ strokeDashoffset: auto ? 1 : 0, ...(auto ? playState : {}) }}
+                      />
+                    </mask>
+                    <path d={b.d} fill={accent} mask={`url(#hero-fill-${c.id})`} />
+                  </g>
                 )}
-                <circle
-                  cx={sx}
-                  cy={sy}
-                  r={on ? 7 : 4.5}
-                  fill={on ? accent : "white"}
-                  fillOpacity={on ? 1 : 0.45}
-                  className="transition-all duration-500"
-                />
-                {/* generous invisible hit area */}
+                {/* generous invisible hit area along the band */}
                 <path
-                  d={d}
+                  d={b.sweep}
                   fill="none"
                   stroke="transparent"
-                  strokeWidth={46}
+                  strokeWidth={b.sweepWidth + 5}
                   className="cursor-pointer"
                   style={{ pointerEvents: "stroke" }}
                   onClick={() => select(i)}
@@ -132,7 +141,11 @@ export function Hero({ locale, latest }: { locale: Locale; latest: HeroLatest })
             );
           })}
         </svg>
-        <div className="pointer-events-none absolute inset-0 grid place-items-center">
+        {/* The active company's logo sits in the mark's open bowl */}
+        <div
+          className="pointer-events-none absolute grid -translate-x-1/2 -translate-y-1/2 place-items-center"
+          style={{ left: `${(BOWL.x / 128) * 100}%`, top: `${(BOWL.y / 128) * 100}%` }}
+        >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={cur.id}
