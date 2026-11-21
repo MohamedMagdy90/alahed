@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion";
 import { Marquee } from "@/components/site/Marquee";
 import { NewsCard } from "@/components/site/NewsCard";
+import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, Em, SectionHeading, TextLink } from "@/components/site/primitives";
 import { companies, getCompany } from "@/content/site";
@@ -50,22 +51,22 @@ export default async function CompanyPage({ params }: P) {
         title={c.name[locale]}
         intro={c.tagline[locale]}
         aside={
-          <div className="rounded-[2px] bg-white p-7 text-ink">
+          <div className="rounded-[2px] border border-white/15 bg-ink-900/55 p-7 text-white backdrop-blur-md">
             <div className="flex h-16 items-center">
-              <Image src={c.logo} alt={c.name[locale]} width={180} height={64} className="h-12 w-auto max-w-[180px] object-contain" />
+              <CompanyLogo id={c.id} locale={locale} tone="white" size={48} />
             </div>
-            <dl className="mt-6 divide-y divide-ink/10 border-t border-ink/10 text-[0.9rem]">
+            <dl className="mt-6 divide-y divide-white/10 border-t border-white/10 text-[0.9rem]">
               <div className="flex justify-between gap-4 py-3">
-                <dt className="text-haze">{ar ? "الاسم القانوني" : "Legal name"}</dt>
+                <dt className="text-white/55">{ar ? "الاسم القانوني" : "Legal name"}</dt>
                 <dd className="text-end">{c.legal[locale]}</dd>
               </div>
               <div className="flex justify-between gap-4 py-3">
-                <dt className="text-haze">{ar ? "سنة التأسيس" : "Established"}</dt>
-                <dd className="num font-mono">{c.founded}</dd>
+                <dt className="text-white/55">{ar ? "سنة التأسيس" : "Established"}</dt>
+                <dd className="num">{c.founded}</dd>
               </div>
             </dl>
             {c.website && (
-              <TextLink href={c.website} external className="mt-5">
+              <TextLink href={c.website} external tone="dark" className="mt-5">
                 {c.website.replace(/^https?:\/\/(www\.)?/, "")}
               </TextLink>
             )}

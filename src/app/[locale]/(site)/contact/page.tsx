@@ -1,8 +1,8 @@
 import { Mail, MapPin, Phone, Printer } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Reveal } from "@/components/motion";
 import { ContactForm } from "@/components/pages/contact/ContactForm";
+import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
 import { Btn, Em, TextLink } from "@/components/site/primitives";
 import { companies, contact } from "@/content/site";
@@ -134,7 +134,7 @@ export default async function ContactPage({ params }: P) {
             {companies.map((c, i) => (
               <Reveal key={c.id} delay={i * 0.06} className="flex flex-col bg-white p-7 md:p-8">
                 <div className="flex h-14 items-center">
-                  <Image src={c.logo} alt={c.name[locale]} width={150} height={56} className="h-10 w-auto max-w-[140px] object-contain" />
+                  <CompanyLogo id={c.id} locale={locale} size={40} />
                 </div>
                 <p className="mt-6 font-display text-[1.3rem] text-ink">{c.name[locale]}</p>
                 <ul className="mt-5 space-y-3 text-[0.92rem] text-ink/75">

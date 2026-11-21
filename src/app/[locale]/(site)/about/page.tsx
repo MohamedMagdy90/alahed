@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Reveal, WordReveal } from "@/components/motion";
 import { Timeline } from "@/components/pages/about/Timeline";
 import { ArcsMark } from "@/components/site/OrbitArcs";
+import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, Em, SectionHeading } from "@/components/site/primitives";
 import { companies, milestones, mission, values, vision, yearsSince } from "@/content/site";
@@ -234,11 +235,11 @@ export default async function AboutPage({ params }: P) {
                     href={href(locale, `/companies/${c.slug}`)}
                     className="group flex w-full flex-col items-center rounded-[2px] border border-ink/10 bg-pearl-50 p-7 text-center transition-colors hover:border-ink/30 hover:bg-white"
                   >
-                    <span className="grid h-16 w-full place-items-center rounded-[2px] bg-white">
-                      <Image src={c.logo} alt="" width={140} height={56} className="h-10 w-auto max-w-[130px] object-contain" />
+                    <span className="grid h-16 w-full place-items-center">
+                      <CompanyLogo id={c.id} locale={locale} size={40} decorative />
                     </span>
                     <span className="mt-5 font-display text-[1.2rem] text-ink">{c.name[locale]}</span>
-                    <span className="num mt-1 font-mono text-[0.72rem] text-haze">{ar ? `تأسست ${c.founded}` : `Est. ${c.founded}`}</span>
+                    <span className="num mt-1 text-[0.85rem] text-haze">{ar ? `تأسست عام ${c.founded}` : `Established ${c.founded}`}</span>
                     <span className="mt-5 inline-flex items-center gap-2 text-[0.85rem] text-ink/70 group-hover:text-ink">
                       {ar ? "استكشف" : "Explore"} <Arrow className="text-leaf-700" />
                     </span>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Parallax, Reveal } from "@/components/motion";
+import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, Em, SectionHeading, TextLink } from "@/components/site/primitives";
 import { companies, sectors } from "@/content/site";
@@ -90,8 +91,8 @@ export default async function CompaniesPage({ params }: P) {
                       {ar ? `تأسست ${c.founded}` : `Est. ${c.founded}`}
                     </span>
                   </div>
-                  <div className="mt-8 inline-grid h-16 place-items-center rounded-[2px] border border-ink/10 bg-white px-5">
-                    <Image src={c.logo} alt={c.name[locale]} width={160} height={64} className="h-10 w-auto max-w-[150px] object-contain" />
+                  <div className="mt-8 flex h-14 items-center">
+                    <CompanyLogo id={c.id} locale={locale} size={44} />
                   </div>
                   <h2 className="mt-8 font-display text-display-md font-normal text-ink">{c.name[locale]}</h2>
                   <p className="mt-2 text-[0.92rem] text-haze">{c.legal[locale]}</p>
