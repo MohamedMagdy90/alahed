@@ -85,6 +85,26 @@ model Document {
   updatedAt   DateTime @updatedAt
 }
 
+/// Open roles listed on the Careers page (managed in the admin panel).
+model Job {
+  id         String   @id @default(cuid())
+  company    String   @default("holding") // holding | aatc | dopet | pemco
+  area       String   @default("engineering") // engineering | technical | inspection | corporate | other
+  employment String   @default("full-time") // full-time | contract | temporary
+  titleEn    String
+  titleAr    String   @default("")
+  locationEn String   @default("")
+  locationAr String   @default("")
+  summaryEn  String   @default("")
+  summaryAr  String   @default("")
+  open       Boolean  @default(true)
+  postedAt   DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([open, postedAt])
+}
+
 model Message {
   id         String   @id @default(cuid())
   kind       String   @default("contact") // contact | career

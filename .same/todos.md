@@ -61,6 +61,24 @@
 - B (needs client assets): hero video loop, real photography (people, workshops, sites), publishable
   project references, named people.
 - C (after listing): live QSE share price, IR calendar.
+## 2026-11-21 evening (branch `redesign`, deployed)
+- Workspace reset deleted /home/project entirely → restored from GitHub `redesign`. The deploy key was lost too:
+  a NEW key `alahed-deploy-2026-11-21` was added to the server by the owner; host key pinned
+  (SHA256:e+xSWCk//TUHHQZqhd2j/AU3eMsgUNFyl5hz55LHRTo). If lost again: ssh-keygen a new key, ask the owner to append
+  the .pub to /root/.ssh/authorized_keys and print `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`.
+- Owner preference: do NOT start the local dev server; deploy to the droplet and let them check there.
+- [x] LogoMark: the real logo = 4 crescents (circle minus offset circle), traced from public/brand/icon.png.
+  Hero fills the real bands; ArcsMark (inner pages) now renders the real mark.
+- [x] Where we work: dark live map (Doha clock, MET Norway conditions via /api/conditions, routes + pulses, auto-tour)
+- [x] Partners: manufacturers → Al-Ahed → operators live network (desktop), stacked flow (mobile)
+- [x] Arabic phone overflow fix (SubscribeForm w-0) + body overflow-x: clip
+## Rest of the redesign (in progress)
+- [ ] Open roles: Job model + admin "Open roles" CRUD + careers listing + apply-to-role + home strip/CTA
+- [ ] Page transitions: View Transitions (cross-fade site-wide; card → hero morph for companies + news)
+- [ ] De-template inner pages: no 01/02 indexes, plain labels (no mono/dash), no italic-serif accents, no grid-lines,
+      full-colour hero photos
+- [ ] Motion audit: no kenburns/LineReveal/WordReveal/Counter/Parallax/Marquee; subtler Reveal
+- [ ] DB backup + schema push on server, deploy, verify live
 ## Content gaps to confirm with client
 - Chairman & President messages, full Board list + photos (only MD & CEO seeded)
 - PEMCO services detail, workforce figure
