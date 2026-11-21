@@ -13,6 +13,7 @@ import { heroCaption, heroHeadline, heroOrder } from "@/content/pages/home";
 import { type Company, companyById } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
+import { openRolesLabel } from "@/lib/forms";
 import { cn } from "@/lib/utils";
 
 /**
@@ -25,7 +26,7 @@ const ACCENT: Record<string, string> = { aatc: "#6CC951", dopet: "#EC4B43", pemc
 
 export type HeroLatest = { title: string; date: string; href: string; label: string } | null;
 
-export function Hero({ locale, latest }: { locale: Locale; latest: HeroLatest }) {
+export function Hero({ locale, latest, openRoles = 0 }: { locale: Locale; latest: HeroLatest; openRoles?: number }) {
   const ar = locale === "ar";
   const reduce = useSafeReducedMotion();
   const ref = useRef<HTMLElement>(null);
@@ -246,6 +247,19 @@ export function Hero({ locale, latest }: { locale: Locale; latest: HeroLatest })
             </>
           ) : (
             <span className="flex-1" />
+          )}
+          {/* Open roles from the admin panel (hidden when nothing is advertised) */}
+          {openRoles > 0 && (
+            <Link
+              href={`${href(locale, "/careers")}#roles`}
+              className="hidden shrink-0 items-center gap-2 border-s border-white/15 ps-5 text-white/75 transition-colors hover:text-white md:inline-flex"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inset-0 rounded-full bg-leaf-300 opacity-60 motion-safe:animate-ping" />
+                <span className="relative h-2 w-2 rounded-full bg-leaf-300" />
+              </span>
+              <span className="num">{openRolesLabel(openRoles, locale)}</span>
+            </Link>
           )}
           {!reduce && (
             <button

@@ -16,6 +16,7 @@ const en = {
     dashboard: "Dashboard",
     posts: "News & insights",
     people: "Leadership",
+    jobs: "Open roles",
     documents: "IR documents",
     inbox: "Inbox",
     subscribers: "Subscribers",

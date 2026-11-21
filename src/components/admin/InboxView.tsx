@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import { formatDate } from "@/i18n/config";
 import { getAdminDict, tx } from "@/i18n/admin";
 import { deleteMessage, setMessageRead } from "@/lib/admin/inbox";
+import { type CareerArea, areaLabels } from "@/lib/forms";
 import { cn } from "@/lib/utils";
 import { ConfirmDelete, useAction } from "./controls";
 import { Badge, EmptyState, aBtn, monoLabel } from "./ui";
@@ -161,7 +162,10 @@ export function InboxView({ locale, messages, initialOpen }: { locale: Locale; m
                   { k: d.name, v: current.name },
                   { k: d.email, v: current.email, href: `mailto:${current.email}`, ltr: true },
                   { k: t("Phone", "الهاتف"), v: current.phone, href: current.phone ? `tel:${current.phone.replace(/\s/g, "")}` : undefined, ltr: true },
-                  { k: current.kind === "career" ? t("Position", "الوظيفة") : t("Organisation", "الجهة"), v: current.kind === "career" ? current.position : current.company },
+                  {
+                    k: current.kind === "career" ? t("Position", "الوظيفة") : t("Organisation", "الجهة"),
+                    v: current.kind === "career" ? (areaLabels[current.position as CareerArea]?.[locale] ?? current.position) : current.company,
+                  },
                 ].map((row) => (
                   <div key={row.k} className="bg-white px-4 py-3">
                     <dt className={monoLabel}>{row.k}</dt>

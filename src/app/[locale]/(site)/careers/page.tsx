@@ -9,7 +9,7 @@ import { Arrow, Btn, SectionHeading } from "@/components/site/primitives";
 import { companyLabels } from "@/content/site";
 import { type Locale, formatDate, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
-import { asEmployment, employmentLabels } from "@/lib/forms";
+import { asEmployment, employmentLabels, openRolesLabel } from "@/lib/forms";
 import { getOpenJobs } from "@/lib/queries";
 
 type P = { params: Promise<{ locale: string }>; searchParams: Promise<{ role?: string }> };
@@ -76,15 +76,7 @@ export default async function CareersPage({ params, searchParams }: P) {
         <div className="mt-10 flex flex-wrap gap-3">
           {jobs.length > 0 ? (
             <>
-              <Btn href="#roles">
-                {ar
-                  ? jobs.length === 1
-                    ? "وظيفة شاغرة واحدة"
-                    : jobs.length === 2
-                      ? "وظيفتان شاغرتان"
-                      : `${jobs.length} وظائف شاغرة`
-                  : `${jobs.length} open role${jobs.length === 1 ? "" : "s"}`}
-              </Btn>
+              <Btn href="#roles">{openRolesLabel(jobs.length, locale)}</Btn>
               <Btn href="#apply" variant="outline-light">
                 {ar ? "طلب عام" : "General application"}
               </Btn>

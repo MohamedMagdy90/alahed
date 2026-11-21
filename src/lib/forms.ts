@@ -14,6 +14,14 @@ export const employmentLabels: Record<JobEmployment, { en: string; ar: string }>
   contract: { en: "Contract", ar: "عقد" },
   temporary: { en: "Temporary", ar: "مؤقت" },
 };
+/** "3 open roles" / Arabic dual and plural forms (1, 2, 3–10, 11+). */
+export function openRolesLabel(n: number, locale: "en" | "ar") {
+  if (locale === "en") return `${n} open role${n === 1 ? "" : "s"}`;
+  if (n === 1) return "وظيفة شاغرة واحدة";
+  if (n === 2) return "وظيفتان شاغرتان";
+  if (n <= 10) return `${n} وظائف شاغرة`;
+  return `${n} وظيفة شاغرة`;
+}
 export const asJobCompany = (v: string): JobCompany => ((JOB_COMPANIES as readonly string[]).includes(v) ? (v as JobCompany) : "holding");
 export const asCareerArea = (v: string): CareerArea => ((CAREER_AREAS as readonly string[]).includes(v) ? (v as CareerArea) : "other");
 export const asEmployment = (v: string): JobEmployment => ((JOB_EMPLOYMENT as readonly string[]).includes(v) ? (v as JobEmployment) : "full-time");
