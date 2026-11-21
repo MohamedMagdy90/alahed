@@ -124,11 +124,9 @@ export default async function CompaniesPage({ params }: P) {
 
       {/* Value chain */}
       <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
-        <div className="grid-lines pointer-events-none absolute inset-0" />
         <div className="container relative">
           <SectionHeading
             tone="dark"
-            index="02"
             eyebrow={ar ? "كيف نعمل معًا" : "How we work together"}
             title={
               ar ? (
@@ -177,7 +175,6 @@ export default async function CompaniesPage({ params }: P) {
             <div className="mb-6 flex items-center gap-4">
               <span className="num font-mono text-xs text-haze">03</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                <span aria-hidden className="h-px w-7 bg-current" />
                 {ar ? "القطاعات التي نخدمها" : "Sectors we serve"}
               </p>
             </div>

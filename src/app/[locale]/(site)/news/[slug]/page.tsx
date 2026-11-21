@@ -57,7 +57,6 @@ export default async function ArticlePage({ params }: P) {
     <article>
       {/* Header */}
       <header className="grain relative isolate overflow-hidden bg-ink-900 pb-40 pt-44 text-white md:pb-48">
-        <div className="grid-lines absolute inset-0 -z-10" />
         <div className="container">
           <nav aria-label="Breadcrumb" className="mb-10 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-white/50 rtl:font-arabic rtl:text-[0.8rem] rtl:normal-case rtl:tracking-normal">
             <ol className="flex flex-wrap items-center gap-2">

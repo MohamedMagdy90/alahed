@@ -83,7 +83,6 @@ export default async function CompanyPage({ params }: P) {
             <div className="flex items-center gap-4">
               <span className="num font-mono text-xs text-haze">{idx()}</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                <span aria-hidden className="h-px w-7 bg-current" />
                 {ar ? "نظرة عامة" : "Overview"}
               </p>
             </div>
@@ -149,7 +148,6 @@ export default async function CompanyPage({ params }: P) {
               <div className="mb-5 flex items-center gap-4">
                 <span className="num font-mono text-xs text-haze">{idx()}</span>
                 <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                  <span aria-hidden className="h-px w-7 bg-current" />
                   {ar ? "الشركاء العالميون" : "Global principals"}
                 </p>
               </div>
@@ -177,7 +175,6 @@ export default async function CompanyPage({ params }: P) {
               <div className="mb-6 flex items-center gap-4">
                 <span className="num font-mono text-xs text-haze">{idx()}</span>
                 <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                  <span aria-hidden className="h-px w-7 bg-current" />
                   {ar ? "مشاريع مختارة" : "Selected projects"}
                 </p>
               </div>
@@ -199,13 +196,11 @@ export default async function CompanyPage({ params }: P) {
 
       {/* Facilities + contact */}
       <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
-        <div className="grid-lines pointer-events-none absolute inset-0" />
         <div className="container relative grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <div className="mb-6 flex items-center gap-4">
               <span className="num font-mono text-xs text-white/40">{idx()}</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-300">
-                <span aria-hidden className="h-px w-7 bg-current" />
                 {ar ? "المرافق" : "Facilities"}
               </p>
             </div>

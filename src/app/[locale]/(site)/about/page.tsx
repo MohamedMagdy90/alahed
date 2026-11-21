@@ -69,7 +69,6 @@ export default async function AboutPage({ params }: P) {
             <div className="flex items-center gap-4 lg:sticky lg:top-32">
               <span className="num font-mono text-xs text-haze">01</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                <span aria-hidden className="h-px w-7 bg-current" />
                 {ar ? "قصتنا" : "Our story"}
               </p>
             </div>
@@ -101,11 +100,9 @@ export default async function AboutPage({ params }: P) {
 
       {/* Timeline */}
       <section className="relative overflow-hidden bg-ink-900 py-24 text-white md:py-32">
-        <div className="grid-lines pointer-events-none absolute inset-0" />
         <div className="container relative">
           <SectionHeading
             tone="dark"
-            index="02"
             eyebrow={ar ? "محطات بارزة" : "Milestones"}
             title={
               ar ? (
@@ -132,7 +129,6 @@ export default async function AboutPage({ params }: P) {
             <div className="mb-8 flex items-center gap-4">
               <span className="num font-mono text-xs text-haze">03</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                <span aria-hidden className="h-px w-7 bg-current" />
                 {ar ? "رؤيتنا" : "Our vision"}
               </p>
             </div>
@@ -148,7 +144,6 @@ export default async function AboutPage({ params }: P) {
           <div className="lg:col-span-5 lg:col-start-8">
             <div className="mb-8 flex items-center gap-4">
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                <span aria-hidden className="h-px w-7 bg-current" />
                 {ar ? "رسالتنا" : "Our mission"}
               </p>
             </div>
@@ -167,7 +162,6 @@ export default async function AboutPage({ params }: P) {
       <section className="bg-pearl-50 py-24 md:py-32">
         <div className="container">
           <SectionHeading
-            index="04"
             eyebrow={ar ? "قيمنا" : "Our values"}
             title={
               ar ? (
@@ -204,7 +198,6 @@ export default async function AboutPage({ params }: P) {
       <section className="bg-white py-24 md:py-32">
         <div className="container">
           <SectionHeading
-            index="05"
             eyebrow={ar ? "هيكل المجموعة" : "Group structure"}
             title={
               ar ? (
@@ -255,7 +248,6 @@ export default async function AboutPage({ params }: P) {
       <section className="bg-white pb-24 md:pb-32">
         <div className="container">
           <div className="relative overflow-hidden rounded-[2px] bg-ink px-8 py-14 text-white md:px-14">
-            <div className="grid-lines pointer-events-none absolute inset-0" />
             <ArcsMark className="pointer-events-none absolute -end-20 -top-20 h-80 w-80 opacity-20" />
             <div className="relative flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
               <h2 className="max-w-xl text-balance font-display text-display-md font-normal">

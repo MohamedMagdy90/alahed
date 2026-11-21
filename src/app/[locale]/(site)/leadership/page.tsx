@@ -118,7 +118,6 @@ export default async function LeadershipPage({ params }: P) {
       <section className="bg-white pb-24 md:pb-32">
         <div className="container">
           <div className="relative overflow-hidden rounded-[2px] bg-ink px-8 py-14 text-white md:px-14">
-            <div className="grid-lines pointer-events-none absolute inset-0" />
             <div className="relative grid gap-8 md:grid-cols-12 md:items-center">
               <div className="md:col-span-8">
                 <p className="eyebrow mb-4 text-leaf-300">{ar ? "الحوكمة المؤسسية" : "Corporate governance"}</p>

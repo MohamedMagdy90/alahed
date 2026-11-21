@@ -219,20 +219,18 @@ export default async function CareersPage({ params, searchParams }: P) {
         <div className="container grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <div className="lg:sticky lg:top-32">
-              <div className="mb-6 flex items-center gap-4">
-                <span className="num font-mono text-xs text-haze">04</span>
-                <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                  <span aria-hidden className="h-px w-7 bg-current" />
-                  {ar ? "نموذج التقديم" : "Application form"}
-                </p>
-              </div>
+              <p className="eyebrow mb-4 text-leaf-700">{ar ? "نموذج التقديم" : "Application form"}</p>
               <h2 className="text-balance font-display text-display-md font-normal text-ink">
                 {ar ? "أرسل طلبك." : "Send us your application."}
               </h2>
               <p className="mt-5 text-pretty text-[1rem] leading-relaxed text-haze">
-                {ar
-                  ? "نحتفظ بطلبك ضمن قاعدة بياناتنا للمواهب، ونتواصل معك عند توفر فرصة تناسب خبراتك."
-                  : "We keep your application in our talent pool and will contact you when an opportunity matches your experience."}
+                {jobs.length > 0
+                  ? ar
+                    ? "اختر وظيفة شاغرة، أو مجالًا عامًا لتنضم إلى قاعدة المواهب. نتواصل معك عند توفر فرصة تناسب خبراتك."
+                    : "Pick an open role, or a general area to join the talent pool. We’ll contact you when an opportunity matches your experience."
+                  : ar
+                    ? "نحتفظ بطلبك ضمن قاعدة بياناتنا للمواهب، ونتواصل معك عند توفر فرصة تناسب خبراتك."
+                    : "We keep your application in our talent pool and will contact you when an opportunity matches your experience."}
               </p>
               <p className="mt-6 text-[0.9rem] text-haze">
                 {ar ? "لديك سؤال؟ " : "Have a question? "}

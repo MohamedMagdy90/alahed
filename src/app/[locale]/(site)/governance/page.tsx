@@ -75,7 +75,6 @@ export default async function GovernancePage({ params }: P) {
       <section className="bg-pearl-50 py-24 md:py-32">
         <div className="container">
           <SectionHeading
-            index="01"
             eyebrow={ar ? "مبادئ الحوكمة" : "Governance principles"}
             title={
               ar ? (
@@ -113,7 +112,6 @@ export default async function GovernancePage({ params }: P) {
               <div className="mb-6 flex items-center gap-4">
                 <span className="num font-mono text-xs text-haze">02</span>
                 <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                  <span aria-hidden className="h-px w-7 bg-current" />
                   {ar ? "إطار الحوكمة" : "Governance framework"}
                 </p>
               </div>
@@ -151,12 +149,10 @@ export default async function GovernancePage({ params }: P) {
 
       {/* HSE */}
       <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
-        <div className="grid-lines pointer-events-none absolute inset-0" />
         <ArcsMark className="pointer-events-none absolute -end-48 -top-48 h-[640px] w-[640px] opacity-[0.08]" />
         <div className="container relative">
           <SectionHeading
             tone="dark"
-            index="03"
             eyebrow={ar ? "الصحة والسلامة والبيئة" : "Health, safety & environment"}
             title={
               ar ? (
@@ -207,7 +203,6 @@ export default async function GovernancePage({ params }: P) {
       <section className="bg-pearl-50 py-24 md:py-32">
         <div className="container">
           <SectionHeading
-            index="04"
             eyebrow={ar ? "الاستدامة" : "Sustainability"}
             title={
               ar ? (
@@ -242,7 +237,6 @@ export default async function GovernancePage({ params }: P) {
             <div className="mb-8 flex items-center gap-4">
               <span className="num font-mono text-xs text-haze">05</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
-                <span aria-hidden className="h-px w-7 bg-current" />
                 {ar ? "وثائق الحوكمة" : "Governance documents"}
               </p>
             </div>

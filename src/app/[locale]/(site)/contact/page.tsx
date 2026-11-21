@@ -126,7 +126,6 @@ export default async function ContactPage({ params }: P) {
           <div className="mb-12 flex items-center gap-4">
             <span className="num font-mono text-xs text-haze">02</span>
             <p className="eyebrow flex items-center gap-3 text-leaf-700">
-              <span aria-hidden className="h-px w-7 bg-current" />
               {ar ? "شركات المجموعة" : "Group companies"}
             </p>
           </div>

@@ -82,10 +82,6 @@
   html[lang="ar"] .text-display-md {
     line-height: 1.35;
   }
-  html[lang="ar"] .eyebrow {
-    letter-spacing: 0;
-    font-size: 0.8rem;
-  }
   html[lang="ar"] .font-serif {
     font-family: var(--font-arabic);
     font-style: normal;
@@ -112,12 +108,12 @@
 }
 
 @layer components {
+  /* Section labels: plain sans, sentence case (matches the home page voice). */
   .eyebrow {
-    @apply font-mono text-eyebrow uppercase;
+    @apply font-sans text-[0.92rem] font-medium leading-snug tracking-normal;
   }
   html[lang="ar"] .eyebrow {
     font-family: var(--font-arabic);
-    text-transform: none;
     font-weight: 500;
   }
 

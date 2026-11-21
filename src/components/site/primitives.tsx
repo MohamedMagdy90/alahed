@@ -30,15 +30,11 @@ type Tone = "light" | "dark";
 
 export function Eyebrow({ children, tone = "light", className }: { children: ReactNode; tone?: Tone; className?: string }) {
   return (
-    <p className={cn("eyebrow flex items-center gap-3", tone === "light" ? "text-leaf-700" : "text-leaf-300", className)}>
-      <span aria-hidden className="h-px w-7 bg-current" />
-      <span>{children}</span>
-    </p>
+    <p className={cn("eyebrow", tone === "light" ? "text-leaf-700" : "text-leaf-300", className)}>{children}</p>
   );
 }
 
 export function SectionHeading({
-  index,
   eyebrow,
   title,
   intro,
@@ -46,6 +42,7 @@ export function SectionHeading({
   className,
   action,
 }: {
+  /** @deprecated Section numbers were removed in the redesign; kept so existing call sites compile. */
   index?: string;
   eyebrow: ReactNode;
   title: ReactNode;
@@ -57,12 +54,9 @@ export function SectionHeading({
   return (
     <div className={cn("grid gap-8 lg:grid-cols-12 lg:items-end", className)}>
       <div className="lg:col-span-7">
-        <div className="mb-6 flex items-center gap-4">
-          {index && (
-            <span className={cn("num font-mono text-xs", tone === "light" ? "text-haze" : "text-haze-300")}>{index}</span>
-          )}
-          <Eyebrow tone={tone}>{eyebrow}</Eyebrow>
-        </div>
+        <Eyebrow tone={tone} className="mb-4">
+          {eyebrow}
+        </Eyebrow>
         <h2
           className={cn(
             "text-balance font-display text-display-lg font-normal",
@@ -86,9 +80,12 @@ export function SectionHeading({
   );
 }
 
-/** Accent word inside display headings (serif italic in EN, bold Arabic in AR). */
-export function Em({ children, className }: { children: ReactNode; className?: string }) {
-  return <em className={cn("font-serif not-italic [font-style:italic] font-normal", className)}>{children}</em>;
+/**
+ * Formerly an italic-serif accent word. The redesign keeps headings in one voice, so this is now a plain
+ * span (colour overrides are ignored on purpose); new code should not use it.
+ */
+export function Em({ children }: { children: ReactNode; className?: string }) {
+  return <span>{children}</span>;
 }
 
 type BtnVariant = "primary" | "dark" | "outline-light" | "outline-dark" | "white";
@@ -198,12 +195,12 @@ export function TextLink({
   );
 }
 
-/** Small mono tag / chip */
+/** Small tag / chip */
 export function Tag({ children, className, tone = "light" }: { children: ReactNode; className?: string; tone?: Tone }) {
   return (
     <span
       className={cn(
-        "inline-flex h-7 items-center rounded-[2px] border px-2.5 font-mono text-[0.68rem] uppercase tracking-[0.12em] rtl:font-arabic rtl:text-[0.75rem] rtl:tracking-normal",
+        "inline-flex h-7 items-center rounded-[2px] border px-2.5 text-[0.8rem] rtl:font-arabic",
         tone === "light" ? "border-ink/10 bg-white text-ink/70" : "border-white/15 bg-white/5 text-white/80",
         className,
       )}

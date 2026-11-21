@@ -118,7 +118,6 @@ export default async function InvestorsPage({ params }: P) {
       <section className="bg-pearl-50 py-24 md:py-32">
         <div className="container">
           <SectionHeading
-            index="01"
             eyebrow={ar ? "لماذا العهد" : "Why Al-Ahed"}
             title={
               ar ? (
@@ -146,11 +145,9 @@ export default async function InvestorsPage({ params }: P) {
 
       {/* Listing journey */}
       <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
-        <div className="grid-lines pointer-events-none absolute inset-0" />
         <div className="container relative">
           <SectionHeading
             tone="dark"
-            index="02"
             eyebrow={ar ? "مسار الإدراج" : "The listing journey"}
             title={
               ar ? (
@@ -187,7 +184,6 @@ export default async function InvestorsPage({ params }: P) {
       <section id="reports" className="scroll-mt-28 bg-pearl-50 py-24 md:py-32">
         <div className="container">
           <SectionHeading
-            index="03"
             eyebrow={ar ? "التقارير والإفصاحات" : "Reports & disclosures"}
             title={
               ar ? (

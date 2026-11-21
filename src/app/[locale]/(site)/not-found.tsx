@@ -10,11 +10,9 @@ export default function NotFound() {
   const l = ar ? "ar" : "en";
   return (
     <section className="grain relative isolate flex min-h-[100svh] items-center overflow-hidden bg-ink-900 text-white">
-      <div className="grid-lines absolute inset-0 -z-10" />
       <ArcsMark className="pointer-events-none absolute -end-40 top-1/2 -z-10 h-[820px] w-[820px] -translate-y-1/2 opacity-[0.14]" />
       <div className="container pb-20 pt-40">
         <p className="eyebrow mb-8 flex items-center gap-3 text-leaf-300">
-          <span aria-hidden className="h-px w-7 bg-current" />
           {ar ? "خطأ 404" : "Error 404"}
         </p>
         <h1 className="max-w-3xl text-balance font-display text-display-xl font-normal">
