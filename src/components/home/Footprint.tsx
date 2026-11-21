@@ -271,7 +271,7 @@ export function Footprint({ locale }: { locale: Locale }) {
 
                     <div className="mt-auto flex flex-wrap items-center gap-x-7 gap-y-4 pt-7">
                       {present.map((c) => (
-                        <CompanyLogo key={c} id={c} locale={locale} tone="white" size={22} className="opacity-80" />
+                        <CompanyLogo key={c} id={c} locale={locale} tone="white" size={30} className="opacity-90" />
                       ))}
                     </div>
                   </motion.div>
@@ -437,7 +437,7 @@ function MapPanel({
                         d={d}
                         fill="none"
                         stroke={on ? LEAF : "white"}
-                        strokeOpacity={on ? 0.75 : 0.18}
+                        strokeOpacity={on ? 0.8 : 0.3}
                         strokeWidth={on ? 1.3 : 0.8}
                         strokeDasharray={on ? undefined : "1.5 3"}
                         className="transition-[stroke,stroke-opacity] duration-500"

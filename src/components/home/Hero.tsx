@@ -102,13 +102,13 @@ export function Hero({ locale, latest }: { locale: Locale; latest: HeroLatest })
             </filter>
           </defs>
           {/* The Group: the embracing outer band, always present */}
-          <path d={BANDS[0].d} fill="white" fillOpacity={0.2} />
+          <path d={BANDS[0].d} fill="white" fillOpacity={0.3} />
           {companies.map((c, i) => {
             const b = BANDS[BAND_FOR[i]];
             const on = i === active;
             return (
               <g key={c.id}>
-                <path d={b.d} fill="white" fillOpacity={on ? 0.2 : 0.12} className="transition-[fill-opacity] duration-500" />
+                <path d={b.d} fill="white" fillOpacity={on ? 0.28 : 0.2} className="transition-[fill-opacity] duration-500" />
                 {on && (
                   <g filter="url(#hero-band-glow)">
                     <mask id={`hero-fill-${c.id}`} maskUnits="userSpaceOnUse" x="-10" y="-10" width="148" height="148">

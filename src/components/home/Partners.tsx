@@ -109,7 +109,7 @@ export function Partners({ locale }: { locale: Locale }) {
   );
 
   const colTitle = (t: string, sub: string, align: "end" | "start") => (
-    <div className={cn("pb-6", align === "end" ? "text-end" : "text-start")}>
+    <div className={cn("pb-6", align === "end" ? "text-end lg:pe-7" : "text-start lg:ps-7")}>
       <p className="font-display text-[1.15rem] text-ink">{t}</p>
       <p className="mt-1 text-[0.85rem] text-haze">{sub}</p>
     </div>
