@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   return {
     title: ar ? "شركات المجموعة" : "Group companies",
     description: ar
-      ? "العهد للتجارة والمقاولات ودوبت وبمكو للفحص: ثلاث شركات متخصصة تغطي دورة حياة الأصول في قطاع الطاقة القطري."
-      : "Al-Ahed Trading & Contracting, DOPET and PEMCO Inspection: three specialist companies covering the asset life cycle in Qatar's energy sector.",
+      ? "العهد للتجارة والمقاولات ودوبت ودوبت للمبيعات والتكنولوجيا وبمكو للفحص: أربع شركات متخصصة تغطي دورة حياة الأصول في قطاع الطاقة القطري."
+      : "Al-Ahed Trading & Contracting, DOPET, DOPET Sales & Technologies and PEMCO Inspection: four specialist companies covering the asset life cycle in Qatar's energy sector.",
     alternates: { languages: { en: "/en/companies", ar: "/ar/companies" } },
   };
 }
@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
 const CHAIN = [
   { id: "aatc", en: "Supply & service", ar: "التوريد والخدمة", den: "Critical process equipment from global principals, with certified local service and repair.", dar: "معدات العمليات الحيوية من الشركاء العالميين، مع خدمات صيانة وإصلاح محلية معتمدة." },
   { id: "dopet", en: "Build & maintain", ar: "الإنشاء والصيانة", den: "EPIC projects, construction, shutdowns and turnarounds, fabrication and skilled manpower.", dar: "مشاريع الهندسة والتوريد والإنشاء، وأعمال الإنشاء والإيقاف والصيانة الشاملة، والتصنيع والقوى العاملة الماهرة." },
+  { id: "dst", en: "Engineer & equip", ar: "الهندسة والتجهيز", den: "Valves, metering, wellhead, power and specialised equipment from the world's leading oilfield suppliers.", dar: "صمامات ووحدات قياس ومعدات رؤوس آبار وطاقة ومعدات متخصصة من كبرى الشركات العالمية لمعدات حقول النفط." },
   { id: "pemco", en: "Inspect & assure", ar: "الفحص والضمان", den: "Independent inspection, NDT and quality assurance that protect asset integrity.", dar: "فحص مستقل واختبارات غير إتلافية وضمان جودة يحمي سلامة الأصول." },
 ] as const;
 
@@ -44,21 +45,21 @@ export default async function CompaniesPage({ params }: P) {
         title={
           ar ? (
             <>
-              ثلاث شركات متخصصة. <Em className="text-leaf-300">مجموعة واحدة.</Em>
+              أربع شركات متخصصة. <Em className="text-leaf-300">مجموعة واحدة.</Em>
             </>
           ) : (
             <>
-              Three specialist companies. <Em className="text-leaf-300">One group.</Em>
+              Four specialist companies. <Em className="text-leaf-300">One group.</Em>
             </>
           )
         }
         intro={
           ar
-            ? "تجمع العهد القابضة ثلاث شركات تشغيلية تكمل بعضها بعضًا، وتخدم معًا المشغّلين والمقاولين في قطاعات النفط والغاز والبتروكيماويات في قطر."
-            : "Al-Ahed Holding brings together three complementary operating companies that together serve operators and contractors across Qatar's oil, gas and petrochemical industries."
+            ? "تجمع العهد القابضة أربع شركات تشغيلية مملوكة لها بالكامل تكمل بعضها بعضًا، وتخدم معًا المشغّلين والمقاولين في قطاعات النفط والغاز والبتروكيماويات في قطر."
+            : "Al-Ahed Holding brings together four complementary, wholly owned operating companies that together serve operators and contractors across Qatar's oil, gas and petrochemical industries."
         }
         aside={
-          <div className="grid grid-cols-3 gap-px overflow-hidden rounded-[2px] border border-white/15 bg-white/10">
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-[2px] border border-white/15 bg-white/10">
             {companies.map((c) => (
               <div key={c.id} className="bg-ink-900/60 p-5 backdrop-blur">
                 <p className="num font-display text-3xl">{c.founded}</p>
@@ -94,6 +95,7 @@ export default async function CompaniesPage({ params }: P) {
                     <span className="num">{ar ? `تأسست عام ${c.founded}` : `Founded ${c.founded}`}</span>
                   </p>
                   <p className="mt-2 text-[0.92rem] text-haze">{c.legal[locale]}</p>
+                  {c.parent && <p className="mt-2 text-[0.92rem] text-haze">{ar ? "تعمل ضمن دوبت" : "Works within DOPET"}</p>}
                   <p className="mt-6 text-pretty text-[1.05rem] leading-relaxed text-ink/75">{c.summary[locale]}</p>
                   <ul className="mt-8 grid gap-x-8 gap-y-3 border-t border-ink/10 pt-8 sm:grid-cols-2">
                     {c.services[locale].slice(0, 6).map((s) => (
@@ -143,7 +145,7 @@ export default async function CompaniesPage({ params }: P) {
                 : "Clients can engage a single company or the whole Group — from equipment supply, to execution, to independent assurance."
             }
           />
-          <ol className="relative mt-16 grid gap-px overflow-hidden rounded-[2px] border border-white/10 bg-white/10 lg:grid-cols-3">
+          <ol className="relative mt-16 grid gap-px overflow-hidden rounded-[2px] border border-white/10 bg-white/10 md:grid-cols-2 lg:grid-cols-4">
             {CHAIN.map((s, i) => {
               const c = companies.find((x) => x.id === s.id)!;
               return (
@@ -152,7 +154,7 @@ export default async function CompaniesPage({ params }: P) {
                   <div className="flex items-center justify-between">
                     {i < CHAIN.length - 1 && <Arrow className="hidden text-white/30 lg:block" />}
                   </div>
-                  <p className="mt-10 font-display text-[1.9rem] leading-tight">{ar ? s.ar : s.en}</p>
+                  <p className="mt-10 font-display text-[1.7rem] leading-tight">{ar ? s.ar : s.en}</p>
                   <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{ar ? s.dar : s.den}</p>
                   <Link href={href(locale, `/companies/${c.slug}`)} className="mt-10 inline-flex items-center gap-2 text-[0.9rem] text-white">
                     <span className="h-1.5 w-1.5 rounded-full" style={{ background: c.accent }} />
