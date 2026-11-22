@@ -259,6 +259,34 @@
     stroke-dashoffset: 0;
   }
 }
+/* Hero photo drift: runs while a slide is painted and pauses with the slideshow (compositor-only). */
+@keyframes herozoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+/* Hero first paint: a quiet rise for the text, a fade for the mark. */
+@keyframes herorise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes herofade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 /* Live flows: a short pulse travelling along a path (pathLength = 1, dasharray "0.07 1.43"). */
 @keyframes flow {

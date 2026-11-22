@@ -9,18 +9,30 @@ import type { L10n } from "@/i18n/config";
 /** Hero headline: three verbs (supply → AATC, build → DOPET, inspect → PEMCO). */
 export type HeroSegment = string | { verb: number; text: string };
 
-export const heroOrder: CompanyId[] = ["aatc", "dopet", "pemco"];
+/** Hero order = logo bands from the inside out (AATC innermost, PEMCO outermost). */
+export const heroOrder: CompanyId[] = ["aatc", "dopet", "dst", "pemco"];
 
 export const heroHeadline: L10n<HeroSegment[]> = {
   en: [
     { verb: 0, text: "Supplying" },
     ", ",
     { verb: 1, text: "building" },
+    ", ",
+    { verb: 2, text: "equipping" },
     " and ",
-    { verb: 2, text: "inspecting" },
+    { verb: 3, text: "inspecting" },
     " Qatar’s energy infrastructure since 1975.",
   ],
-  ar: [{ verb: 0, text: "نورّد" }, " ", { verb: 1, text: "ونبني" }, " ", { verb: 2, text: "ونفحص" }, " منشآت الطاقة في قطر منذ عام 1975."],
+  ar: [
+    { verb: 0, text: "نورّد" },
+    " ",
+    { verb: 1, text: "ونبني" },
+    " ",
+    { verb: 2, text: "ونجهّز" },
+    " ",
+    { verb: 3, text: "ونفحص" },
+    " منشآت الطاقة في قطر منذ عام 1975.",
+  ],
 };
 
 /** One plain sentence per company for the hero caption. */
@@ -34,8 +46,8 @@ export const heroCaption: Record<CompanyId, L10n> = {
     ar: "مشاريع الهندسة والتوريد والإنشاء، وعمليات الإيقاف والصيانة لمشغّلي الطاقة في قطر، في البر والبحر، منذ عام 1981.",
   },
   dst: {
-    en: "Engineered equipment from Emerson, Cameron, Aggreko and other leading oilfield suppliers, since 2000.",
-    ar: "معدات هندسية من إيمرسون وكاميرون وأغريكو وغيرها من كبرى شركات حقول النفط، منذ عام 2000.",
+    en: "Engineered equipment from Emerson, Cameron, Aggreko and other leading oilfield suppliers. A DOPET division from 2000, a company since 2019.",
+    ar: "معدات هندسية من إيمرسون وكاميرون وأغريكو وغيرها من كبرى شركات حقول النفط. بدأت قسمًا في دوبت عام 2000، وأصبحت شركة مستقلة عام 2019.",
   },
   pemco: {
     en: "Conventional and advanced non-destructive testing and inspection, 100% Qatari, since 1987.",
