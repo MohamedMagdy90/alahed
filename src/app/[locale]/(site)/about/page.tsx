@@ -7,6 +7,7 @@ import { ArcsMark } from "@/components/site/OrbitArcs";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, Em, SectionHeading } from "@/components/site/primitives";
+import { footprint, holdingAbout, oemCentres, oemNote, properties, shareholders, workshops, workshopsNote } from "@/content/group";
 import { companies, milestones, mission, values, vision, yearsSince } from "@/content/site";
 import { type Locale, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
@@ -19,8 +20,8 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   return {
     title: ar ? "قصتنا" : "Our story",
     description: ar
-      ? "مسيرة العهد القابضة منذ عام 1975: الرؤية والرسالة والقيم، وهيكل المجموعة وشركاتها الثلاث."
-      : "The story of Al-Ahed Holding since 1975: our vision, mission and values, and the structure of the Group and its three companies.",
+      ? "مسيرة العهد القابضة منذ عام 1975: الرؤية والرسالة والقيم، وهيكل المجموعة وشركاتها الأربع."
+      : "The story of Al-Ahed Holding since 1975: our vision, mission and values, and the structure of the Group and its four companies.",
     alternates: { languages: { en: "/en/about", ar: "/ar/about" } },
   };
 }
@@ -57,8 +58,8 @@ export default async function AboutPage({ params }: P) {
         }
         intro={
           ar
-            ? `منذ ${years} عامًا، تعمل العهد جنبًا إلى جنب مع المشغّلين والمقاولين في قطر، وتنمو معهم من شركة توريد واحدة إلى مجموعة متكاملة من ثلاث شركات.`
-            : `For ${years} years, Al-Ahed has worked alongside Qatar's operators and contractors — growing with them from a single supply business into an integrated group of three companies.`
+            ? `منذ ${years} عامًا، تعمل العهد جنبًا إلى جنب مع المشغّلين والمقاولين في قطر، وتنمو معهم من شركة توريد واحدة إلى مجموعة متكاملة من أربع شركات.`
+            : `For ${years} years, Al-Ahed has worked alongside Qatar's operators and contractors — growing with them from a single supply business into an integrated group of four companies.`
         }
       />
 
@@ -75,8 +76,8 @@ export default async function AboutPage({ params }: P) {
           <div className="lg:col-span-9">
             <p className="text-pretty font-display text-[clamp(1.6rem,3vw,2.6rem)] leading-[1.22] tracking-[-0.02em] text-ink">
               {ar
-                ? "بدأت قصتنا عام 1975 مع انطلاق صناعة النفط والغاز في قطر. واليوم، تجمع العهد القابضة ثلاث شركات متخصصة تحت مظلة استراتيجية واحدة، يوحّدها التزام راسخ بالجودة والسلامة والنزاهة."
-                : "Our story began in 1975, as Qatar's oil and gas industry was taking shape. Today Al-Ahed Holding brings three specialist companies under one strategic umbrella — united by an enduring commitment to quality, safety and integrity."}
+                ? "بدأت قصتنا عام 1975 مع انطلاق صناعة النفط والغاز في قطر. واليوم، تجمع العهد القابضة أربع شركات متخصصة تحت مظلة استراتيجية واحدة، يوحّدها التزام راسخ بالجودة والسلامة والنزاهة."
+                : "Our story began in 1975, as Qatar's oil and gas industry was taking shape. Today Al-Ahed Holding brings four specialist companies under one strategic umbrella — united by an enduring commitment to quality, safety and integrity."}
             </p>
             <div className="mt-16 grid gap-10 border-t border-ink/10 pt-12 md:grid-cols-2">
               <Reveal>
@@ -85,8 +86,8 @@ export default async function AboutPage({ params }: P) {
               <Reveal delay={0.08}>
                 <p className="text-pretty text-[1.02rem] leading-relaxed text-haze">
                   {ar
-                    ? "وفي عام 1981 تأسست دوبت لتضيف قدرات الهندسة والتوريد والإنشاء والصيانة، فيما تقدّم بمكو للفحص خدمات الفحص المستقل وضمان الجودة. وفي عام 2018 تأسست العهد القابضة شركةً أمًّا للمجموعة، استعدادًا لمرحلة جديدة من النمو والحوكمة."
-                    : "In 1981 DOPET was founded, adding engineering, procurement, construction and maintenance capability, while PEMCO Inspection provides independent inspection and quality assurance. In 2018, Al-Ahed Holding was established as the Group's parent company, preparing for a new phase of growth and governance."}
+                    ? "وفي عام 1981 تأسست دوبت لتضيف قدرات الهندسة والتوريد والإنشاء والصيانة، ثم تأسست بمكو للفحص عام 1987 لتقدّم الاختبارات غير الإتلافية والفحص المستقل. وفي عام 2000 أنشأت دوبت قسم المبيعات والتكنولوجيا الذي أصبح عام 2019 شركة دوبت للمبيعات والتكنولوجيا. وفي عام 2018 تأسست العهد القابضة شركةً أمًّا للمجموعة، استعدادًا لمرحلة جديدة من النمو والحوكمة."
+                    : "DOPET followed in 1981, adding engineering, procurement, construction and maintenance capability, and PEMCO Inspection in 1987, bringing non-destructive testing and independent inspection. DOPET's Sales & Technology Division, formed in 2000, became DOPET Sales & Technologies in 2019. In 2018, Al-Ahed Holding was established as the Group's parent company, preparing for a new phase of growth and governance."}
                 </p>
               </Reveal>
             </div>
@@ -188,56 +189,141 @@ export default async function AboutPage({ params }: P) {
         </div>
       </section>
 
-      {/* Group structure */}
+{/* Group structure: shareholders → holding → four wholly owned companies */}
       <section className="bg-white py-24 md:py-32">
         <div className="container">
           <SectionHeading
             eyebrow={ar ? "هيكل المجموعة" : "Group structure"}
-            title={
-              ar ? (
-                <>
-                  شركة أم واحدة، <Em className="text-brand">وثلاث شركات تشغيلية.</Em>
-                </>
-              ) : (
-                <>
-                  One parent company, <Em className="text-brand">three operating companies.</Em>
-                </>
-              )
-            }
+            title={ar ? "شركة أم واحدة، وأربع شركات مملوكة لها بالكامل." : "One parent company, four wholly owned operating companies."}
+            intro={holdingAbout[locale][1]}
           />
           <Reveal className="mt-16">
-            <div className="mx-auto flex max-w-sm flex-col items-center rounded-[2px] bg-ink-900 px-8 py-7 text-center text-white">
-              <Image src="/brand/alahed-holding.png" alt="" width={366} height={100} className="h-auto w-44 [filter:brightness(0)_invert(1)]" />
-              <p className="mt-4 text-[0.85rem] text-white/50">
-                {ar ? "الشركة الأم · 2018" : "Parent company · 2018"}
-              </p>
-            </div>
-            <div aria-hidden className="mx-auto h-10 w-px bg-ink/20" />
-            <div aria-hidden className="mx-auto hidden h-px w-2/3 bg-ink/20 md:block" />
-            <div className="grid gap-4 md:grid-cols-3">
-              {companies.map((c) => (
-                <div key={c.id} className="flex flex-col items-center">
-                  <span aria-hidden className="hidden h-10 w-px bg-ink/20 md:block" />
-                  <Link
-                    href={href(locale, `/companies/${c.slug}`)}
-                    className="group flex w-full flex-col items-center rounded-[2px] border border-ink/10 bg-pearl-50 p-7 text-center transition-colors hover:border-ink/30 hover:bg-white"
-                  >
-                    <span className="grid h-16 w-full place-items-center">
-                      <CompanyLogo id={c.id} locale={locale} size={40} decorative />
-                    </span>
-                    <span className="mt-5 font-display text-[1.2rem] text-ink">{c.name[locale]}</span>
-                    <span className="num mt-1 text-[0.85rem] text-haze">{ar ? `تأسست عام ${c.founded}` : `Established ${c.founded}`}</span>
-                    <span className="mt-5 inline-flex items-center gap-2 text-[0.85rem] text-ink/70 group-hover:text-ink">
-                      {ar ? "استكشف" : "Explore"} <Arrow className="text-leaf-700" />
-                    </span>
-                  </Link>
+            <p className="text-center text-[0.85rem] text-haze">{ar ? "المساهمون" : "Shareholders"}</p>
+            <div className="mx-auto mt-4 grid max-w-3xl gap-4 sm:grid-cols-2">
+              {shareholders.map((s) => (
+                <div key={s.name.en} className="flex items-center justify-between gap-5 rounded-[2px] border border-ink/10 bg-pearl-50 px-6 py-5">
+                  <div>
+                    <p className="font-display text-[1.1rem] leading-snug text-ink">{s.name[locale]}</p>
+                    <p className="mt-1 text-[0.85rem] text-haze">{s.rep[locale]}</p>
+                  </div>
+                  <p className="num shrink-0 font-display text-[2rem] leading-none text-ink">{s.stake}%</p>
                 </div>
               ))}
+            </div>
+            <div aria-hidden className="mx-auto hidden h-px w-[calc(50%-1rem)] max-w-[23rem] bg-ink/20 sm:block" />
+            <div aria-hidden className="mx-auto h-10 w-px bg-ink/20" />
+            <div className="mx-auto flex max-w-sm flex-col items-center rounded-[2px] bg-ink-900 px-8 py-7 text-center text-white">
+              <Image src="/brand/alahed-holding.png" alt="" width={366} height={100} className="h-auto w-44 [filter:brightness(0)_invert(1)]" />
+              <p className="mt-4 text-[0.85rem] text-white/55">{ar ? "شركة العهد القابضة ذ.م.م · تأسست عام 2018" : "Al-Ahed Holding W.L.L. · established 2018"}</p>
+            </div>
+            <div aria-hidden className="mx-auto h-10 w-px bg-ink/20" />
+            <div aria-hidden className="mx-auto hidden h-px w-3/4 bg-ink/20 lg:block" />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {companies.map((c) => {
+                const parent = c.parent ? companies.find((x) => x.id === c.parent) : undefined;
+                return (
+                  <div key={c.id} className="flex flex-col items-center">
+                    <span aria-hidden className="hidden h-10 w-px bg-ink/20 lg:block" />
+                    <Link
+                      href={href(locale, `/companies/${c.slug}`)}
+                      className="group flex h-full w-full flex-col items-center rounded-[2px] border border-ink/10 bg-pearl-50 p-7 text-center transition-colors hover:border-ink/30 hover:bg-white"
+                    >
+                      <span className="grid h-16 w-full place-items-center">
+                        <CompanyLogo id={c.id} locale={locale} size={40} decorative />
+                      </span>
+                      <span className="mt-5 font-display text-[1.15rem] leading-snug text-ink">{c.name[locale]}</span>
+                      <span className="num mt-1 text-[0.85rem] text-haze">{ar ? `منذ ${c.founded} · مملوكة بنسبة 100%` : `Since ${c.founded} · 100% owned`}</span>
+                      {parent && <span className="mt-1 text-[0.85rem] text-haze">{ar ? `تعمل ضمن ${parent.short[locale]}` : `Works within ${parent.short[locale]}`}</span>}
+                      <span className="mt-auto inline-flex items-center gap-2 pt-5 text-[0.85rem] text-ink/70 group-hover:text-ink">
+                        {ar ? "استكشف" : "Explore"} <Arrow className="text-leaf-700" />
+                      </span>
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
           </Reveal>
         </div>
       </section>
 
+      {/* Property portfolio, operating footprint, workshops and OEM service centres */}
+      <section className="relative overflow-hidden bg-ink-900 py-24 text-white md:py-32">
+        <div className="container relative">
+          <SectionHeading
+            tone="dark"
+            eyebrow={ar ? "الأصول والمرافق" : "Property & facilities"}
+            title={ar ? "قاعدة تشغيلية تمتد في أنحاء قطر." : "An operating base that spans Qatar."}
+            intro={footprint.intro[locale]}
+          />
+
+          <div className="mt-16 grid gap-px overflow-hidden rounded-[2px] border border-white/10 bg-white/10 lg:grid-cols-12">
+            <div className="bg-ink-900 p-8 md:p-10 lg:col-span-5">
+              <p className="num font-display text-[clamp(2.8rem,5vw,4.2rem)] leading-none tracking-[-0.03em]">
+                {footprint.area.toLocaleString("en-US")} <span className="text-[0.45em] text-white/55">m²</span>
+              </p>
+              <p className="mt-4 max-w-xs text-[0.95rem] text-white/60">{footprint.label[locale]}</p>
+              <p className="num mt-10 font-display text-[2.6rem] leading-none">{footprint.locations}</p>
+              <p className="mt-3 text-[0.95rem] text-white/60">{ar ? "مواقع صناعية" : "Industrial locations"}</p>
+            </div>
+            <ul className="grid bg-ink-900 sm:grid-cols-2 lg:col-span-7">
+              {footprint.places.map((pl, i) => (
+                <li key={pl.en} className="flex items-center gap-4 border-b border-white/10 px-8 py-5 sm:odd:border-e">
+                  <span className="num text-[0.8rem] text-white/35">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display text-[1.1rem]">{pl[locale]}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-16 grid gap-12 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <p className="text-[0.9rem] font-medium text-leaf-300">{ar ? "المحفظة العقارية" : "Corporate & commercial property"}</p>
+              <ul className="mt-6 border-t border-white/10">
+                {properties.map((pr) => (
+                  <li key={pr.name.en} className="border-b border-white/10 py-5">
+                    <p className="font-display text-[1.25rem]">{pr.name[locale]}</p>
+                    <p className="mt-1 text-[0.92rem] text-white/60">{pr.address[locale]}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="lg:col-span-7">
+              <p className="text-[0.9rem] font-medium text-leaf-300">{ar ? "قدرات الورش المتكاملة" : "Integrated workshop capabilities"}</p>
+              <ul className="mt-6 grid gap-px overflow-hidden rounded-[2px] border border-white/10 bg-white/10 sm:grid-cols-2">
+                {workshops.map((w) => (
+                  <li key={w.title.en} className="bg-ink-900 p-6">
+                    <p className="num font-display text-[1.9rem] leading-none" dir="ltr" style={{ textAlign: ar ? "right" : "left" }}>
+                      {w.value}
+                    </p>
+                    <p className="mt-3 font-display text-[1.1rem]">{w.title[locale]}</p>
+                    <p className="mt-1 text-[0.9rem] leading-snug text-white/55">{w.body[locale]}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-[0.9rem] text-white/50">{workshopsNote[locale]}</p>
+            </div>
+          </div>
+
+          <div className="mt-16">
+            <p className="text-[0.9rem] font-medium text-leaf-300">{ar ? "مراكز خدمة مرتبطة بالمصنّعين" : "OEM-linked service centres"}</p>
+            <ul className="mt-6 grid gap-px overflow-hidden rounded-[2px] border border-white/10 bg-white/10 md:grid-cols-3">
+              {oemCentres.map((o) => {
+                const co = companies.find((x) => x.id === o.company);
+                return (
+                  <li key={o.name} className="relative bg-ink-900 p-7">
+                    <span aria-hidden className="absolute inset-x-0 top-0 h-[2px]" style={{ background: co?.accent }} />
+                    <p className="font-display text-[1.4rem]">{ar ? `مركز خدمة ${o.name}` : `${o.name} Service Centre`}</p>
+                    <p className="mt-2 text-[0.92rem] text-white/65">{o.place[locale]}</p>
+                    <p className="num mt-1 text-[0.92rem] text-white/45">{o.area[locale]}</p>
+                    {co && <p className="mt-5 text-[0.85rem] text-white/50">{co.short[locale]}</p>}
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-4 text-[0.9rem] text-white/50">{oemNote[locale]}</p>
+          </div>
+        </div>
+      </section>
       {/* CTA */}
       <section className="bg-white pb-24 md:pb-32">
         <div className="container">
