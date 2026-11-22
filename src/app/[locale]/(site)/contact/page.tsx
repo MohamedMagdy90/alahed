@@ -124,7 +124,6 @@ export default async function ContactPage({ params }: P) {
       <section className="bg-white py-24 md:py-28">
         <div className="container">
           <div className="mb-12 flex items-center gap-4">
-            <span className="num font-mono text-xs text-haze">02</span>
             <p className="eyebrow flex items-center gap-3 text-leaf-700">
               {ar ? "شركات المجموعة" : "Group companies"}
             </p>

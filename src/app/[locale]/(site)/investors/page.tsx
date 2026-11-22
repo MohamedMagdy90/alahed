@@ -134,7 +134,6 @@ export default async function InvestorsPage({ params }: P) {
           <ul className="mt-14 grid gap-px overflow-hidden rounded-[2px] border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
             {highlights.map((h, i) => (
               <Reveal as="li" key={h.en} delay={(i % 3) * 0.05} className="bg-white p-7 md:p-9">
-                <span className="num font-mono text-xs text-leaf-700">{String(i + 1).padStart(2, "0")}</span>
                 <p className="mt-8 font-display text-[1.45rem] leading-tight text-ink">{ar ? h.ar : h.en}</p>
                 <p className="mt-3 text-[0.96rem] leading-relaxed text-haze">{ar ? h.dar : h.den}</p>
               </Reveal>
@@ -166,7 +165,7 @@ export default async function InvestorsPage({ params }: P) {
             {steps.map((s, i) => (
               <Reveal as="li" key={s.en} delay={i * 0.08} className="relative">
                 <span className="relative block h-[15px] w-[15px] rounded-full border border-white/40 bg-ink" />
-                <p className="num mt-8 font-mono text-xs text-white/40">{String(i + 1).padStart(2, "0")}</p>
+                <p className="num mt-8 text-[0.85rem] text-white/45">{ar ? `المرحلة ${i + 1}` : `Stage ${i + 1}`}</p>
                 <p className="mt-3 font-display text-[1.45rem]">{ar ? s.ar : s.en}</p>
                 <p className="mt-2 text-[0.94rem] leading-relaxed text-white/60">{ar ? s.dar : s.den}</p>
               </Reveal>

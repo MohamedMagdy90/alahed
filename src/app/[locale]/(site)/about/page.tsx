@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Reveal, WordReveal } from "@/components/motion";
+import { Reveal } from "@/components/motion";
 import { Timeline } from "@/components/pages/about/Timeline";
 import { ArcsMark } from "@/components/site/OrbitArcs";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
@@ -67,21 +67,17 @@ export default async function AboutPage({ params }: P) {
         <div className="container grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-3">
             <div className="flex items-center gap-4 lg:sticky lg:top-32">
-              <span className="num font-mono text-xs text-haze">01</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
                 {ar ? "قصتنا" : "Our story"}
               </p>
             </div>
           </div>
           <div className="lg:col-span-9">
-            <WordReveal
-              className="font-display text-[clamp(1.6rem,3vw,2.6rem)] leading-[1.22] tracking-[-0.02em] text-ink"
-              text={
-                ar
-                  ? "بدأت قصتنا عام 1975 مع انطلاق صناعة النفط والغاز في قطر. واليوم، تجمع العهد القابضة ثلاث شركات متخصصة تحت مظلة استراتيجية واحدة، يوحّدها التزام راسخ بالجودة والسلامة والنزاهة."
-                  : "Our story began in 1975, as Qatar's oil and gas industry was taking shape. Today Al-Ahed Holding brings three specialist companies under one strategic umbrella — united by an enduring commitment to quality, safety and integrity."
-              }
-            />
+            <p className="text-pretty font-display text-[clamp(1.6rem,3vw,2.6rem)] leading-[1.22] tracking-[-0.02em] text-ink">
+              {ar
+                ? "بدأت قصتنا عام 1975 مع انطلاق صناعة النفط والغاز في قطر. واليوم، تجمع العهد القابضة ثلاث شركات متخصصة تحت مظلة استراتيجية واحدة، يوحّدها التزام راسخ بالجودة والسلامة والنزاهة."
+                : "Our story began in 1975, as Qatar's oil and gas industry was taking shape. Today Al-Ahed Holding brings three specialist companies under one strategic umbrella — united by an enduring commitment to quality, safety and integrity."}
+            </p>
             <div className="mt-16 grid gap-10 border-t border-ink/10 pt-12 md:grid-cols-2">
               <Reveal>
                 <p className="text-pretty text-[1.02rem] leading-relaxed text-haze">{companies[0].about[locale][0]}</p>
@@ -127,7 +123,6 @@ export default async function AboutPage({ params }: P) {
         <div className="container grid gap-16 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <div className="mb-8 flex items-center gap-4">
-              <span className="num font-mono text-xs text-haze">03</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
                 {ar ? "رؤيتنا" : "Our vision"}
               </p>
@@ -178,7 +173,6 @@ export default async function AboutPage({ params }: P) {
           <ul className="mt-14 grid gap-px overflow-hidden rounded-[2px] border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4">
             {values.map((v, i) => (
               <Reveal as="li" key={v.title.en} delay={(i % 4) * 0.05} className="group relative bg-white p-7 transition-colors duration-500 hover:bg-ink hover:text-white md:p-8">
-                <span className="num font-mono text-xs text-haze-300 group-hover:text-white/40">{String(i + 1).padStart(2, "0")}</span>
                 <p className="mt-10 font-display text-[1.4rem] leading-tight">{v.title[locale]}</p>
                 <p className="mt-4 text-[0.92rem] leading-relaxed text-haze group-hover:text-white/65">{v.body[locale]}</p>
               </Reveal>

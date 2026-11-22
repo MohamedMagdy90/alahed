@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Parallax, Reveal } from "@/components/motion";
+import { Reveal } from "@/components/motion";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, Em, SectionHeading, TextLink } from "@/components/site/primitives";
@@ -75,26 +75,24 @@ export default async function CompaniesPage({ params }: P) {
           {companies.map((c, i) => {
             const flip = i % 2 === 1;
             return (
-              <article key={c.id} className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+              <article key={c.id} data-vt-card className="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
                 <Reveal className={flip ? "lg:order-2 lg:col-span-6" : "lg:col-span-6"}>
-                  <Link href={href(locale, `/companies/${c.slug}`)} className="group block">
-                    <Parallax className="aspect-[4/3] rounded-[2px] bg-ink" amount={40}>
-                      <Image src={c.image} alt="" fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition-transform duration-1400 ease-out-expo group-hover:scale-105" />
-                    </Parallax>
+                  <Link href={href(locale, `/companies/${c.slug}`)} className="group block" aria-label={c.name[locale]}>
+                    <div data-vt="media" className="relative aspect-[4/3] overflow-hidden rounded-[2px] bg-ink">
+                      <Image src={c.image} alt="" fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.03]" />
+                    </div>
                   </Link>
                 </Reveal>
                 <Reveal delay={0.1} className={flip ? "lg:order-1 lg:col-span-6" : "lg:col-span-6"}>
-                  <div className="flex items-center gap-4">
-                    <span className="num font-mono text-xs text-haze">{c.index}</span>
-                    <span className="h-px w-10" style={{ background: c.accent }} />
-                    <span className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-haze rtl:font-arabic rtl:text-[0.8rem] rtl:normal-case rtl:tracking-normal">
-                      {ar ? `تأسست ${c.founded}` : `Est. ${c.founded}`}
-                    </span>
-                  </div>
-                  <div className="mt-8 flex h-14 items-center">
+                  <div className="flex h-14 items-center">
                     <CompanyLogo id={c.id} locale={locale} size={44} />
                   </div>
-                  <h2 className="mt-8 font-display text-display-md font-normal text-ink">{c.name[locale]}</h2>
+                  <h2 data-vt="title" className="mt-8 font-display text-display-md font-normal text-ink">
+                    {c.name[locale]}
+                  </h2>
+                  <p className="mt-2 text-[0.92rem] text-haze">
+                    <span className="num">{ar ? `تأسست عام ${c.founded}` : `Founded ${c.founded}`}</span>
+                  </p>
                   <p className="mt-2 text-[0.92rem] text-haze">{c.legal[locale]}</p>
                   <p className="mt-6 text-pretty text-[1.05rem] leading-relaxed text-ink/75">{c.summary[locale]}</p>
                   <ul className="mt-8 grid gap-x-8 gap-y-3 border-t border-ink/10 pt-8 sm:grid-cols-2">
@@ -152,7 +150,6 @@ export default async function CompaniesPage({ params }: P) {
                 <Reveal as="li" key={s.id} delay={i * 0.1} className="group relative bg-ink p-8 md:p-10">
                   <span aria-hidden className="absolute inset-x-0 top-0 h-[3px]" style={{ background: c.accent }} />
                   <div className="flex items-center justify-between">
-                    <span className="num font-mono text-xs text-white/40">{String(i + 1).padStart(2, "0")}</span>
                     {i < CHAIN.length - 1 && <Arrow className="hidden text-white/30 lg:block" />}
                   </div>
                   <p className="mt-10 font-display text-[1.9rem] leading-tight">{ar ? s.ar : s.en}</p>
@@ -173,7 +170,6 @@ export default async function CompaniesPage({ params }: P) {
         <div className="container grid gap-12 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-7">
             <div className="mb-6 flex items-center gap-4">
-              <span className="num font-mono text-xs text-haze">03</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
                 {ar ? "القطاعات التي نخدمها" : "Sectors we serve"}
               </p>

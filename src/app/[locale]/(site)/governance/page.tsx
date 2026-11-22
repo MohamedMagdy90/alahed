@@ -1,6 +1,6 @@
 import { HardHat, Leaf, Scale, ShieldCheck, Users } from "lucide-react";
 import type { Metadata } from "next";
-import { Counter, Reveal } from "@/components/motion";
+import { Reveal } from "@/components/motion";
 import { DocumentRow } from "@/components/site/DocumentRow";
 import { ArcsMark } from "@/components/site/OrbitArcs";
 import { PageHero } from "@/components/site/PageHero";
@@ -96,7 +96,6 @@ export default async function GovernancePage({ params }: P) {
           <ul className="mt-14 grid gap-px overflow-hidden rounded-[2px] border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4">
             {governancePrinciples.map((g, i) => (
               <Reveal as="li" key={g.en} delay={(i % 4) * 0.05} className="bg-white p-7 md:p-8">
-                <span className="num font-mono text-xs text-leaf-700">{String(i + 1).padStart(2, "0")}</span>
                 <p className="mt-8 text-pretty font-display text-[1.25rem] leading-snug text-ink">{g[locale]}</p>
               </Reveal>
             ))}
@@ -110,7 +109,6 @@ export default async function GovernancePage({ params }: P) {
           <div className="lg:col-span-5">
             <div className="lg:sticky lg:top-32">
               <div className="mb-6 flex items-center gap-4">
-                <span className="num font-mono text-xs text-haze">02</span>
                 <p className="eyebrow flex items-center gap-3 text-leaf-700">
                   {ar ? "إطار الحوكمة" : "Governance framework"}
                 </p>
@@ -135,8 +133,7 @@ export default async function GovernancePage({ params }: P) {
           </div>
           <ol className="border-t border-ink/10 lg:col-span-7">
             {framework.map((f, i) => (
-              <Reveal as="li" key={f.en} delay={i * 0.04} className="grid grid-cols-[3rem_1fr] gap-4 border-b border-ink/10 py-7">
-                <span className="num pt-1.5 font-mono text-xs text-haze">{String(i + 1).padStart(2, "0")}</span>
+              <Reveal as="li" key={f.en} delay={i * 0.04} className="border-b border-ink/10 py-7">
                 <div>
                   <p className="font-display text-[1.45rem] leading-tight text-ink">{ar ? f.ar : f.en}</p>
                   <p className="mt-2 text-[0.98rem] leading-relaxed text-haze">{ar ? f.dar : f.den}</p>
@@ -176,14 +173,14 @@ export default async function GovernancePage({ params }: P) {
               <HardHat className="h-5 w-5 text-leaf-300" />
               <p className="mt-8 font-display text-[clamp(3rem,5vw,4.5rem)] leading-none tracking-[-0.04em]">
                 <span className="text-white/60">{"<"}</span>
-                <Counter value={1} />
+                <span className="num">1</span>
               </p>
               <p className="mt-4 text-[0.95rem] text-white/60">{ar ? "معدل تكرار الحوادث" : "Accident frequency rate"}</p>
             </div>
             <div className="bg-ink p-8 md:p-10">
               <ShieldCheck className="h-5 w-5 text-leaf-300" />
               <p className="mt-8 font-display text-[clamp(3rem,5vw,4.5rem)] leading-none tracking-[-0.04em]">
-                <Counter value={95} />
+                <span className="num">95</span>
                 <span className="text-leaf">%</span>
               </p>
               <p className="mt-4 text-[0.95rem] text-white/60">{ar ? "تسليم في الوقت المحدد وبالكامل" : "On-time in-full delivery"}</p>
@@ -235,7 +232,6 @@ export default async function GovernancePage({ params }: P) {
         <div className="container grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <div className="mb-8 flex items-center gap-4">
-              <span className="num font-mono text-xs text-haze">05</span>
               <p className="eyebrow flex items-center gap-3 text-leaf-700">
                 {ar ? "وثائق الحوكمة" : "Governance documents"}
               </p>
