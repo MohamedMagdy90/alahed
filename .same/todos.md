@@ -82,10 +82,11 @@
       PageHero full-colour photo + edge shading, no title animation
 - [x] Motion audit: motion/index.tsx = useSafeReducedMotion + MotionProvider + Reveal (10px, 0.55s, delay ≤ 0.15s);
       Marquee.tsx deleted; principals = static list
-- [ ] Deploy BLOCKED on new key: owner must append .deploy/alahed_do_ed25519.pub (comment `alahed-deploy-2026-11-22`)
-      to /root/.ssh/authorized_keys. Then: upload deploy/migrate-2026-11-open-roles.js to /tmp, run it as user `alahed`
-      from /srv/alahed/current with /etc/alahed/env + BACKUP_PATH=/srv/alahed/shared/backups/pre-open-roles-<ts>.db,
-      THEN `SKIP_BUILD=1 bash deploy/deploy.sh` (or full deploy), verify /en, /ar, /en/careers, /en/admin/jobs.
+- [x] 2026-11-22 09:40 UTC: key `alahed-deploy-2026-11-22` added by owner. DB backup
+      shared/backups/pre-open-roles-20261122-094011.db, migration applied (Job + Message.jobId + 2 indexes, as `alahed`),
+      release 20261122-094021 live (= commit 7320774). Verified: 14 routes 200, admin/jobs → login, careers API
+      ROLE_CLOSED/INVALID, vt markers present, 0 log errors, other services active.
+- [ ] Owner review of the live redesign (transitions, de-templated inner pages, open roles in admin)
 ## Workspace resets (2026-11-21/22)
 - Host load ~180; the container is replaced several times a day. `.git` internals never survive; project files
   usually do; everything outside /home/project (incl. ~/.config) is lost. Restore: clone `redesign` with
