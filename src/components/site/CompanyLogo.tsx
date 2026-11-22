@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 const ART: Record<CompanyId, { w: number; h: number; scale: number }> = {
   aatc: { w: 977, h: 360, scale: 0.86 },
   dopet: { w: 654, h: 360, scale: 1 },
+  dst: { w: 708, h: 360, scale: 0.97 },
   pemco: { w: 818, h: 360, scale: 0.92 },
 };
 
