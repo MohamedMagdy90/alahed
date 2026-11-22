@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 HOST="${DEPLOY_HOST:-root@142.93.222.165}"
-KEY="${DEPLOY_KEY:-/home/project/.deploy-keys/alahed_do_ed25519}"
+KEY="${DEPLOY_KEY:-$PWD/.deploy/alahed_do_ed25519}"
 DOMAIN="${DOMAIN:-alahed.142-93-222-165.sslip.io}"
 DIST=.next-prod
 # Host key is pinned next to the deploy key (survives workspace restarts that wipe ~/.ssh).

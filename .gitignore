@@ -50,3 +50,6 @@ next-env.d.ts
 /.next-prod
 # local storage (uploads, CVs)
 /storage
+
+# deploy key (never commit)
+/.deploy/
