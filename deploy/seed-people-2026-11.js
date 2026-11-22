@@ -17,7 +17,8 @@ const PEOPLE = [
   { group: "management", order: 5, nameEn: "N. Shankaran", nameAr: "ن. شانكاران", roleEn: "Sales Manager, DOPET Sales & Technologies", roleAr: "مدير المبيعات، دوبت للمبيعات والتكنولوجيا" },
 ];
 
-const norm = (s) => s.toLowerCase().replace(/[^a-z]/g, "");
+// Ignore honorifics, punctuation and spacing ("Mr. Mohammed Jaber Al-Sulaiti" = "Mohammed Jaber Al Sulaiti").
+const norm = (s) => s.toLowerCase().replace(/^\s*(mr|mrs|ms|dr|eng|sheikh)\.?\s+/, "").replace(/[^a-z]/g, "");
 
 async function main() {
   const db = new PrismaClient();
