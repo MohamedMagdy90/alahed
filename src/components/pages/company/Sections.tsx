@@ -454,11 +454,11 @@ function Table({ t, accent, locale }: { t: ProjectTable; accent: string; locale:
   );
 }
 
-export function Projects({ c, p, locale }: Base) {
+export function Projects({ c, p, locale, tone = "pearl" }: Base & { tone?: "pearl" | "white" }) {
   if (!p.projectTables && !c.projects) return null;
   const ar = locale === "ar";
   return (
-    <section className="bg-pearl-50 py-24 md:py-32">
+    <section className={cn("py-24 md:py-32", tone === "white" ? "bg-white" : "bg-pearl-50")}>
       <div className="container">
         <SectionHeading eyebrow={ar ? "المشاريع" : "Projects"} title={ar ? "خبرة مثبتة في مواقع الطاقة الرئيسية في قطر." : "Proven delivery at Qatar's key energy sites."} />
         <div className="mt-14 space-y-14">

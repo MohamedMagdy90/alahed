@@ -249,7 +249,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                           <Arrow className="text-leaf-700" />
                         </Link>
                       </div>
-                      <div className="col-span-9 grid grid-cols-3 gap-6">
+                      <div className="col-span-9 grid grid-cols-4 gap-5">
                         {companies.map((c) => (
                           <Link key={c.id} href={href(locale, `/companies/${c.slug}`)} className="group block">
                             <div className="relative aspect-[16/9] overflow-hidden rounded-[2px] bg-pearl-100">

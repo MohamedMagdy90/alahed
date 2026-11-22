@@ -18,7 +18,7 @@ const VB_W = 336;
 const VB_H = 640;
 const HQ = "doha";
 const LEAF = "#9ED38D";
-const DOT: Record<string, string> = { holding: "#FFFFFF", aatc: "#6CC951", dopet: "#EC4B43", pemco: "#8EAAE0" };
+const DOT: Record<string, string> = { holding: "#FFFFFF", aatc: "#6CC951", dopet: "#EC4B43", dst: "#F59A8F", pemco: "#8EAAE0" };
 
 // Projection for the graticule and scale bar, anchored on two plotted locations (Doha ↔ Ras Laffan).
 const PX_PER_DEG = (SITE_POINTS.doha[1] - SITE_POINTS.raslaffan[1]) / (siteGeo.raslaffan.lat - siteGeo.doha.lat);
@@ -27,7 +27,7 @@ const xOfLon = (lon: number) => SITE_POINTS.doha[0] + (lon - siteGeo.doha.lon) *
 const KM20 = (20 / 111.2) * PX_PER_DEG;
 
 /** Which side of its point each label sits on (Doha and Salwa are close together, so they face away). */
-const LABEL_SIDE: Record<string, "left" | "right"> = { doha: "right", salwa: "left", raslaffan: "left", mesaieed: "left", dukhan: "right" };
+const LABEL_SIDE: Record<string, "left" | "right"> = { doha: "right", salwa: "left", newdoha: "right", raslaffan: "left", alkhor: "left", mesaieed: "left", dukhan: "right", karaana: "right" };
 
 const rad = (d: number) => (d * Math.PI) / 180;
 function km(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {

@@ -13,7 +13,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ local
     id: p.id,
     slug: p.slug,
     type: (["news", "blog", "event", "press", "award"].includes(p.type) ? p.type : "news") as PostFormState["type"],
-    company: (["holding", "aatc", "dopet", "pemco"].includes(p.company) ? p.company : "holding") as PostFormState["company"],
+    company: (["holding", "aatc", "dopet", "dst", "pemco"].includes(p.company) ? p.company : "holding") as PostFormState["company"],
     status: p.status === "published" ? "published" : "draft",
     featured: p.featured,
     titleEn: p.titleEn,

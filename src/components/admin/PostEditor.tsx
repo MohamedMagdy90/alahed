@@ -17,7 +17,7 @@ export type PostFormState = {
   id?: string;
   slug: string;
   type: "news" | "blog" | "event" | "press" | "award";
-  company: "holding" | "aatc" | "dopet" | "pemco";
+  company: "holding" | "aatc" | "dopet" | "dst" | "pemco";
   status: "draft" | "published";
   featured: boolean;
   titleEn: string;
