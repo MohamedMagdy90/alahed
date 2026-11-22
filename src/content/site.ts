@@ -353,11 +353,11 @@ export const companies: Company[] = [
     about: {
       en: [
         "With a dedicated team of professionals, a strong workforce and modern equipment, PEMCO carries out conventional and advanced NDT, welding, plant and tank inspection, coating and corrosion inspection and rope-access integrity work for the energy, marine and offshore, power and utility, and building and infrastructure sectors.",
-        "A fully equipped yard and maintenance facility keeps its equipment ready for deployment. Its people hold ASNT NDT Level III, CSWIP and AWS, SNT-TC-1A and ISO 9712 qualifications, and its radiation protection officers are licensed by the Ministry of Municipality and Environment.",
+        "A fully equipped yard and maintenance facility keeps its equipment ready for deployment. Its people hold ASNT NDT Level III, CSWIP and AWS, SNT-TC-1A and ISO 9712 qualifications, and its radiation protection officers are MME-licensed.",
       ],
       ar: [
         "بفريق متخصص من المهنيين وقوى عاملة قوية ومعدات حديثة، تنفّذ بمكو الاختبارات غير الإتلافية التقليدية والمتقدمة، وفحص اللحامات والمصانع والخزانات، وفحص الطلاءات والتآكل، وأعمال فحص السلامة بتقنية الحبال لقطاعات الطاقة، والبحرية والبحرية المغمورة، والكهرباء والمرافق، والمباني والبنية التحتية.",
-        "وتحافظ ساحة ومنشأة صيانة مجهزة بالكامل على جاهزية معداتها للعمل. ويحمل فريقها مؤهلات المستوى الثالث من ASNT وCSWIP وAWS وSNT-TC-1A وISO 9712، ومسؤولو الحماية من الإشعاع لديها مرخّصون من وزارة البلدية والبيئة.",
+        "وتحافظ ساحة ومنشأة صيانة مجهزة بالكامل على جاهزية معداتها للعمل. ويحمل فريقها مؤهلات المستوى الثالث من ASNT وCSWIP وAWS وSNT-TC-1A وISO 9712، ومسؤولو الحماية من الإشعاع لديها مرخّصون (MME).",
       ],
     },
     services: {
@@ -663,7 +663,7 @@ export const clientsAll = [
 export const figures = [
   { value: 1975, suffix: "", label: { en: "Year established", ar: "سنة التأسيس" } as L10n, format: "year" as const },
   { value: 4, suffix: "", label: { en: "Operating companies", ar: "شركات تابعة" } as L10n },
-  { value: 40, suffix: "+", label: { en: "International principals", ar: "شركة عالمية نمثّلها" } as L10n },
+  { value: 50, suffix: "+", label: { en: "International brands represented", ar: "علامة تجارية عالمية نمثّلها" } as L10n },
   { value: 95, suffix: "%", label: { en: "On-time in-full delivery", ar: "تسليم في الوقت وبالكامل" } as L10n },
   { value: 1, prefix: "<", suffix: "", label: { en: "Accident frequency rate", ar: "معدل تكرار الحوادث" } as L10n },
   { value: 14001, prefix: "ISO ", suffix: "", label: { en: "Certified industrial sites", ar: "مواقع صناعية معتمدة" } as L10n, format: "year" as const },
