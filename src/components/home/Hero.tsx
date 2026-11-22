@@ -34,6 +34,8 @@ const FADE_MS = 1400;
 const ZOOM_MS = SLIDE_MS + FADE_MS + 800;
 const EASE_SWAP = "cubic-bezier(0.45, 0, 0.55, 1)";
 const EASE_OUT = "cubic-bezier(0.16, 1, 0.3, 1)";
+/** Punctuation that must stay on the same line as the verb before it (Latin and Arabic). */
+const LEADING_PUNCT = /^[,.;:\u060C\u061B]+/;
 
 type State = {
   active: number;
@@ -251,43 +253,51 @@ export function Hero({ locale, latest, openRoles = 0 }: { locale: Locale; latest
             className="text-balance font-display text-[clamp(2.25rem,4.4vw,4.5rem)] font-normal leading-[1.05] tracking-[-0.03em]"
             style={{ animation: `herorise 1.1s ${EASE_OUT} 0.05s both` }}
           >
-            {heroHeadline[locale].map((seg, k) => {
-              // biome-ignore lint/suspicious/noArrayIndexKey: fixed, never-reordered list; separators like ", " repeat
-              if (typeof seg === "string") return <span key={`s${k}`}>{seg}</span>;
+            {heroHeadline[locale].map((seg, k, all) => {
+              if (typeof seg === "string") {
+                // Punctuation right after a verb is rendered with that verb (below), so no line starts with a comma.
+                const text = k > 0 && typeof all[k - 1] !== "string" ? seg.replace(LEADING_PUNCT, "") : seg;
+                // biome-ignore lint/suspicious/noArrayIndexKey: fixed, never-reordered list; separators like ", " repeat
+                return text ? <span key={`s${k}`}>{text}</span> : null;
+              }
               const on = seg.verb === active;
               const c = COMPANIES[seg.verb];
+              const after = all[k + 1];
+              const tail = typeof after === "string" ? (after.match(LEADING_PUNCT)?.[0] ?? "") : "";
               return (
-                <button
-                  key={`v${seg.verb}`}
-                  type="button"
-                  onClick={() => select(seg.verb)}
-                  aria-pressed={on}
-                  aria-controls="hero-company"
-                  title={c.name[locale]}
-                  className={`relative inline-block rounded-[2px] text-start transition-colors duration-700 focus-visible:outline-offset-4 ${
-                    on ? "text-white" : "text-white/40 hover:text-white/75"
-                  }`}
-                >
-                  {seg.text}
-                  <span aria-hidden className="absolute inset-x-0 -bottom-[0.04em] h-[3px] overflow-hidden rounded-full bg-white/15">
-                    <span
-                      key={runs[seg.verb]}
-                      className="absolute inset-0 origin-left rtl:origin-right"
-                      style={{
-                        background: ACCENT[c.id],
-                        opacity: on ? 1 : 0,
-                        transition: on ? "opacity 250ms ease-out" : `opacity 900ms ${EASE_SWAP}`,
-                        ...(auto
-                          ? {
-                              animation: `heroprogress ${SLIDE_MS}ms linear forwards`,
-                              animationPlayState: on ? playState : "paused",
-                            }
-                          : { transform: "scaleX(1)" }),
-                      }}
-                      onAnimationEnd={on && auto ? next : undefined}
-                    />
-                  </span>
-                </button>
+                <span key={`v${seg.verb}`} className="whitespace-nowrap">
+                  <button
+                    type="button"
+                    onClick={() => select(seg.verb)}
+                    aria-pressed={on}
+                    aria-controls="hero-company"
+                    title={c.name[locale]}
+                    className={`relative inline-block rounded-[2px] text-start transition-colors duration-700 focus-visible:outline-offset-4 ${
+                      on ? "text-white" : "text-white/40 hover:text-white/75"
+                    }`}
+                  >
+                    {seg.text}
+                    <span aria-hidden className="absolute inset-x-0 -bottom-[0.04em] h-[3px] overflow-hidden rounded-full bg-white/15">
+                      <span
+                        key={runs[seg.verb]}
+                        className="absolute inset-0 origin-left rtl:origin-right"
+                        style={{
+                          background: ACCENT[c.id],
+                          opacity: on ? 1 : 0,
+                          transition: on ? "opacity 250ms ease-out" : `opacity 900ms ${EASE_SWAP}`,
+                          ...(auto
+                            ? {
+                                animation: `heroprogress ${SLIDE_MS}ms linear forwards`,
+                                animationPlayState: on ? playState : "paused",
+                              }
+                            : { transform: "scaleX(1)" }),
+                        }}
+                        onAnimationEnd={on && auto ? next : undefined}
+                      />
+                    </span>
+                  </button>
+                  {tail}
+                </span>
               );
             })}
           </h1>
