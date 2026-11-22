@@ -89,6 +89,10 @@ rm -f /tmp/alahed-release.tgz
 if [ -f /tmp/alahed-seed.db ]; then
   if [ ! -f $APP/shared/data/alahed.db ]; then mv /tmp/alahed-seed.db $APP/shared/data/alahed.db; echo "    database installed"; else rm -f /tmp/alahed-seed.db; fi
 fi
+# Optimised images are cached outside the release, so a deploy does not make the next visitors wait while
+# every photo is re-encoded (1-2 s each).
+mkdir -p $APP/shared/cache/images "$REL/.next-prod/cache"
+rm -rf "$REL/.next-prod/cache/images" && ln -sfn $APP/shared/cache/images "$REL/.next-prod/cache/images"
 chown -R alahed:alahed "$REL" $APP/shared
 ln -sfn "$REL" $APP/current
 systemctl restart alahed-web

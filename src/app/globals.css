@@ -447,11 +447,12 @@ html.vt-active .vt-header {
 html.vt-morph [data-vt-hero="media"] {
   view-transition-name: vt-media;
 }
+/* Kept short: the fade must never make a page change feel slower than a plain one. */
 ::view-transition-old(root) {
-  animation: vt-fade-out 200ms cubic-bezier(0.4, 0, 1, 1) both;
+  animation: vt-fade-out 140ms cubic-bezier(0.4, 0, 1, 1) both;
 }
 ::view-transition-new(root) {
-  animation: vt-fade-in 420ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
+  animation: vt-fade-in 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
 }
 /* The header stays put above everything (including a morphing photo). */
 ::view-transition-group(site-header) {

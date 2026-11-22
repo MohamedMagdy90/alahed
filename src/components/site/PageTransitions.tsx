@@ -17,7 +17,8 @@ import { useEffect, useRef } from "react";
 type Pending = { resolve: () => void; timer: number };
 
 const SKIP = /^\/(?:en|ar)\/admin(?:\/|$)|^\/api\/|^\/media\//;
-const MAX_WAIT = 2500;
+/** The screen is frozen while the next page loads: never longer than this (slow networks swap without the fade). */
+const MAX_WAIT = 1200;
 
 function qualifies(a: HTMLAnchorElement): URL | null {
   if (a.target && a.target !== "_self") return null;
@@ -40,22 +41,23 @@ export function PageTransitions() {
   const pathname = usePathname();
   const pending = useRef<Pending | null>(null);
 
-  // The new route has committed (and Next has scrolled to the top): let the browser capture the new state.
+  // The new route has committed: let the browser capture the new state and play the crossfade.
+  // NOT requestAnimationFrame: Chrome runs no animation frames while a view transition waits for its callback,
+  // so the old code hung until Chrome's own 4 s timeout on every click. A 0 ms timer still runs (after Next's
+  // scroll-to-top, which happens during the commit).
   // biome-ignore lint/correctness/useExhaustiveDependencies: runs on every route change by design
   useEffect(() => {
     const p = pending.current;
     if (!p) return;
     pending.current = null;
     window.clearTimeout(p.timer);
-    requestAnimationFrame(() => p.resolve());
+    window.setTimeout(p.resolve, 0);
   }, [pathname]);
 
   useEffect(() => {
     if (typeof document.startViewTransition !== "function") return;
     const root = document.documentElement;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const warmed = new Map<string, number>();
-    let hoverTimer = 0;
 
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -101,29 +103,43 @@ export function PageTransitions() {
       });
     };
 
-    // Warm card destinations on hover so the morph starts without a long freeze (dynamic pages have
-    // no loading boundary for next/link's automatic prefetch to use).
+    window.addEventListener("click", onClick, true);
+    return () => window.removeEventListener("click", onClick, true);
+  }, [router]);
+
+  // Warm the destination as soon as intent shows (mouse resting on a link, or a finger touching it), in every
+  // browser. All pages are dynamic with no loading boundary, so next/link's automatic prefetch fetches nothing;
+  // router.prefetch() fetches the full page, which the click then reuses (kept 5 minutes).
+  useEffect(() => {
+    const warmed = new Map<string, number>();
+    let hoverTimer = 0;
+    const target = (e: Event): string | null => {
+      const a = (e.target as Element | null)?.closest?.("a");
+      if (!(a instanceof HTMLAnchorElement)) return null;
+      const url = qualifies(a);
+      if (!url) return null;
+      const key = url.pathname + url.search;
+      return Date.now() - (warmed.get(key) ?? 0) < 60_000 ? null : key;
+    };
+    const warm = (key: string) => {
+      warmed.set(key, Date.now());
+      router.prefetch(key);
+    };
     const onOver = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
-      const a = (e.target as Element | null)?.closest?.("a");
-      if (!(a instanceof HTMLAnchorElement) || !sharedMedia(a)) return;
-      const url = qualifies(a);
-      if (!url) return;
-      const key = url.pathname + url.search;
-      const last = warmed.get(key) ?? 0;
-      if (Date.now() - last < 30_000) return;
+      const key = target(e);
       window.clearTimeout(hoverTimer);
-      hoverTimer = window.setTimeout(() => {
-        warmed.set(key, Date.now());
-        router.prefetch(key);
-      }, 80);
+      if (key) hoverTimer = window.setTimeout(() => warm(key), 65);
     };
-
-    window.addEventListener("click", onClick, true);
+    const onTouch = (e: TouchEvent) => {
+      const key = target(e);
+      if (key) warm(key);
+    };
     document.addEventListener("pointerover", onOver, { passive: true });
+    document.addEventListener("touchstart", onTouch, { passive: true });
     return () => {
-      window.removeEventListener("click", onClick, true);
       document.removeEventListener("pointerover", onOver);
+      document.removeEventListener("touchstart", onTouch);
       window.clearTimeout(hoverTimer);
     };
   }, [router]);
