@@ -6,6 +6,7 @@ import { ArcsMark } from "@/components/site/OrbitArcs";
 import { PageHero } from "@/components/site/PageHero";
 import { Btn, Em, SectionHeading } from "@/components/site/primitives";
 import { contact, governancePrinciples } from "@/content/site";
+import { profiles } from "@/content/profiles";
 import { type Locale, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
 import { getDocuments } from "@/lib/queries";
@@ -191,6 +192,42 @@ export default async function GovernancePage({ params }: P) {
                 <span className="me-2 text-[0.45em] tracking-normal text-white/60">ISO</span>14001
               </p>
               <p className="mt-4 text-[0.95rem] text-white/60">{ar ? "مواقع صناعية معتمدة" : "Certified industrial sites"}</p>
+            </div>
+          </div>
+          <div className="mt-16 grid gap-12 lg:grid-cols-12">
+            <div className="lg:col-span-5">
+              <p className="text-[0.9rem] font-medium text-leaf-300">{ar ? "أنظمة إدارة معتمدة" : "Certified management systems"}</p>
+              <p className="mt-4 text-pretty text-[1rem] leading-relaxed text-white/65">
+                {ar
+                  ? "نظام دوبت المتكامل لإدارة الجودة والصحة والسلامة والبيئة معتمد من لويدز ريجستر (LRQA)."
+                  : "DOPET's integrated quality, health, safety and environment management system is certified by Lloyd's Register (LRQA)."}
+              </p>
+              <ul className="mt-6 divide-y divide-white/10 border-y border-white/10">
+                {(profiles.dopet.certifications?.items ?? []).slice(0, 3).map((x) => (
+                  <li key={x.name} className="flex items-baseline justify-between gap-6 py-4">
+                    <span className="num font-display text-[1.15rem]" dir="ltr">
+                      {x.name}
+                    </span>
+                    <span className="text-end text-[0.9rem] text-white/55">{x.body[locale]}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="lg:col-span-7">
+              <p className="text-[0.9rem] font-medium text-leaf-300">{ar ? "تقدير في السلامة" : "Safety recognition"}</p>
+              <ol className="mt-4 border-t border-white/10">
+                {(profiles.dopet.awards ?? []).map((a) => (
+                  <li key={a.title.en} className="grid gap-2 border-b border-white/10 py-5 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-8">
+                    <div>
+                      <p className="font-display text-[1rem]" dir="ltr" style={{ textAlign: ar ? "right" : "left" }}>
+                        {a.org}
+                      </p>
+                      <p className="num mt-1 text-[0.85rem] text-white/45">{a.date}</p>
+                    </div>
+                    <p className="text-pretty text-[0.98rem] leading-relaxed text-white/75">{a.title[locale]}</p>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         </div>

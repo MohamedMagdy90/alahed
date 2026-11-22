@@ -128,7 +128,7 @@ export default async function ContactPage({ params }: P) {
               {ar ? "شركات المجموعة" : "Group companies"}
             </p>
           </div>
-          <div className="grid gap-px overflow-hidden rounded-[2px] border border-ink/10 bg-ink/10 md:grid-cols-3">
+          <div className="grid gap-px overflow-hidden rounded-[2px] border border-ink/10 bg-ink/10 sm:grid-cols-2 xl:grid-cols-4">
             {companies.map((c, i) => (
               <Reveal key={c.id} delay={i * 0.06} className="flex flex-col bg-white p-7 md:p-8">
                 <div className="flex h-14 items-center">
