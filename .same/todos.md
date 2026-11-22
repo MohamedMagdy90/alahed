@@ -72,13 +72,26 @@
 - [x] Where we work: dark live map (Doha clock, MET Norway conditions via /api/conditions, routes + pulses, auto-tour)
 - [x] Partners: manufacturers → Al-Ahed → operators live network (desktop), stacked flow (mobile)
 - [x] Arabic phone overflow fix (SubscribeForm w-0) + body overflow-x: clip
-## Rest of the redesign (in progress)
-- [ ] Open roles: Job model + admin "Open roles" CRUD + careers listing + apply-to-role + home strip/CTA
-- [ ] Page transitions: View Transitions (cross-fade site-wide; card → hero morph for companies + news)
-- [ ] De-template inner pages: no 01/02 indexes, plain labels (no mono/dash), no italic-serif accents, no grid-lines,
-      full-colour hero photos
-- [ ] Motion audit: no kenburns/LineReveal/WordReveal/Counter/Parallax/Marquee; subtler Reveal
-- [ ] DB backup + schema push on server, deploy, verify live
+## Rest of the redesign (code done 2026-11-22, all pushed to `redesign`)
+- [x] Open roles: Job model + Message.jobId, admin /admin/jobs (JobsManager, lib/admin/jobs.ts), careers #roles list,
+      apply-to-role (`position=job:<id>`, `?role=<id>#apply` preselect, ROLE_CLOSED), hero strip count, home CTA list
+- [x] Page transitions: components/site/PageTransitions.tsx (window capture click → startViewTransition + router.push,
+      resolves on pathname change, 2.5s cap). Cards: `data-vt-card` + `data-vt="media"`; heroes: `data-vt-hero="media"`.
+      CSS at the end of globals.css. Header named only during a transition (`html.vt-active .vt-header`).
+- [x] De-template: Eyebrow/SectionHeading plain sans (index prop ignored), Em = plain span, no grid-lines/dash/mono caps,
+      PageHero full-colour photo + edge shading, no title animation
+- [x] Motion audit: motion/index.tsx = useSafeReducedMotion + MotionProvider + Reveal (10px, 0.55s, delay ≤ 0.15s);
+      Marquee.tsx deleted; principals = static list
+- [ ] Deploy BLOCKED on new key: owner must append .deploy/alahed_do_ed25519.pub (comment `alahed-deploy-2026-11-22`)
+      to /root/.ssh/authorized_keys. Then: upload deploy/migrate-2026-11-open-roles.js to /tmp, run it as user `alahed`
+      from /srv/alahed/current with /etc/alahed/env + BACKUP_PATH=/srv/alahed/shared/backups/pre-open-roles-<ts>.db,
+      THEN `SKIP_BUILD=1 bash deploy/deploy.sh` (or full deploy), verify /en, /ar, /en/careers, /en/admin/jobs.
+## Workspace resets (2026-11-21/22)
+- Host load ~180; the container is replaced several times a day. `.git` internals never survive; project files
+  usually do; everything outside /home/project (incl. ~/.config) is lost. Restore: clone `redesign` with
+  --no-checkout into /tmp, move its .git into the project, `git reset -q`, then `git status` shows unpushed work.
+- Deploy key now lives in the git-ignored `.deploy/` folder inside the project (never commit it; repo is PUBLIC).
+- Commit + push after every step. Kill the auto-started `next dev` (owner preference + memory).
 ## Content gaps to confirm with client
 - Chairman & President messages, full Board list + photos (only MD & CEO seeded)
 - PEMCO services detail, workforce figure
