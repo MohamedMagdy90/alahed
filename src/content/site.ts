@@ -284,7 +284,7 @@ export const companies: Company[] = [
       en: ["Doha, State of Qatar"],
       ar: ["الدوحة، دولة قطر"],
     },
-    logo: "/brand/pemco-cutout.png",
+    logo: "/brand/pemco.png",
     logoBg: "#FFFFFF",
     image: "/images/offshore.jpg",
     accent: "#2D62C4",

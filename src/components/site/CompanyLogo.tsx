@@ -9,13 +9,14 @@ import { cn } from "@/lib/utils";
  * - tone "white": clean monochrome for dark surfaces and photography.
  * - tone "ink": monochrome navy, for quiet / inactive states on light surfaces.
  *
- * The three logos have very different proportions (AATC ≈ 4.9:1, DOPET ≈ 1.8:1, PEMCO ≈ 1:1), so each one
- * gets its own height relative to `size` to look optically equal next to the others.
+ * The logos have different proportions (AATC ≈ 2.7:1, DOPET ≈ 1.8:1, DOPET S&T ≈ 2:1, PEMCO ≈ 2.3:1), so each
+ * one gets its own height relative to `size` to look optically equal next to the others.
+ * Artwork: the companies' current logos, cropped, background removed (public/brand).
  */
 const ART: Record<CompanyId, { w: number; h: number; scale: number }> = {
-  aatc: { w: 706, h: 144, scale: 0.68 },
-  dopet: { w: 1487, h: 837, scale: 1 },
-  pemco: { w: 289, h: 278, scale: 1.22 },
+  aatc: { w: 977, h: 360, scale: 0.86 },
+  dopet: { w: 654, h: 360, scale: 1 },
+  pemco: { w: 818, h: 360, scale: 0.92 },
 };
 
 const TONE = {
