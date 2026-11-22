@@ -140,5 +140,15 @@
 - [x] Images: real optimisation on (WebP, srcset); deploy.sh installs linux-x64 sharp + health-checks /_next/image.
       Cache headers for /images and /brand. Logos sized to their rendered size. Non-first hero photos deferred.
 - [x] Newsroom phone overflow (filter form 480/620 px) fixed with min-w-0. Tap targets: footer, breadcrumbs, top bar.
-- [ ] Local build + re-audit (Playwright in /tmp/pw: audit.mjs, summary.mjs, cls.mjs, overflow.mjs; env.sh for libs)
-- [ ] Commit, push, deploy, live verify (+ image optimiser health check)
+- [x] Local build + re-audit: 0 errors / 0 overflow / CLS 0 on 46 URLs x 3 viewports; home 3.2 MB -> 1.3 MB.
+- [x] Arabic font self-hosted (public/fonts, @font-face in globals.css), preloaded on /ar only (desktop AR CLS 0.29 -> 0).
+- [x] Commit 2097b8e pushed, release 20261122-141014 live (image optimiser health check ok). Hero fix verified live.
+- [x] SLOW NAVIGATION (owner report): every click took 4.0 s = Chrome's view-transition timeout, because
+      PageTransitions released the transition with requestAnimationFrame (not run while a transition waits).
+      Now setTimeout 0; cap 1.2 s; crossfade 0.3 s; all internal links prefetched on hover/touchstart (full page,
+      reused on click); image cache symlinked to shared/cache/images (survives deploys).
+      Commit 3e82d8b, release 20261122-143719. Live: 0.45-0.77 s to new page (hover then click), was 4.0 s.
+- Owner must hard-refresh (Ctrl+Shift+R) open tabs: an open tab keeps the old JavaScript.
+- Playwright lives in /tmp/pw (wiped on container reset: npm i playwright@1.49.1, npx playwright install chromium,
+  bash libs.sh for the no-root .deb libs, then `. ./env.sh`). Scripts: audit, hero, nav2/nav4/nav6, http.sh.
+- [ ] Next step (proposed): ISR instead of force-dynamic (revalidatePath from admin) so links prefetch fully.
