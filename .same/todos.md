@@ -108,10 +108,10 @@
 - [x] Local prod build verified (11:20): 30 public routes + legal + news 200 in EN/AR, all 4 company pages carry their
       new sections, leadership shows board + management from the people script, 0 server log errors.
 - [x] deploy.sh builds in the folder that holds node_modules (/tmp/nmb), never in the workspace; cleans up after deploy.
-- [ ] Deploy: key lost again → new key `alahed-deploy-2026-11-22-b` in .deploy/ (host key re-verified + pinned).
-      Waiting for the owner to append the .pub to /root/.ssh/authorized_keys. Release already built (21 MB):
-      `SKIP_BUILD=1 bash deploy/deploy.sh` if /tmp survived, else plain `bash deploy/deploy.sh`.
-- [ ] Leadership DB on the server, after deploy (as `alahed`, backup first):
-      scp deploy/seed-people-2026-11.js → /tmp/seed-people.js; cd /srv/alahed/current; source /etc/alahed/env;
-      runuser -u alahed -- env DATABASE_URL=… BACKUP_PATH=/srv/alahed/shared/backups/pre-people-<ts>.db node /tmp/seed-people.js
-- [ ] After deploy: delete /tmp/nmb (≈1 GB node_modules) and the node_modules symlink.
+- [x] Key `alahed-deploy-2026-11-22-b` added by owner. Schema unchanged (sha256 equal) → no migration.
+      Release 20261122-113728 live (= commit 9dd4418 content). Verified: 34 routes 200 EN/AR, brand PNGs, sitemap,
+      conditions API, new content markers, 0 log errors, other services active.
+- [x] Leadership DB on the server: backup pre-people-20261122-113910.db; 9 added, MD & CEO kept and moved to order 3
+      (10 Person rows). Command in the header of deploy/seed-people-2026-11.js (needs NODE_PATH).
+- [x] Cleaned: /tmp/nmb, node_modules symlink, release bundle, /home/project/.pm helpers.
+- [ ] Owner review of the live PDF content (4 company pages, About structure, Leadership board + management).

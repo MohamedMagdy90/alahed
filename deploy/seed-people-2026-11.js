@@ -1,7 +1,10 @@
 // One-off, idempotent data update: board & management from the Al-Ahed Holding corporate profile.
 // Insert-only: a person is added only if no row with the same English name exists, so edits made in the
-// admin panel are never overwritten. Run on the server from the CURRENT release:
-//   cd /srv/alahed/current && set -a && . /etc/alahed/env && set +a && BACKUP_PATH=/srv/alahed/shared/backups/pre-people-$(date +%Y%m%d-%H%M%S).db node /tmp/seed-people.js
+// admin panel are never overwritten. Run on the server as the app user, against the CURRENT release's modules
+// (applied on the live site 2026-11-22 11:39 UTC, backup pre-people-20261122-113910.db):
+//   set -a; . /etc/alahed/env; set +a; cd /srv/alahed/current
+//   runuser -u alahed -- env DATABASE_URL="$DATABASE_URL" NODE_PATH=/srv/alahed/current/node_modules \
+//     BACKUP_PATH=/srv/alahed/shared/backups/pre-people-$(date -u +%Y%m%d-%H%M%S).db /usr/bin/node /tmp/seed-people.js
 const { PrismaClient } = require("@prisma/client");
 
 const PEOPLE = [
