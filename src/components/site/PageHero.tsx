@@ -59,7 +59,7 @@ export function PageHero({
           <nav aria-label="Breadcrumb" className="mb-10 text-[0.85rem] text-white/55">
             <ol className="flex flex-wrap items-center gap-2">
               <li>
-                <Link href={href(locale)} className="hover:text-white">
+                <Link href={href(locale)} className="-my-2 inline-block py-2 hover:text-white">
                   {t.home}
                 </Link>
               </li>
@@ -67,7 +67,7 @@ export function PageHero({
                 <li key={c.label} className="flex items-center gap-2">
                   <span className="text-white/25">/</span>
                   {c.href ? (
-                    <Link href={c.href} className="hover:text-white">
+                    <Link href={c.href} className="-my-2 inline-block py-2 hover:text-white">
                       {c.label}
                     </Link>
                   ) : (

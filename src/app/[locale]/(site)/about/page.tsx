@@ -213,7 +213,7 @@ export default async function AboutPage({ params }: P) {
             <div aria-hidden className="mx-auto hidden h-px w-[calc(50%-1rem)] max-w-[23rem] bg-ink/20 sm:block" />
             <div aria-hidden className="mx-auto h-10 w-px bg-ink/20" />
             <div className="mx-auto flex max-w-sm flex-col items-center rounded-[2px] bg-ink-900 px-8 py-7 text-center text-white">
-              <Image src="/brand/alahed-holding.png" alt="" width={366} height={100} className="h-auto w-44 [filter:brightness(0)_invert(1)]" />
+              <Image src="/brand/alahed-holding.png" alt="" width={176} height={48} className="h-auto w-44 [filter:brightness(0)_invert(1)]" />
               <p className="mt-4 text-[0.85rem] text-white/55">{ar ? "شركة العهد القابضة ذ.م.م · تأسست عام 2018" : "Al-Ahed Holding W.L.L. · established 2018"}</p>
             </div>
             <div aria-hidden className="mx-auto h-10 w-px bg-ink/20" />

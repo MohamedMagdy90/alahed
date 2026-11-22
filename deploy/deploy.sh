@@ -49,8 +49,22 @@ cp -a public "$OUT/public"
 mkdir -p "$OUT/prisma" && cp prisma/schema.prisma "$OUT/prisma/"
 # Never ship local databases, env files or uploads.
 rm -rf "$OUT/.env" "$OUT/prisma/"*.db "$OUT/storage" "$OUT/deploy" "$OUT/.same"
-# sharp is never loaded (images.unoptimized) and the traced binaries are for the build machine's CPU.
+# Image optimisation (next/image) needs sharp built for the droplet (linux x86_64, glibc). The build machine may
+# be arm64, so the traced binaries are dropped and the x64 package is installed instead, with its dependencies
+# nested under sharp/node_modules so they can never clash with the app's own copies.
+SHARP_VERSION=0.34.2
+SHARP_DIR=/tmp/alahed-sharp-x64-$SHARP_VERSION
 rm -rf "$OUT/node_modules/@img" "$OUT/node_modules/sharp"
+if [ ! -d "$SHARP_DIR/node_modules/@img/sharp-linux-x64" ]; then
+  rm -rf "$SHARP_DIR" && mkdir -p "$SHARP_DIR"
+  echo '{"name":"sharp-x64","private":true}' > "$SHARP_DIR/package.json"
+  (cd "$SHARP_DIR" && npm install --silent --no-audit --no-fund --os=linux --cpu=x64 --libc=glibc "sharp@$SHARP_VERSION")
+fi
+mkdir -p "$OUT/node_modules/sharp/node_modules"
+cp -a "$SHARP_DIR/node_modules/sharp/." "$OUT/node_modules/sharp/"
+for d in "$SHARP_DIR"/node_modules/*; do
+  [ "$(basename "$d")" = "sharp" ] || cp -a "$d" "$OUT/node_modules/sharp/node_modules/"
+done
 tar czf /tmp/alahed-release.tgz -C "$OUT" .
 echo "    size: $(du -h /tmp/alahed-release.tgz | cut -f1)"
 
@@ -84,6 +98,15 @@ for i in $(seq 1 30); do
   if [ "$code" = "200" ]; then ok=1; break; fi
   sleep 1
 done
+# The image optimiser must work too (sharp for this CPU), or every photo on the site breaks.
+if [ -n "$ok" ]; then
+  img=$(curl -s -o /dev/null -w "%{http_code} %{content_type}" --max-time 30 -H "Accept: image/webp,image/*;q=0.8" \
+    "http://127.0.0.1:3002/_next/image?url=%2Fimages%2Fdoha-night.jpg&w=640&q=75" || true)
+  case "$img" in
+    "200 image/webp"*) echo "    image optimiser ok" ;;
+    *) ok=""; code="image optimiser: $img" ;;
+  esac
+fi
 if [ -z "$ok" ]; then
   echo "!! health check failed (last code: $code) — rolling back"
   journalctl -u alahed-web -n 40 --no-pager || true

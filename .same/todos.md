@@ -128,3 +128,17 @@
   AATC deck = mostly OEM product renders + stock, a few small own shots (service-centre building, field service,
   ESAB centre entrance). PEMCO = diagrams + stock. Holding profile = logo only. DST hero uses stock engineer.jpg.
 - Formatting: do NOT run `biome format --write` on existing files (repo isn't biome-formatted; reflows everything).
+
+## 2026-11-22 13:00 — hero pause bug + production audit (branch redesign)
+- [x] Admin password: live hash ≠ seed default and the old creds file was lost → backup
+      shared/backups/pre-admin-reset-20261122-132836.db, new password set (hashed locally, cost 12), saved in git-ignored
+      .deploy/admin-credentials.txt. Live login verified with Playwright (lands on /en/admin).
+- [x] Hero freeze: hover-pause on the headline + invisible logo square froze the slideshow when a mega menu closed over
+      it (and a tapped verb froze it on phones). Now: no hover pause; keyboard focus (:focus-visible) + pause button only.
+- [x] Footprint: tour no longer pauses on hover; clicking a site takes control. Card keeps its tallest height (no CLS).
+- [x] Header collapse = transform (no CLS). Fonts: Arabic/serif/mono not preloaded, unused 300 weight dropped.
+- [x] Images: real optimisation on (WebP, srcset); deploy.sh installs linux-x64 sharp + health-checks /_next/image.
+      Cache headers for /images and /brand. Logos sized to their rendered size. Non-first hero photos deferred.
+- [x] Newsroom phone overflow (filter form 480/620 px) fixed with min-w-0. Tap targets: footer, breadcrumbs, top bar.
+- [ ] Local build + re-audit (Playwright in /tmp/pw: audit.mjs, summary.mjs, cls.mjs, overflow.mjs; env.sh for libs)
+- [ ] Commit, push, deploy, live verify (+ image optimiser health check)

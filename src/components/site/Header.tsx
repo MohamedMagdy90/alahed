@@ -94,16 +94,24 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
         {t.skip}
       </a>
 
-      <header className="vt-header fixed inset-x-0 top-0 z-50" onMouseLeave={() => setMenu(null)}>
+      {/* On scroll the whole header slides up by the utility bar's height (a transform, so nothing re-lays out
+          and the page records no layout shift) instead of collapsing the bar's height. */}
+      <header
+        className={cn(
+          "vt-header fixed inset-x-0 top-0 z-50 transition-transform duration-500 ease-out-expo",
+          scrolled && "-translate-y-9",
+        )}
+        onMouseLeave={() => setMenu(null)}
+      >
         {/* Utility bar */}
         <div
           className={cn(
-            "overflow-hidden bg-ink-900 text-[0.72rem] text-white/80 transition-[height,opacity] duration-500 ease-out-expo",
-            scrolled ? "h-0 opacity-0" : "h-9 opacity-100",
+            "h-9 overflow-hidden bg-ink-900 text-[0.72rem] text-white/80 transition-opacity duration-500 ease-out-expo",
+            scrolled ? "pointer-events-none opacity-0" : "opacity-100",
           )}
         >
           <div className="container flex h-9 items-center justify-between gap-6 text-[0.78rem]">
-            <Link href={href(locale, "/investors")} className="group inline-flex items-center gap-2 hover:text-white">
+            <Link href={href(locale, "/investors")} className="group inline-flex items-center gap-2 self-stretch hover:text-white">
               <span className="h-1.5 w-1.5 rounded-full bg-leaf" />
               <span className="link-underline">{listed ? t.listed : t.listingStatus}</span>
             </Link>

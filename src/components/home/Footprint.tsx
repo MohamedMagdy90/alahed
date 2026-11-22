@@ -1,8 +1,8 @@
 "use client";
 
-import { AnimatePresence, motion, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSafeReducedMotion } from "@/components/motion";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { BANDS, BOWL, MARK_TONES } from "@/components/site/LogoMark";
@@ -122,6 +122,23 @@ function DohaClock({ locale, now: wx }: { locale: Locale; now: Now | null }) {
 
 /* ------------------------------------------------------------------ section */
 
+/** Location text crossfade: the incoming block rises in after a beat; the outgoing one fades, then hides. */
+function swap(on: boolean): CSSProperties {
+  return on
+    ? {
+        opacity: 1,
+        transform: "none",
+        visibility: "visible",
+        transition: "opacity 450ms cubic-bezier(0.16,1,0.3,1) 160ms, transform 600ms cubic-bezier(0.16,1,0.3,1) 160ms, visibility 0s",
+      }
+    : {
+        opacity: 0,
+        transform: "translateY(8px)",
+        visibility: "hidden",
+        transition: "opacity 220ms ease-out, transform 0s linear 220ms, visibility 0s linear 220ms",
+      };
+}
+
 export function Footprint({ locale }: { locale: Locale }) {
   const ar = locale === "ar";
   const reduce = useSafeReducedMotion();
@@ -129,18 +146,20 @@ export function Footprint({ locale }: { locale: Locale }) {
   const inView = useInView(ref, { amount: 0.25 });
   const [active, setActive] = useState(0);
   const [run, setRun] = useState(0);
-  const [hover, setHover] = useState(false);
+    // The tour runs on its own until the visitor picks a location; then it stays on their choice. (It no longer
+  // pauses on hover: the map is large, so a cursor resting on it while scrolling used to freeze the tour.)
+  const [stopped, setStopped] = useState(false);
   const [wx, setWx] = useState<Record<string, Now | null> | null>(null);
+  const [wxDone, setWxDone] = useState(false);
   const fetched = useRef(false);
-
   const cur = sites[active];
-  const auto = !reduce;
-  const running = auto && !hover && inView;
+  const auto = !reduce && !stopped;
+  const running = auto && inView;
   const playState = { animationPlayState: running ? "running" : "paused" } as const;
-
   const select = useCallback((i: number) => {
     setActive(i);
     setRun((r) => r + 1);
+    setStopped(true);
   }, []);
   const next = useCallback(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -155,7 +174,8 @@ export function Footprint({ locale }: { locale: Locale }) {
     fetch("/api/conditions")
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => j?.ok && setWx(j.sites))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setWxDone(true));
   }, [inView]);
 
   const dist = useMemo(() => Object.fromEntries(sites.map((s) => [s.id, Math.round(km(siteGeo[HQ], siteGeo[s.id]))])), []);
@@ -163,8 +183,6 @@ export function Footprint({ locale }: { locale: Locale }) {
     id === HQ ? (ar ? "المقر الرئيسي للمجموعة" : "Group headquarters") : ar ? `${dist[id]} كم من المقر الرئيسي` : `${dist[id]} km from Group HQ`;
 
   const curWx = wx?.[cur.id] ?? null;
-  const details = siteDetails[cur.id] ?? [];
-  const present = cur.companies.filter((c): c is CompanyId => c !== "holding");
 
   return (
     <section ref={ref} className="relative overflow-hidden bg-ink-900 py-24 text-white md:py-32">
@@ -185,7 +203,7 @@ export function Footprint({ locale }: { locale: Locale }) {
           </div>
         </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-12" onPointerEnter={() => setHover(true)} onPointerLeave={() => setHover(false)}>
+        <div className="mt-14 grid gap-6 lg:grid-cols-12">
           {/* ---------------- map */}
           <div className="lg:col-span-7">
             <MapPanel locale={locale} activeId={cur.id} onSelect={(id) => select(sites.findIndex((s) => s.id === id))} running={inView && !reduce} />
@@ -225,57 +243,59 @@ export function Footprint({ locale }: { locale: Locale }) {
                 </p>
               </div>
 
-              <div className="flex flex-1 flex-col p-6 md:p-8">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={cur.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="flex flex-1 flex-col"
-                  >
-                    <p className="text-[0.88rem] text-leaf-300">{distLabel(cur.id)}</p>
-                    <h3 className="mt-2 font-display text-[1.75rem] leading-tight md:text-[2rem]">{cur.name[locale]}</h3>
-                    <ul className="mt-5 space-y-3">
-                      {details.map((d) => (
-                        <li key={d.text.en} className="flex items-start gap-3 text-[0.95rem] leading-snug text-white/75">
-                          <span aria-hidden className="mt-[0.5em] h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: DOT[d.company] }} />
-                          <span>
-                            {d.text[locale]}
-                            <span className="text-white/40"> · {companyLabels[d.company]?.[locale]}</span>
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+              {/* Every location's text shares one grid cell, so the card keeps the tallest height and the tabs below
+                  never jump as the tour moves on (or when the live conditions arrive). */}
+              <div className="grid flex-1 p-6 md:p-8">
+                {sites.map((s) => {
+                  const on = s.id === cur.id;
+                  const sWx = wx?.[s.id] ?? null;
+                  return (
+                    <div key={s.id} aria-hidden={!on} className="col-start-1 row-start-1 flex flex-col" style={swap(on)}>
+                      <p className="text-[0.88rem] text-leaf-300">{distLabel(s.id)}</p>
+                      <h3 className="mt-2 font-display text-[1.75rem] leading-tight md:text-[2rem]">{s.name[locale]}</h3>
+                      <ul className="mt-5 space-y-3">
+                        {(siteDetails[s.id] ?? []).map((d) => (
+                          <li key={d.text.en} className="flex items-start gap-3 text-[0.95rem] leading-snug text-white/75">
+                            <span aria-hidden className="mt-[0.5em] h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: DOT[d.company] }} />
+                            <span>
+                              {d.text[locale]}
+                              <span className="text-white/40"> · {companyLabels[d.company]?.[locale]}</span>
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
 
-                    {curWx && (
-                      <dl className="mt-6 grid grid-cols-3 gap-4 border-t border-white/10 pt-5">
-                        <div>
-                          <dt className="text-[0.78rem] text-white/45">{ar ? "الحرارة" : "Temperature"}</dt>
-                          <dd className="num mt-1 text-[0.98rem]">{curWx.t.toFixed(1)}°C</dd>
-                        </div>
-                        <div>
-                          <dt className="text-[0.78rem] text-white/45">{ar ? "الرياح" : "Wind"}</dt>
-                          <dd className="mt-1 text-[0.98rem]">
-                            <span className="num">{Math.round(curWx.wind * 3.6)}</span> {ar ? "كم/س" : "km/h"}{" "}
-                            <span className="text-white/55">{compass(curWx.dir, locale)}</span>
-                          </dd>
-                        </div>
-                        <div>
-                          <dt className="text-[0.78rem] text-white/45">{ar ? "الرطوبة" : "Humidity"}</dt>
-                          <dd className="num mt-1 text-[0.98rem]">{Math.round(curWx.rh)}%</dd>
-                        </div>
-                      </dl>
-                    )}
+                      {/* Space is reserved while the conditions load; dropped only if the service is unavailable. */}
+                      {(sWx || !wxDone) && (
+                        <dl className={cn("mt-6 grid grid-cols-3 gap-4 border-t border-white/10 pt-5", !sWx && "invisible")}>
+                          <div>
+                            <dt className="text-[0.78rem] text-white/45">{ar ? "الحرارة" : "Temperature"}</dt>
+                            <dd className="num mt-1 text-[0.98rem]">{sWx ? `${sWx.t.toFixed(1)}°C` : "-"}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-[0.78rem] text-white/45">{ar ? "الرياح" : "Wind"}</dt>
+                            <dd className="mt-1 text-[0.98rem]">
+                              <span className="num">{sWx ? Math.round(sWx.wind * 3.6) : "-"}</span> {ar ? "كم/س" : "km/h"}{" "}
+                              <span className="text-white/55">{sWx ? compass(sWx.dir, locale) : ""}</span>
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-[0.78rem] text-white/45">{ar ? "الرطوبة" : "Humidity"}</dt>
+                            <dd className="num mt-1 text-[0.98rem]">{sWx ? `${Math.round(sWx.rh)}%` : "-"}</dd>
+                          </div>
+                        </dl>
+                      )}
 
-                    <div className="mt-auto flex flex-wrap items-center gap-x-7 gap-y-4 pt-7">
-                      {present.map((c) => (
-                        <CompanyLogo key={c} id={c} locale={locale} tone="white" size={30} className="opacity-90" />
-                      ))}
+                      <div className="mt-auto flex flex-wrap items-center gap-x-7 gap-y-4 pt-7">
+                        {s.companies
+                          .filter((c): c is CompanyId => c !== "holding")
+                          .map((c) => (
+                            <CompanyLogo key={c} id={c} locale={locale} tone="white" size={30} className="opacity-90" />
+                          ))}
+                      </div>
                     </div>
-                  </motion.div>
-                </AnimatePresence>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -286,8 +306,6 @@ export function Footprint({ locale }: { locale: Locale }) {
           role="tablist"
           aria-label={ar ? "مواقع المجموعة" : "Group locations"}
           className="no-scrollbar mt-6 grid auto-cols-[minmax(9.5rem,1fr)] grid-flow-col overflow-x-auto border-t border-white/10 lg:auto-cols-fr"
-          onPointerEnter={() => setHover(true)}
-          onPointerLeave={() => setHover(false)}
         >
           {sites.map((s, i) => {
             const on = i === active;
@@ -321,8 +339,8 @@ export function Footprint({ locale }: { locale: Locale }) {
           })}
         </div>
 
-        {wx && (
-          <p className="mt-8 text-[0.78rem] text-white/35">
+        {(wx || !wxDone) && (
+          <p className={cn("mt-8 text-[0.78rem] text-white/35", !wx && "invisible")}>
             {ar ? "الأحوال الجوية: " : "Local conditions: "}
             <a href="https://www.met.no/en" target="_blank" rel="noreferrer" className="underline decoration-white/20 underline-offset-2 hover:text-white/60">
               MET Norway

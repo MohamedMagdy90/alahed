@@ -4,7 +4,7 @@ import { useInView } from "framer-motion";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { type CSSProperties, useCallback, useEffect, useId, useReducer, useRef, useState } from "react";
+import { type CSSProperties, type FocusEvent, useCallback, useEffect, useId, useReducer, useRef, useState } from "react";
 import { useSafeReducedMotion } from "@/components/motion";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { BANDS, BOWL, MARK_VIEWBOX } from "@/components/site/LogoMark";
@@ -102,14 +102,15 @@ export function Hero({ locale, latest, openRoles = 0 }: { locale: Locale; latest
   const inView = useInView(ref, { amount: 0.3 });
   const [{ active, shown, stamp, runs, counter }, dispatch] = useReducer(reducer, INITIAL);
   const [userPaused, setUserPaused] = useState(false);
-  const [hover, setHover] = useState(false);
-
-  const cur = COMPANIES[active];
-  const accent = ACCENT[cur.id];
+  // Keyboard focus inside the hero pauses it (WCAG 2.2.2). Pointer hover deliberately does NOT: the hover zones
+  // were large and invisible, so a resting cursor (e.g. after closing a header menu) froze the slideshow.
+  const [keyboardFocus, setKeyboardFocus] = useState(false);
+  // Photos 2-4 are mounted once the page has loaded, so they never compete with the first photo (the LCP image).
+  const [warm, setWarm] = useState(false);
 
   // Auto-advance is driven by CSS animations (progress bar, band sweep, photo drift) so they all pause together.
   const auto = !reduce;
-  const running = auto && !userPaused && !hover && inView;
+  const running = auto && !userPaused && !keyboardFocus && inView;
   const playState = running ? "running" : "paused";
 
   const select = useCallback((i: number) => dispatch({ type: "go", to: i }), []);
@@ -125,20 +126,34 @@ export function Hero({ locale, latest, openRoles = 0 }: { locale: Locale; latest
     return () => window.clearTimeout(t);
   }, [counter]);
 
-  // Download and decode every photo up front, so no dissolve ever waits on (or stutters for) a decode.
+  // After the page has loaded (and the browser is idle), mount the other photos; each one is decoded as soon as
+  // it arrives (onLoad below), long before its turn at 7 s, so no dissolve ever waits on a decode.
   useEffect(() => {
-    for (const c of COMPANIES) {
-      const img = new window.Image();
-      img.src = c.image;
-      img.decode?.().catch(() => {});
-    }
+    let idle = 0;
+    let timer = 0;
+    const go = () => {
+      const ric = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+      if (ric) idle = ric(() => setWarm(true), { timeout: 2500 });
+      else timer = window.setTimeout(() => setWarm(true), 600);
+    };
+    if (document.readyState === "complete") go();
+    else window.addEventListener("load", go, { once: true });
+    return () => {
+      window.removeEventListener("load", go);
+      window.clearTimeout(timer);
+      (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(idle);
+    };
   }, []);
 
+  // Pause only for keyboard users (focus-visible). A mouse click or a tap also focuses the button, which used to
+  // pause the slideshow until the user clicked somewhere else.
   const pauseHandlers = {
-    onPointerEnter: () => setHover(true),
-    onPointerLeave: () => setHover(false),
-    onFocusCapture: () => setHover(true),
-    onBlurCapture: () => setHover(false),
+    onFocusCapture: (e: FocusEvent<HTMLElement>) => {
+      if ((e.target as HTMLElement).matches?.(":focus-visible")) setKeyboardFocus(true);
+    },
+    onBlurCapture: (e: FocusEvent<HTMLElement>) => {
+      if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setKeyboardFocus(false);
+    },
   };
 
   return (
@@ -155,19 +170,23 @@ export function Hero({ locale, latest, openRoles = 0 }: { locale: Locale; latest
               transition: shown[i] ? `opacity ${FADE_MS}ms ${EASE_SWAP}` : "none",
             }}
           >
-            <Image
-              src={c.image}
-              alt=""
-              fill
-              priority={i === 0}
-              loading={i === 0 ? undefined : "eager"}
-              sizes="100vw"
-              className="object-cover"
-              style={{
-                animation: auto && shown[i] ? `herozoom ${ZOOM_MS}ms linear forwards` : "none",
-                animationPlayState: playState,
-              }}
-            />
+            {(i === 0 || warm || shown[i]) && (
+              <Image
+                src={c.image}
+                alt=""
+                fill
+                priority={i === 0}
+                loading={i === 0 ? undefined : "eager"}
+                fetchPriority={i === 0 ? undefined : "low"}
+                sizes="100vw"
+                className="object-cover"
+                onLoad={i === 0 ? undefined : (e) => e.currentTarget.decode?.().catch(() => {})}
+                style={{
+                  animation: auto && shown[i] ? `herozoom ${ZOOM_MS}ms linear forwards` : "none",
+                  animationPlayState: playState,
+                }}
+              />
+            )}
           </div>
         ))}
       </div>
@@ -382,7 +401,7 @@ export function Hero({ locale, latest, openRoles = 0 }: { locale: Locale; latest
               type="button"
               onClick={() => setUserPaused((p) => !p)}
               aria-label={userPaused ? (ar ? "تشغيل العرض" : "Play") : ar ? "إيقاف العرض مؤقتًا" : "Pause"}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-white/20 text-white/70 transition-colors hover:border-white/50 hover:text-white"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/20 text-white/70 transition-colors hover:border-white/50 hover:text-white sm:h-8 sm:w-8"
             >
               {userPaused ? <Play className="h-3.5 w-3.5 rtl:-scale-x-100" /> : <Pause className="h-3.5 w-3.5" />}
             </button>

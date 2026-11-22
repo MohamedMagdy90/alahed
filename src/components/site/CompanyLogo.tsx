@@ -52,8 +52,9 @@ export function CompanyLogo({
     <Image
       src={c.logo}
       alt={decorative ? "" : c.name[locale]}
-      width={art.w}
-      height={art.h}
+      // The rendered size, so the optimiser serves a 1x/2x pair at that size rather than the full artwork.
+      width={width}
+      height={height}
       style={{ height, width }}
       className={cn("max-w-none shrink-0 object-contain transition-[filter,opacity] duration-500", TONE[tone], className)}
     />

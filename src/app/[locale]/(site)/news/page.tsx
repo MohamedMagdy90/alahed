@@ -82,13 +82,15 @@ export default async function NewsPage({ params, searchParams }: P) {
               </Link>
             ))}
           </nav>
-          <form action={href(locale, "/news")} method="get" className="flex gap-2">
+          {/* min-w-0 everywhere: a <select> is as wide as its longest option and the search box as wide as its
+              placeholder, which pushed the row to ~480 px (620 px in Arabic) and zoomed the whole page out on phones. */}
+          <form action={href(locale, "/news")} method="get" className="flex min-w-0 gap-2">
             {type && <input type="hidden" name="type" value={type} />}
             <select
               name="company"
               defaultValue={company ?? ""}
               aria-label={ar ? "الشركة" : "Company"}
-              className="h-10 rounded-[2px] border border-ink/15 bg-white px-3 text-[0.88rem] text-ink outline-none focus:border-leaf"
+              className="h-10 w-[38%] min-w-0 shrink-0 truncate rounded-[2px] border border-ink/15 bg-white px-2.5 text-[0.88rem] text-ink outline-none focus:border-leaf sm:w-auto sm:max-w-[15rem] sm:px-3"
             >
               <option value="">{ar ? "جميع الشركات" : "All companies"}</option>
               {Object.entries(companyLabels).map(([k, v]) => (
@@ -97,7 +99,7 @@ export default async function NewsPage({ params, searchParams }: P) {
                 </option>
               ))}
             </select>
-            <div className="flex h-10 flex-1 items-center rounded-[2px] border border-ink/15 bg-white focus-within:border-leaf lg:w-72 lg:flex-none">
+            <div className="flex h-10 min-w-0 flex-1 items-center rounded-[2px] border border-ink/15 bg-white focus-within:border-leaf lg:w-72 lg:flex-none">
               <Search className="ms-3 h-4 w-4 shrink-0 text-haze" />
               <input
                 type="search"
@@ -107,7 +109,7 @@ export default async function NewsPage({ params, searchParams }: P) {
                 className="h-full min-w-0 flex-1 bg-transparent px-3 text-[0.9rem] outline-none placeholder:text-haze-300"
               />
             </div>
-            <button type="submit" className="h-10 rounded-[2px] bg-ink px-4 text-[0.88rem] font-medium text-white transition-colors hover:bg-navy">
+            <button type="submit" className="h-10 shrink-0 rounded-[2px] bg-ink px-4 text-[0.88rem] font-medium text-white transition-colors hover:bg-navy">
               {ar ? "بحث" : "Go"}
             </button>
           </form>

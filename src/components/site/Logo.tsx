@@ -7,8 +7,9 @@ export function Logo({ variant = "color", className, priority }: { variant?: "co
     <Image
       src="/brand/alahed-holding.png"
       alt="Al-Ahed Holding — العهد القابضة"
-      width={366}
-      height={100}
+      // Rendered at most 172px wide: these dimensions give a 1x/2x srcset of 192/384px (artwork is 366x100).
+      width={172}
+      height={47}
       priority={priority}
       className={cn(
         "h-auto w-[150px] transition-[filter] duration-500 md:w-[172px]",

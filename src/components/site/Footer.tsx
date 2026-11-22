@@ -89,10 +89,14 @@ export function Footer({ locale }: { locale: Locale }) {
         {cols.map((col) => (
           <div key={col.title} className="lg:col-span-2">
             <p className="mb-5 text-[0.85rem] font-medium text-white/45">{col.title}</p>
-            <ul className="space-y-3">
+            {/* Touch screens: 40 px rows so each link is an easy tap; desktop keeps the tighter list. */}
+            <ul className="lg:space-y-3">
               {col.links.map((l) => (
                 <li key={l.href}>
-                  <Link href={href(locale, l.href)} className="text-[0.92rem] text-white/75 transition-colors hover:text-white">
+                  <Link
+                    href={href(locale, l.href)}
+                    className="inline-flex min-h-10 items-center text-[0.92rem] text-white/75 transition-colors hover:text-white lg:min-h-0"
+                  >
                     <span className="link-underline">{l.label}</span>
                   </Link>
                 </li>
@@ -105,12 +109,12 @@ export function Footer({ locale }: { locale: Locale }) {
           <address className="space-y-3 text-[0.92rem] not-italic text-white/75">
             <p>{contact.holding.address[locale]}</p>
             <p className="num" dir="ltr">
-              <a href={`tel:${contact.holding.phone.replace(/\s/g, "")}`} className="hover:text-white">
+              <a href={`tel:${contact.holding.phone.replace(/\s/g, "")}`} className="-my-2 inline-block py-2 hover:text-white">
                 {contact.holding.phone}
               </a>
             </p>
             <p>
-              <a href={`mailto:${contact.holding.email}`} className="break-all hover:text-white">
+              <a href={`mailto:${contact.holding.email}`} className="-my-2 inline-block break-all py-2 hover:text-white">
                 {contact.holding.email}
               </a>
             </p>
@@ -124,17 +128,17 @@ export function Footer({ locale }: { locale: Locale }) {
           <p>
             © {year} {contact.holding.name[locale]} {t.footer.rights}
           </p>
-          <div className="flex flex-wrap items-center gap-6">
-            <Link href={href(locale, "/legal/privacy")} className="hover:text-white">
+          <div className="flex flex-wrap items-center gap-x-6 md:gap-y-6">
+            <Link href={href(locale, "/legal/privacy")} className="inline-flex min-h-10 items-center hover:text-white md:min-h-0">
               {t.footer.privacy}
             </Link>
-            <Link href={href(locale, "/legal/terms")} className="hover:text-white">
+            <Link href={href(locale, "/legal/terms")} className="inline-flex min-h-10 items-center hover:text-white md:min-h-0">
               {t.footer.terms}
             </Link>
-            <Link href={href(locale, "/legal/disclaimer")} className="hover:text-white">
+            <Link href={href(locale, "/legal/disclaimer")} className="inline-flex min-h-10 items-center hover:text-white md:min-h-0">
               {t.footer.disclaimer}
             </Link>
-            <a href="#main" className="group inline-flex items-center gap-2 text-white/70 hover:text-white">
+            <a href="#main" className="group inline-flex min-h-10 items-center gap-2 text-white/70 hover:text-white md:min-h-0">
               {t.footer.backToTop}
               <Arrow className="-rotate-90 rtl:rotate-90" />
             </a>
