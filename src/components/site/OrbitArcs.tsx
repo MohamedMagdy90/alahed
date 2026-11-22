@@ -165,7 +165,7 @@ export function OrbitArcs({
             <span className="num font-mono text-[0.68rem] text-white/45">{l.index}</span>
             <span>
               <span className="block font-display text-[0.98rem] text-white transition-colors group-hover:text-leaf-300">{l.name}</span>
-              <span className="block font-mono text-[0.66rem] uppercase tracking-[0.14em] text-white/45 rtl:font-arabic rtl:tracking-normal">
+              <span className="block text-[0.85rem] text-white/45">
                 {l.meta}
               </span>
             </span>

@@ -54,7 +54,7 @@ export default async function InvestorsPage({ params }: P) {
   const shareCard = (
     <div className="rounded-[2px] border border-white/15 bg-ink-900/60 backdrop-blur-md">
       <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-        <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-white/50 rtl:font-arabic rtl:text-[0.8rem] rtl:normal-case rtl:tracking-normal">
+        <span className="text-[0.85rem] text-white/50">
           {ar ? "معلومات السهم" : "Share information"}
         </span>
         <span className="inline-flex items-center gap-2 rounded-full border border-leaf/40 bg-leaf/10 px-3 py-1 text-[0.72rem] text-leaf-300">

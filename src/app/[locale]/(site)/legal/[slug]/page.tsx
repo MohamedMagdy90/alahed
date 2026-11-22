@@ -68,7 +68,7 @@ export default async function LegalPage({ params }: P) {
             </div>
           </aside>
           <div className="lg:col-span-8 lg:col-start-5">
-            <p className="mb-10 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-haze rtl:font-arabic rtl:text-[0.82rem] rtl:normal-case rtl:tracking-normal">
+            <p className="mb-10 text-[0.85rem] text-haze">
               {ar ? "آخر تحديث:" : "Last updated:"} <span className="num">{formatDate(LEGAL_UPDATED, locale)}</span>
             </p>
             <div className="prose-ah max-w-3xl">

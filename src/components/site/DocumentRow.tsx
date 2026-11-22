@@ -20,7 +20,7 @@ export function DocumentRow({ doc, locale, showCategory = true }: { doc: Documen
       </span>
       <span className="min-w-0">
         <span className="block text-pretty font-display text-[1.08rem] leading-snug text-ink">{pick(doc, "title", locale)}</span>
-        <span className="mt-1 flex flex-wrap items-center gap-x-3 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-haze rtl:font-arabic rtl:text-[0.78rem] rtl:normal-case rtl:tracking-normal">
+        <span className="mt-1 flex flex-wrap items-center gap-x-3 text-[0.85rem] text-haze">
           <span className="num md:hidden">{doc.year}</span>
           {showCategory && <span>{documentCategories[doc.category]?.[locale] ?? doc.category}</span>}
           <span>PDF{doc.fileSize ? ` · ${formatBytes(doc.fileSize, locale)}` : ""}</span>

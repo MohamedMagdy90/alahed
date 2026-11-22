@@ -208,7 +208,7 @@ export default async function AboutPage({ params }: P) {
           <Reveal className="mt-16">
             <div className="mx-auto flex max-w-sm flex-col items-center rounded-[2px] bg-ink-900 px-8 py-7 text-center text-white">
               <Image src="/brand/alahed-holding.png" alt="" width={366} height={100} className="h-auto w-44 [filter:brightness(0)_invert(1)]" />
-              <p className="mt-4 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-white/50 rtl:font-arabic rtl:text-[0.8rem] rtl:normal-case rtl:tracking-normal">
+              <p className="mt-4 text-[0.85rem] text-white/50">
                 {ar ? "الشركة الأم · 2018" : "Parent company · 2018"}
               </p>
             </div>
