@@ -4,6 +4,7 @@ import Image from "next/image";
 import { type KeyboardEvent, useRef, useState } from "react";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { TextLink } from "@/components/site/primitives";
+import { profileOf } from "@/content/profiles";
 import { companies } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
@@ -42,7 +43,7 @@ export function Companies({ locale }: { locale: Locale }) {
           </p>
         </div>
 
-        <div role="tablist" aria-label={ar ? "شركات المجموعة" : "Group companies"} className="mt-14 grid grid-cols-3 border-b border-ink/10">
+        <div role="tablist" aria-label={ar ? "شركات المجموعة" : "Group companies"} className="mt-14 grid grid-cols-4 border-b border-ink/10">
           {companies.map((c, i) => {
             const on = i === active;
             return (
@@ -85,8 +86,10 @@ export function Companies({ locale }: { locale: Locale }) {
 
         {companies.map((c, i) => {
           const on = i === active;
-          const principals = c.partners ?? [];
-          const projects = c.projects?.[locale] ?? [];
+          const prof = profileOf(c.id);
+          const principals = c.partners ?? prof.portfolio?.divisions.flatMap((d) => d.brands.map((b) => b.name)) ?? [];
+          const recent = prof.projectTables?.[0]?.rows.slice(0, 3).map((r) => `${r.client}: ${r.title[locale]}`);
+          const projects = recent ?? c.projects?.[locale] ?? [];
           return (
             <div
               key={c.id}
@@ -112,7 +115,10 @@ export function Companies({ locale }: { locale: Locale }) {
 
                 <div className="flex flex-col lg:col-span-5">
                   <h3 className="font-display text-display-md font-normal text-ink">{c.name[locale]}</h3>
-                  <p className="mt-2 text-[0.9rem] text-haze">{c.legal[locale]}</p>
+                  <p className="mt-2 text-[0.9rem] text-haze">
+                    {c.legal[locale]}
+                    {c.parent && <span> · {ar ? "تعمل ضمن دوبت" : "Works within DOPET"}</span>}
+                  </p>
                   <p className="mt-6 text-pretty text-[1.02rem] leading-relaxed text-ink/75">{c.summary[locale]}</p>
 
                   <div className="mt-8 border-t border-ink/10 pt-6">
@@ -129,7 +135,7 @@ export function Companies({ locale }: { locale: Locale }) {
 
                   {principals.length > 0 && (
                     <div className="mt-6 border-t border-ink/10 pt-6">
-                      <p className="text-[0.88rem] font-medium text-ink">{ar ? "شركات مصنّعة نمثّلها" : "Manufacturers we represent"}</p>
+                      <p className="text-[0.88rem] font-medium text-ink">{ar ? "علامات تجارية نمثّلها" : "Brands we represent"}</p>
                       <p className="mt-2 text-[0.92rem] leading-relaxed text-ink/75">
                         {principals.slice(0, 6).join(ar ? "، " : ", ")}
                         {principals.length > 6 && (ar ? ` و${principals.length - 6} شركات أخرى` : `, and ${principals.length - 6} more`)}
@@ -139,7 +145,7 @@ export function Companies({ locale }: { locale: Locale }) {
 
                   {projects.length > 0 && (
                     <div className="mt-6 border-t border-ink/10 pt-6">
-                      <p className="text-[0.88rem] font-medium text-ink">{ar ? "مشاريع مختارة" : "Selected projects"}</p>
+                      <p className="text-[0.88rem] font-medium text-ink">{c.id === "pemco" ? (ar ? "عقود جارية" : "Ongoing contracts") : ar ? "مشاريع حديثة" : "Recent projects"}</p>
                       <ul className="mt-3 space-y-2.5">
                         {projects.slice(0, 3).map((p) => (
                           <li key={p} className="text-[0.92rem] leading-snug text-ink/75">
