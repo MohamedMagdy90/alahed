@@ -115,3 +115,16 @@
       (10 Person rows). Command in the header of deploy/seed-people-2026-11.js (needs NODE_PATH).
 - [x] Cleaned: /tmp/nmb, node_modules symlink, release bundle, /home/project/.pm helpers.
 - [ ] Owner review of the live PDF content (4 company pages, About structure, Leadership board + management).
+
+## 2026-11-22 afternoon — hero x4 + smoother motion (branch redesign)
+- [x] Hero: DST added (heroOrder aatc, dopet, dst, pemco = logo bands inside → out; verb "equipping" / "ونجهّز").
+      DST caption: "A DOPET division from 2000, a company since 2019" (matches Established 2019).
+- [x] Smoothness: photo dissolve over an opaque outgoing slide (no dark dip), images pre-decoded, slow drift
+      (herozoom) paused with the slideshow; logos + captions crossfade in one grid cell (no headline jump);
+      clipPath instead of mask+blur for the band sweep; strip solid tint instead of backdrop blur.
+- [x] Headline wrap fix: comma kept with the verb before it (nowrap wrapper), no line starts with ",".
+- [x] Commits b2b697f + 34e45ba pushed; release 20261122-121304 live and verified (EN/AR, 0 log errors).
+- Photo answer for owner: only DOPET's profile has usable own photos (10 facility shots, already on site).
+  AATC deck = mostly OEM product renders + stock, a few small own shots (service-centre building, field service,
+  ESAB centre entrance). PEMCO = diagrams + stock. Holding profile = logo only. DST hero uses stock engineer.jpg.
+- Formatting: do NOT run `biome format --write` on existing files (repo isn't biome-formatted; reflows everything).
