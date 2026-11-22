@@ -96,3 +96,14 @@
 ## Content gaps to confirm with client
 - Chairman & President messages, full Board list + photos (only MD & CEO seeded)
 - PEMCO services detail, workforce figure
+
+## 2026-11-22 PDF content + logos (branch redesign)
+- Source: github.com/MohamedMagdy90/PM (holding profile, AATC 2026 deck, DOPET, PEMCO, 4 logos). Download to /tmp only,
+  extract, delete. Never keep PDFs / node_modules / .next* in the workspace (big files trigger resets).
+- [x] Logos: aatc, dopet, dopet-st (new), pemco (palette PNGs, ~35 KB). pemco-cutout removed.
+- [x] 4th company DOPET Sales & Technologies (id dst, slug dopet-sales-technologies, parent dopet); PEMCO founded 1987.
+- [x] content/profiles.ts (per-company detail), content/group.ts (ownership, board, property, footprint, workshops, OEM centres)
+- [x] Company page sections (components/pages/company), About structure + facilities, Governance certs/awards,
+      home tabs x4, map 8 sites, admin enums, header 4 cols.
+- [ ] Leadership DB: insert board + management from group.ts (idempotent, by nameEn) on the server.
+- [ ] Deploy: deploy key lost in the 10:30 wipe → new key needed from owner.
