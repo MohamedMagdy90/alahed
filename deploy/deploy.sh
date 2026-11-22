@@ -16,18 +16,35 @@ SSH_OPTS="-i $KEY -o BatchMode=yes -o ConnectTimeout=15 -o UserKnownHostsFile=$K
 SSH="ssh $SSH_OPTS"
 TS=$(date -u +%Y%m%d-%H%M%S)
 OUT=/tmp/alahed-release
+# Build where the dependencies really live, so build output never lands in the workspace (large files there
+# trigger container resets). node_modules may be a symlink into /tmp; with no dependencies, install in /tmp.
+if [ -n "${BUILD_DIR:-}" ]; then BUILD="$BUILD_DIR"
+elif [ -e node_modules ]; then BUILD="$(dirname "$(readlink -f node_modules)")"
+else BUILD=/tmp/alahed-build; fi
 
 if [ -z "${SKIP_BUILD:-}" ]; then
-  echo "==> build ($DIST)"
-  rm -rf "$DIST"
-  bunx prisma generate >/dev/null
-  NEXT_DIST_DIR=$DIST NEXT_PUBLIC_SITE_URL="https://$DOMAIN" NEXT_TELEMETRY_DISABLED=1 bunx next build
+  echo "==> build ($BUILD/$DIST)"
+  if [ "$(readlink -f "$BUILD")" != "$(readlink -f .)" ]; then
+    mkdir -p "$BUILD"
+    rm -rf "$BUILD/src" "$BUILD/public" "$BUILD/prisma" "$BUILD/$DIST"
+    tar -cf - --exclude=./node_modules --exclude=./.git --exclude='./.next*' --exclude=./.deploy \
+      --exclude=./storage --exclude='./prisma/*.db*' --exclude=./tsconfig.tsbuildinfo --exclude=./.same . \
+      | tar -xf - -C "$BUILD"
+    [ -d "$BUILD/node_modules" ] || (cd "$BUILD" && bun install --frozen-lockfile)
+  fi
+  (
+    cd "$BUILD"
+    rm -rf "$DIST"
+    bunx prisma generate >/dev/null
+    NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=3072}" NEXT_DIST_DIR=$DIST \
+      NEXT_PUBLIC_SITE_URL="https://$DOMAIN" NEXT_TELEMETRY_DISABLED=1 bunx next build
+  )
 fi
 
 echo "==> assemble release"
 rm -rf "$OUT" && mkdir -p "$OUT"
-cp -a "$DIST/standalone/." "$OUT/"
-mkdir -p "$OUT/$DIST" && cp -a "$DIST/static" "$OUT/$DIST/static"
+cp -a "$BUILD/$DIST/standalone/." "$OUT/"
+mkdir -p "$OUT/$DIST" && cp -a "$BUILD/$DIST/static" "$OUT/$DIST/static"
 cp -a public "$OUT/public"
 mkdir -p "$OUT/prisma" && cp prisma/schema.prisma "$OUT/prisma/"
 # Never ship local databases, env files or uploads.
@@ -79,4 +96,7 @@ ls -1dt $APP/releases/* | tail -n +6 | xargs -r rm -rf
 REMOTE
 
 rm -f /tmp/alahed-seed.db
+# Free the space: build output and the release bundle are not needed after a successful deploy.
+rm -rf "$OUT" /tmp/alahed-release.tgz
+[ "$(readlink -f "$BUILD")" = "$(readlink -f .)" ] || rm -rf "$BUILD/$DIST"
 echo "==> live: https://$DOMAIN"
