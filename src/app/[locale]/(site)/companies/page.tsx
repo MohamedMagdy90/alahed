@@ -87,7 +87,7 @@ export default async function CompaniesPage({ params }: P) {
                   <div className="flex h-14 items-center">
                     <CompanyLogo id={c.id} locale={locale} size={44} />
                   </div>
-                  <h2 data-vt="title" className="mt-8 font-display text-display-md font-normal text-ink">
+                  <h2 className="mt-8 font-display text-display-md font-normal text-ink">
                     {c.name[locale]}
                   </h2>
                   <p className="mt-2 text-[0.92rem] text-haze">

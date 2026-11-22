@@ -94,7 +94,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
         {t.skip}
       </a>
 
-      <header className="fixed inset-x-0 top-0 z-50" onMouseLeave={() => setMenu(null)}>
+      <header className="vt-header fixed inset-x-0 top-0 z-50" onMouseLeave={() => setMenu(null)}>
         {/* Utility bar */}
         <div
           className={cn(

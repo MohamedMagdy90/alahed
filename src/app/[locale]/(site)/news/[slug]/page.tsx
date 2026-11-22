@@ -58,7 +58,7 @@ export default async function ArticlePage({ params }: P) {
       {/* Header */}
       <header className="grain relative isolate overflow-hidden bg-ink-900 pb-40 pt-44 text-white md:pb-48">
         <div className="container">
-          <nav aria-label="Breadcrumb" className="mb-10 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-white/50 rtl:font-arabic rtl:text-[0.8rem] rtl:normal-case rtl:tracking-normal">
+          <nav aria-label="Breadcrumb" className="mb-10 text-[0.85rem] text-white/55">
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link href={href(locale)} className="hover:text-white">
@@ -80,15 +80,15 @@ export default async function ArticlePage({ params }: P) {
             </ol>
           </nav>
           <div className="max-w-4xl">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-white/60 rtl:font-arabic rtl:text-[0.82rem] rtl:normal-case rtl:tracking-normal">
-              <span className="text-leaf-300">{type}</span>
-              <span aria-hidden className="h-px w-4 bg-white/30" />
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[0.9rem] text-white/65">
+              <span className="font-medium text-leaf-300">{type}</span>
+              <span aria-hidden className="text-white/30">·</span>
               <span>{company}</span>
-              <span aria-hidden className="h-px w-4 bg-white/30" />
+              <span aria-hidden className="text-white/30">·</span>
               <time className="num" dateTime={new Date(post.publishedAt).toISOString()}>
                 {formatDate(post.publishedAt, locale)}
               </time>
-              <span aria-hidden className="h-px w-4 bg-white/30" />
+              <span aria-hidden className="text-white/30">·</span>
               <span className="num">
                 {readingMinutes(body)} {ar ? "دقائق قراءة" : "min read"}
               </span>
@@ -102,11 +102,13 @@ export default async function ArticlePage({ params }: P) {
       {/* Cover */}
       {post.coverImage && (
         <div className="container relative z-10 -mt-28 md:-mt-36">
-          <Reveal>
-            <div className="relative aspect-[16/8] overflow-hidden rounded-[2px] bg-ink shadow-[0_40px_80px_-40px_rgba(6,13,34,0.5)]">
-              <Image src={post.coverImage} alt="" fill priority sizes="(min-width: 1440px) 1360px, 100vw" className="object-cover" />
-            </div>
-          </Reveal>
+          {/* Not wrapped in a reveal: the cover is the target of the card → article morph. */}
+          <div
+            data-vt-hero="media"
+            className="relative aspect-[16/8] overflow-hidden rounded-[2px] bg-ink shadow-[0_40px_80px_-40px_rgba(6,13,34,0.5)]"
+          >
+            <Image src={post.coverImage} alt="" fill priority sizes="(min-width: 1440px) 1360px, 100vw" className="object-cover" />
+          </div>
         </div>
       )}
 

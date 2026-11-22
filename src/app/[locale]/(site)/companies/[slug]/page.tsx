@@ -266,8 +266,10 @@ export default async function CompanyPage({ params }: P) {
           <div className="grid gap-4 md:grid-cols-2">
             {others.map((o) => (
               <Link key={o.id} href={href(locale, `/companies/${o.slug}`)} className="group relative isolate flex min-h-[260px] flex-col justify-end overflow-hidden rounded-[2px] bg-ink-900 p-8 text-white">
-                <Image src={o.image} alt="" fill sizes="50vw" className="-z-20 object-cover opacity-50 transition-transform duration-1400 ease-out-expo group-hover:scale-105" />
-                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink-900 via-ink-900/50 to-transparent" />
+                <div data-vt="media" className="absolute inset-0 -z-10 overflow-hidden">
+                  <Image src={o.image} alt="" fill sizes="50vw" className="object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.03]" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/55 to-ink-900/10" />
+                </div>
                 <span className="mt-3 flex items-center justify-between gap-4">
                   <span className="font-display text-[1.8rem] leading-tight">{o.name[locale]}</span>
                   <Arrow className="text-leaf-300" />

@@ -39,14 +39,14 @@ export function NewsCard({
   const meta = (tone: "light" | "dark") => (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.68rem] uppercase tracking-[0.14em] rtl:font-arabic rtl:text-[0.78rem] rtl:normal-case rtl:tracking-normal",
-        tone === "light" ? "text-haze" : "text-white/60",
+        "flex flex-wrap items-center gap-x-2 gap-y-1 text-[0.86rem]",
+        tone === "light" ? "text-haze" : "text-white/65",
       )}
     >
-      <span className={tone === "light" ? "text-leaf-700" : "text-leaf-300"}>{type}</span>
-      <span aria-hidden className="h-px w-3 bg-current opacity-50" />
+      <span className={cn("font-medium", tone === "light" ? "text-leaf-700" : "text-leaf-300")}>{type}</span>
+      <span aria-hidden className="opacity-50">·</span>
       <span>{company}</span>
-      <span aria-hidden className="h-px w-3 bg-current opacity-50" />
+      <span aria-hidden className="opacity-50">·</span>
       <time dateTime={new Date(post.publishedAt).toISOString()} className="num">
         {date}
       </time>
@@ -62,15 +62,17 @@ export function NewsCard({
           className,
         )}
       >
-        <Image
-          src={cover}
-          alt=""
-          fill
-          priority={priority}
-          sizes="(min-width: 1024px) 60vw, 100vw"
-          className="-z-20 object-cover opacity-80 transition-transform duration-1600 ease-out-expo group-hover:scale-[1.04]"
-        />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink-900 via-ink-900/55 to-transparent" />
+        <div data-vt="media" className="absolute inset-0 -z-10 overflow-hidden">
+          <Image
+            src={cover}
+            alt=""
+            fill
+            priority={priority}
+            sizes="(min-width: 1024px) 60vw, 100vw"
+            className="object-cover transition-transform duration-700 ease-out-expo group-hover:scale-[1.03]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/55 to-transparent" />
+        </div>
         {meta("dark")}
         <h3 className="mt-5 max-w-2xl text-balance font-display text-[clamp(1.6rem,2.6vw,2.4rem)] font-normal leading-[1.1]">
           {title}
@@ -87,7 +89,7 @@ export function NewsCard({
   if (variant === "row") {
     return (
       <Link href={link} className={cn("group grid grid-cols-[112px_1fr] gap-5 py-5 sm:grid-cols-[148px_1fr]", className)}>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[2px] bg-pearl-200">
+        <div data-vt="media" className="relative aspect-[4/3] overflow-hidden rounded-[2px] bg-pearl-200">
           <Image
             src={cover}
             alt=""
@@ -108,7 +110,7 @@ export function NewsCard({
 
   return (
     <Link href={link} className={cn("group flex flex-col", className)}>
-      <div className="relative aspect-[16/10] overflow-hidden rounded-[2px] bg-pearl-200">
+      <div data-vt="media" className="relative aspect-[16/10] overflow-hidden rounded-[2px] bg-pearl-200">
         <Image
           src={cover}
           alt=""

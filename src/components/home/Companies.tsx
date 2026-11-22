@@ -94,11 +94,12 @@ export function Companies({ locale }: { locale: Locale }) {
               id={`co-panel-${c.id}`}
               aria-labelledby={`co-tab-${c.id}`}
               hidden={!on}
+              data-vt-card
               className="pt-12 animate-in fade-in-0 duration-500"
             >
               <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
                 <div className="lg:col-span-7">
-                  <div className="relative aspect-[16/11] overflow-hidden rounded-[2px] bg-pearl-100">
+                  <div data-vt="media" className="relative aspect-[16/11] overflow-hidden rounded-[2px] bg-pearl-100">
                     <Image
                       src={c.image}
                       alt=""

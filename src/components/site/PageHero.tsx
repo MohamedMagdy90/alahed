@@ -85,7 +85,7 @@ export function PageHero({
           <div className={aside ? "lg:col-span-8" : "lg:col-span-10"}>
             <p className="eyebrow mb-5 text-leaf-300">{eyebrow}</p>
             {/* No entrance animation on the title: the page transition carries the motion and the title can morph. */}
-            <h1 data-vt-hero="title" className="text-balance font-display text-display-xl font-normal">
+            <h1 className="text-balance font-display text-display-xl font-normal">
               {title}
             </h1>
             {intro && (
