@@ -46,8 +46,8 @@ export function CareersCta({ locale, roles = [], total = 0 }: { locale: Locale; 
           ) : (
             <p className="mt-6 max-w-lg text-pretty text-[1.05rem] leading-relaxed text-haze">
               {ar
-                ? "نوظّف مهندسين وفنيين ومتخصصين لأعمال التوريد والإنشاء والصيانة والفحص في شركاتنا الثلاث. ونبحث عن أشخاص يأخذون السلامة والجودة بجدية كما نفعل."
-                : "We hire engineers, technicians and specialists for supply, construction, maintenance and inspection work across our three companies. We look for people who take safety and quality as seriously as we do."}
+                ? "نوظّف مهندسين وفنيين ومتخصصين لأعمال التوريد والإنشاء والصيانة والفحص في شركاتنا الأربع. ونبحث عن أشخاص يأخذون السلامة والجودة بجدية كما نفعل."
+                : "We hire engineers, technicians and specialists for supply, construction, maintenance and inspection work across our four companies. We look for people who take safety and quality as seriously as we do."}
             </p>
           )}
 

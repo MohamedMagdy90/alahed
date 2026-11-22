@@ -102,8 +102,8 @@ export function Partners({ locale }: { locale: Locale }) {
       </h2>
       <p className="max-w-xl text-pretty text-[1.05rem] leading-relaxed text-haze lg:col-span-5">
         {ar
-          ? `تمثّل العهد للتجارة والمقاولات ${principals.length} شركة مصنّعة عالمية في قطر، وتخدم شركات المجموعة الثلاث كبرى المشغّلين والحقول في الدولة.`
-          : `Al-Ahed T&C represents ${principals.length} international manufacturers in Qatar, and the Group’s three companies serve the country’s major operators and fields.`}
+          ? "تمثّل العهد للتجارة والمقاولات ودوبت للمبيعات والتكنولوجيا أكثر من 50 علامة تجارية عالمية في قطر، نعرض هنا مجموعة مختارة منها. وتخدم شركات المجموعة الأربع كبرى المشغّلين والشركات الصناعية في الدولة."
+          : "Al-Ahed T&C and DOPET Sales & Technologies represent more than 50 international brands in Qatar; a selection is shown here. The Group’s four companies serve the country’s major operators and industrial companies."}
       </p>
     </div>
   );

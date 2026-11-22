@@ -179,7 +179,7 @@ export default async function CareersPage({ params, searchParams }: P) {
         <div className="container">
           <SectionHeading
             eyebrow={ar ? "مجالات العمل" : "Areas of work"}
-            title={ar ? "الأعمال التي نوظّف لها في شركاتنا الثلاث." : "The work we hire for across our three companies."}
+            title={ar ? "الأعمال التي نوظّف لها في شركاتنا الأربع." : "The work we hire for across our four companies."}
           />
           <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {areas.map((a, i) => (

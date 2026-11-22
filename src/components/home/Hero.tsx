@@ -87,7 +87,7 @@ export function Hero({ locale, latest, openRoles = 0 }: { locale: Locale; latest
       <div className="absolute inset-x-0 top-0 -z-20 h-48 bg-gradient-to-b from-ink-900/75 to-transparent" />
 
       {/* The Al-Ahed mark itself: four crescents traced from the logo. The outer band is the Group, holding the
-          three companies; the active company's band fills along its taper, tip to tip, as the story progresses. */}
+          three featured companies; the active company's band fills along its taper, tip to tip, as the story progresses. */}
       <div
         className="absolute -end-[3%] top-1/2 hidden aspect-square w-[min(40vw,660px)] -translate-y-[44%] lg:block"
         {...pauseHandlers}

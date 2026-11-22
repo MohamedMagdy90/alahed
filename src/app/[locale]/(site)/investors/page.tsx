@@ -37,7 +37,7 @@ export default async function InvestorsPage({ params }: P) {
 
   const highlights = [
     { en: "Heritage since 1975", ar: "إرث منذ عام 1975", den: "Five decades serving Qatar's energy sector, through every phase of its growth.", dar: "خمسة عقود في خدمة قطاع الطاقة القطري عبر جميع مراحل نموه." },
-    { en: "Integrated model", ar: "نموذج متكامل", den: "Three complementary companies covering supply, execution and independent assurance.", dar: "ثلاث شركات متكاملة تغطي التوريد والتنفيذ والضمان المستقل." },
+    { en: "Integrated model", ar: "نموذج متكامل", den: "Four complementary, wholly owned companies covering supply, execution, engineered equipment and independent assurance.", dar: "أربع شركات متكاملة مملوكة بالكامل تغطي التوريد والتنفيذ والمعدات الهندسية والضمان المستقل." },
     { en: "Long-standing clients", ar: "علاقات راسخة مع العملاء", den: "Relationships with Qatar's leading energy operators built over decades.", dar: "علاقات مع كبرى شركات الطاقة في قطر بُنيت على مدى عقود." },
     { en: "Global principals", ar: "شركاء عالميون", den: `Channel partnerships with ${principals} world-leading equipment manufacturers.`, dar: `شراكات مع ${principals} من كبرى الشركات العالمية المصنّعة للمعدات.` },
     { en: "Governance & transparency", ar: "الحوكمة والشفافية", den: "A governance framework being strengthened in line with listed-company requirements.", dar: "إطار حوكمة يتعزّز بما يتوافق مع متطلبات الشركات المدرجة." },
