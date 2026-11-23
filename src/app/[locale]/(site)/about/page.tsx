@@ -180,7 +180,8 @@ export default async function AboutPage({ params }: P) {
                 <p className="mt-4 text-[0.92rem] leading-relaxed text-haze group-hover:text-white/65">{v.body[locale]}</p>
               </Reveal>
             ))}
-            <li className="relative hidden overflow-hidden bg-ink p-8 text-white lg:block">
+            {/* 7 values + this tile = complete rows in both the 2- and 4-column layouts */}
+            <li className="relative hidden overflow-hidden bg-ink p-8 text-white sm:block">
               <ArcsMark className="absolute -bottom-24 -end-24 h-72 w-72 opacity-40" />
               <p className="relative font-display text-[1.4rem] leading-tight">{ar ? "منذ 1975" : "Since 1975"}</p>
               <p className="relative mt-4 text-[0.92rem] leading-relaxed text-white/60">
