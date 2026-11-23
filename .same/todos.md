@@ -182,6 +182,10 @@
 - [x] Local prod test (/tmp/alahed-build, test DB /tmp/alahed-test.db, /tmp/local-start.sh on :3005; the release lacks the
       arm64 Prisma engine → copy it in for local runs): 15/15 e2e (Playwright /tmp/pw/e2e.mjs). Server render 40-170 ms →
       4-18 ms cached. Commit ecc5f87, release 20261123-101749 live (42 pages warmed; live render 7-14 ms, was 40-85 ms).
+- [x] Speed fixes (commit 57d95ac, release 20261123-104332): framer-motion via LazyMotion + `m` (domAnimation, strict) in
+      motion/index.tsx MotionProvider → never import `motion` again, use `m`; 12-24 KB less JS per page. Phone partners
+      diagram animates only on screen (flowRef/flowInView). ArcsMark = server component (site/ArcsMark.tsx), geometry in
+      site/mark-geometry.ts, OrbitArcs deleted. Checks: /tmp/pw/anim2.mjs 9/9, glint.mjs (paused/running/paused) live.
 - Server: Bengaluru (DO BLR1), nginx 1.24, HTTP/1.1 only. HTTP/2 must be enabled per port (`listen 443 ssl http2`) and
   would affect the other sites on the droplet → ask owner before changing.
 - Speed check tooling: /tmp/pw (lighthouse 12.2.1, playwright 1.49.1, chromium-1148; libs unpacked into /tmp/pw/libs via
