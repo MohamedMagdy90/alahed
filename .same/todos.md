@@ -256,6 +256,7 @@
       names from the shared MAP_LABEL (moved to content/site.ts, SiteMap.tsx imports it). Latitude ticks moved to the
       west edge (25°N ran under Mesaieed); grid/scale text forced LTR (AR read "km 20"). Measured every site active:
       EN/AR × 390/1440 0 overlaps / 0 clipped; ticks 768-1920 px.
-- [ ] Commit + push (push still blocked, see Source control) → deploy after owner OK.
+- [x] Commits a5b7cf0 (About + Leadership) + f7c6f40 (map labels) pushed to `redesign`. Not deployed yet (live =
+      20261123-181841) → deploy after owner OK.
 - Local test data: live active people + messages exported to /tmp/people.json and loaded with tmp/people-import.js;
   portraits copied to storage/uploads/2026/11 (git-ignored).
