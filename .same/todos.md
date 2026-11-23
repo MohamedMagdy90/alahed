@@ -220,3 +220,17 @@
 - Speed check tooling: /tmp/pw (lighthouse 12.2.1, playwright 1.49.1, chromium-1148; libs unpacked into /tmp/pw/libs via
   apt with a private index in /tmp/pw/apt; `. /tmp/pw/env.sh`). speed.mjs: mobile/desktop, CPU slowdown 1x (this CPU is
   benchmark ~400-670, slower than the reference phone), median of 3. ~3 min per page per form factor here.
+## 2026-11-23 evening — company page visual review (branch redesign, NOT deployed yet)
+- [x] 7db3aa6 / 308ad0d: every section its own composition; shrunken headings fixed site-wide.
+- [x] 0e25f8f: short map labels (MAP_LABEL), Mesaieed label faces the sea, locations nearest first, news grid sized to
+      its post count (1 = full width, 2 = halves, 3 = row).
+- [x] e3d9bde: locations panel = live readout per site (temp/wind/humidity, same /api/conditions as home) + coordinates;
+      map height by site count (lg grows with the detail column; single site centred). Register.tsx min-w-0 on both
+      grid columns (DST phone overflow 909 px → 0). Checked: 4 companies desktop EN, DST AR + phone, AATC/DST phone
+      EN/AR overflow 0, lint clean.
+- [ ] Deploy the review commits to the droplet (bash deploy/deploy.sh) once the owner is happy with the local pass.
+- Reset recovery used again (17:32): .git restored from origin, dev.db malformed → db push + seed. Screenshot helpers
+  live in /home/project/tmp (shots.mjs full page, loc.mjs locations section, ovf.mjs phone overflow probe); copy to
+  /tmp/pw before running. Long runs: nohup + poll (tool calls time out after ~90 s without output).
+- Tooling note: string_replace sometimes reports success without writing (twice in a row on SiteMap.tsx) → grep
+  after every edit before type-checking.
