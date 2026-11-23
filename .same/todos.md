@@ -96,13 +96,23 @@
 ## 2026-11-23 — old-site content: messages, portraits, bios, news photos (branch redesign)
 - Source: old site alahedholding.com (curl works with a browser UA; WP media API is public) + owner's investor
   presentation screenshot (board x7 + executive management x3 bios; marked "Strictly private and confidential").
-- [ ] Leadership messages: Setting key "messages" (no schema change), admin card on /admin/people, public section
+- [x] Leadership messages: Setting key "messages" (no schema change), admin card on /admin/people, public section
       on /leadership (#messages) above the board; person-linked (photo/name/role come from Person)
-- [ ] Prose: consecutive images in an article render as a 2-column gallery
-- [ ] Data script deploy/content-2026-11-23.js: portraits + bios (EN/AR) for board + management, Jassim/Mohammed added
+- [x] Prose: consecutive images in an article render as a 2-column gallery (:has(), stacked fallback)
+- [x] Data script deploy/content-2026-11-23.js: portraits + bios (EN/AR) for board + management, Jassim/Mohammed added
       to management, Al-Mulla + Larem added HIDDEN (confidential deck), 2 messages, 3 posts updated with original
-      photos/text/dates, Hilong post created. Images optimised to /srv/alahed/shared/storage/uploads/2026/11/
-- [ ] Build + deploy, run data script (backup first), verify live EN/AR, commit + push
+      photos/text/dates, Hilong post created. 15 optimised images in /srv/alahed/shared/storage/uploads/2026/11/
+- [x] Local prod test on a copy of the live DB (pages EN/AR, admin with signed cookie, hidden rows not leaked, script
+      idempotent). Live: backup pre-content-20261123-120956.db, script applied, release 20261123-121011 (= commit
+      a88be3b), 44 pages warm, 0 not 200.
+- Build note: workspace node_modules is a real dir now → always deploy with BUILD_DIR=/tmp/alahed-build (fresh bun
+  install there) so .next-prod never lands in the workspace. A local run writes ISR pages into the standalone
+  folder: delete files newer than the build before shipping.
+- [ ] Owner: Chairman/Vice Chairman portraits on the old site are tiny (212 px / 545 px) → upload larger ones.
+- [ ] Owner: switch on Al-Mulla + Larem when the board composition is public (deck marked confidential); add photos.
+- [ ] Owner: messages say "1976" (site says 1975) and have small grammar slips (kept verbatim) → confirm/edit.
+- [ ] Owner: old WordPress media library is publicly listable (/wp-json/wp/v2/media) and exposes private files
+      (ID copies, power of attorney, CVs) → remove/privatise on the old site.
 ## Content gaps to confirm with client
 - Chairman & President messages, full Board list + photos (only MD & CEO seeded)
 - PEMCO services detail, workforce figure
