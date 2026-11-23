@@ -262,5 +262,12 @@
       0 log errors, all 5 services active. Live: new markup on home/about/leadership EN/AR (h2), map labels
       EN/AR × 1440/390 every site active → 0 overlaps / 0 clipped.
 - [ ] Owner review of the live About chart, Leadership page and home map.
+- [x] Home facts row (owner report: "171,500 m²" wrapped, m² on its own line, number lifted above the rest): value +
+      separate `unit` (m² / م²) as a small suffix, whitespace-nowrap; last fact spans leftover cells below lg; 5-col row
+      font capped with cqi (`min(clamp(...), (100cqi - 6rem)/24)`, longest value ≈ 4.4x font size in AR). Commit
+      8f97473, release 20261123-211920. Live check EN/AR × 9 widths (360-1920): 1 line, no overflow, level, same size.
+- OWNER RULE (2026-11-23): never use the local dev server. When a change is done and checked → deploy straight to
+  production. Verify with Playwright against the live URL (BASE=https://alahed.142-93-222-165.sslip.io).
+- Shell: never put `!!` in a command (bash history expansion pastes the previous command in).
 - Local test data: live active people + messages exported to /tmp/people.json and loaded with tmp/people-import.js;
   portraits copied to storage/uploads/2026/11 (git-ignored).
