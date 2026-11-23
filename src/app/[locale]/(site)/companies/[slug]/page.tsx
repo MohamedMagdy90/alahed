@@ -75,6 +75,7 @@ export default async function CompanyPage({ params }: P) {
         name: s.name[locale].split(/ — | – /)[0],
         details: details.length ? details : s.id === homeId ? [c.contact.address[locale]] : [],
         distance: s.id === homeId ? (ar ? "المكتب الرئيسي" : "Head office") : ar ? `${dist} كم من المكتب الرئيسي` : `${dist} km from the head office`,
+        short: s.id === homeId ? (ar ? "المكتب الرئيسي" : "Head office") : ar ? `${dist} كم` : `${dist} km`,
       };
     })
     .filter((s) => s.details.length > 0)

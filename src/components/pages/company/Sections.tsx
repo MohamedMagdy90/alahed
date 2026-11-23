@@ -26,6 +26,18 @@ const fmt = (n: number, locale: Locale) => n.toLocaleString(locale === "ar" ? "a
 const pad = (n: number) => String(n).padStart(2, "0");
 const ltr: CSSProperties = { unicodeBidi: "isolate" };
 
+/** "1,152 m²" → large number with a small unit beside it; values without a leading number render as they are. */
+function Metric({ value }: { value: string }) {
+  const m = value.match(/^([\d.,]+)\s*(.+)$/);
+  if (!m) return <>{value}</>;
+  return (
+    <>
+      <span className="num">{m[1]}</span>
+      <span className="ms-2 text-[0.4em] tracking-normal text-haze">{m[2]}</span>
+    </>
+  );
+}
+
 /* --------------------------------------------------------------- Principles: vision, mission, pillars over a photo */
 export function Principles({ c, p, locale }: Base) {
   if (!p.pillars && !p.vision) return null;
@@ -36,9 +48,9 @@ export function Principles({ c, p, locale }: Base) {
   return (
     <section className="grain relative isolate overflow-hidden bg-ink-900 text-white">
       <ParallaxPhoto src={p.photo ?? c.image} className="-z-10">
-        <div className="absolute inset-0 bg-ink-900/45" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/50 to-ink-900/70" />
-        <div className="absolute inset-0 from-ink-900/85 via-ink-900/30 to-transparent ltr:bg-gradient-to-r rtl:bg-gradient-to-l" />
+        <div className="absolute inset-0 bg-ink-900/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/35 to-ink-900/55" />
+        <div className="absolute inset-0 from-ink-900/80 via-ink-900/20 to-transparent ltr:bg-gradient-to-r rtl:bg-gradient-to-l" />
       </ParallaxPhoto>
       <div className="container relative flex min-h-[86svh] flex-col justify-between gap-20 py-24 md:gap-28 md:py-32">
         <div className="max-w-4xl">
@@ -228,7 +240,9 @@ export function AfterSales({ c, p, locale }: Base) {
                   <Grow className="absolute inset-x-0 top-0 h-[2px]" style={{ background: c.accent }} delay={0.1 + i * 0.15} duration={1.3} />
                   {s.metric && (
                     <>
-                      <p className="num font-display text-[clamp(2.7rem,4.4vw,4rem)] leading-none tracking-[-0.035em] text-ink">{s.metric.value[locale]}</p>
+                      <p className="font-display text-[clamp(2.7rem,4.4vw,4rem)] leading-none tracking-[-0.035em] text-ink">
+                        <Metric value={s.metric.value[locale]} />
+                      </p>
                       <p className="mt-3 text-[0.9rem] text-haze">{s.metric.label[locale]}</p>
                     </>
                   )}
@@ -463,7 +477,7 @@ export function Standards({ c, p, locale }: Base) {
               <div className="lg:col-span-7">
                 <p className="eyebrow text-leaf-700">{ar ? "الجوائز والتقدير" : "Awards & recognition"}</p>
                 <ol className="mt-5 border-t border-ink/10">
-                  {p.awards.map((a, i) => (
+                  {[...p.awards].sort((a, b) => Number(b.date.slice(-4)) - Number(a.date.slice(-4))).map((a, i) => (
                     <Reveal as="li" key={a.title.en} delay={i * 0.05} className="grid gap-3 border-b border-ink/10 py-7 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-8">
                       <p className="num font-display text-[2.6rem] leading-none tracking-[-0.03em] text-ink">{a.date.slice(-4)}</p>
                       <div>
@@ -692,7 +706,7 @@ export function Partnership({ c, p, locale }: Base) {
   const ar = locale === "ar";
   return (
     <section className="relative overflow-hidden bg-pearl-50 py-24 md:py-32">
-      <ArcsMark tone="ink" className="pointer-events-none absolute -bottom-48 -start-48 h-[560px] w-[560px] opacity-[0.05]" />
+      <ArcsMark tone="ink" className="pointer-events-none absolute -end-56 -top-72 h-[560px] w-[560px] opacity-[0.035]" />
       <div className="container relative grid gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-6">
           <p className="eyebrow text-leaf-700">{ar ? "للشركات المصنّعة" : "For manufacturers"}</p>

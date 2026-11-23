@@ -5,7 +5,7 @@ import { useSafeReducedMotion } from "@/components/motion";
 import { QATAR_PATH, QATAR_VIEWBOX, SITE_POINTS } from "@/content/qatar-map";
 import { cn } from "@/lib/utils";
 
-export type MapSite = { id: string; name: string; details: string[]; distance: string };
+export type MapSite = { id: string; name: string; details: string[]; distance: string; short: string };
 type Now = { t: number; symbol: string | null };
 
 const VB_W = 336;
@@ -267,9 +267,9 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
         </div>
       </div>
 
-      {/* ---------------- site detail + tour */}
-      <div className="flex flex-col lg:col-span-6">
-        <div className="grid flex-1 rounded-[2px] border border-white/10 bg-white/[0.03] p-7 md:p-9">
+      {/* ---------------- site detail (open, no box) above the ruled list of every site */}
+      <div className="flex flex-col lg:col-span-6 lg:ps-8 xl:ps-12">
+        <div className="grid">
           {sites.map((s, i) => {
             const on = i === active;
             const w = wx?.[s.id] ?? null;
@@ -287,10 +287,10 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
                     </p>
                   )}
                 </div>
-                <h3 className="mt-3 font-display text-[1.9rem] leading-tight text-white md:text-[2.3rem]">{s.name}</h3>
-                <ul className="mt-6 space-y-3.5 border-t border-white/10 pt-6">
+                <h3 className="mt-3 text-balance font-display text-[clamp(2rem,3.4vw,3rem)] leading-[1.05] tracking-[-0.02em] text-white">{s.name}</h3>
+                <ul className="mt-7 space-y-3.5">
                   {s.details.map((d) => (
-                    <li key={d} className="flex gap-3 text-[0.98rem] leading-snug text-white/75">
+                    <li key={d} className="flex gap-3 text-[1rem] leading-snug text-white/75">
                       <span aria-hidden className="mt-[0.5em] h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: tint }} />
                       {d}
                     </li>
@@ -301,12 +301,19 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
           })}
         </div>
         {tour && (
-          <div role="tablist" aria-label={label} className="no-scrollbar mt-6 grid auto-cols-[minmax(8.5rem,1fr)] grid-flow-col overflow-x-auto border-t border-white/10">
+          <div role="tablist" aria-label={label} aria-orientation="vertical" className="mt-12 border-t border-white/10 lg:mt-auto lg:pt-0">
             {sites.map((s, i) => {
               const on = i === active;
               return (
-                <button key={s.id} type="button" role="tab" aria-selected={on} onClick={() => select(i)} className="group relative pe-4 pt-4 text-start">
-                  <span aria-hidden className="absolute inset-x-0 -top-px h-[2px] overflow-hidden">
+                <button
+                  key={s.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={on}
+                  onClick={() => select(i)}
+                  className="group relative flex w-full items-baseline justify-between gap-6 border-b border-white/10 py-3.5 text-start md:py-4"
+                >
+                  <span aria-hidden className="absolute inset-x-0 -bottom-px h-[2px] overflow-hidden">
                     {on && (
                       <span
                         key={run}
@@ -316,7 +323,15 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
                       />
                     )}
                   </span>
-                  <span className={cn("block font-display text-[1rem] leading-tight transition-colors", on ? "text-white" : "text-white/45 group-hover:text-white/80")}>{s.name}</span>
+                  <span
+                    className={cn(
+                      "font-display text-[1.1rem] leading-tight transition-[color,transform] duration-500 ease-out-expo md:text-[1.25rem]",
+                      on ? "translate-x-1 text-white rtl:-translate-x-1" : "text-white/45 group-hover:text-white/80",
+                    )}
+                  >
+                    {s.name}
+                  </span>
+                  <span className={cn("num shrink-0 text-[0.82rem] transition-colors", on ? "text-white/70" : "text-white/30")}>{s.short}</span>
                 </button>
               );
             })}
