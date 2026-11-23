@@ -7,7 +7,7 @@ import { getAdminDict, tx } from "@/i18n/admin";
 import { saveIrContact, saveShareInfo } from "@/lib/admin/settings";
 import type { IrContact, ShareInfo } from "@/lib/settings";
 import { cn } from "@/lib/utils";
-import { Field, Segmented, useAction } from "./controls";
+import { Field, Segmented, Toggle, useAction } from "./controls";
 import { Card, aBtn, aInput, aTextarea, monoLabel } from "./ui";
 
 const numOrNull = (v: string) => {
@@ -37,11 +37,40 @@ export function SettingsForm({ locale, share: initShare, ir: initIr }: { locale:
         className="xl:col-span-8"
         title={t("Listing & share information", "معلومات الإدراج والسهم")}
         description={t(
-          "Shown in the site header ticker, on the home page and on the Investors page.",
-          "تظهر في شريط أعلى الموقع وفي الصفحة الرئيسية وصفحة المستثمرين.",
+          "One switch controls everything about the listing on the public website.",
+          "مفتاح واحد يتحكم في كل ما يتعلق بالإدراج على الموقع العام.",
         )}
         bodyClassName="space-y-6 p-5 md:p-6"
       >
+        <div
+          className={cn(
+            "rounded-[2px] border p-4 transition-colors md:p-5",
+            share.visible ? "border-leaf/40 bg-leaf/[0.06]" : "border-ink/10 bg-pearl-50",
+          )}
+        >
+          <Toggle
+            id="listing-visible"
+            checked={share.visible}
+            onChange={(v) => s("visible", v)}
+            label={t("Show listing information on the website", "إظهار معلومات الإدراج على الموقع")}
+            description={t(
+              "When off, visitors see no trace of the listing: the header status line, the share section on the home page, the Investors page and every link to it, the “next chapter” milestone, the investor enquiry type and the securities clauses of the disclaimer are all removed. Turn it on once the listing is officially announced.",
+              "عند الإيقاف لا يظهر للزوار أي أثر للإدراج: تُزال حالة الإدراج أعلى الموقع، وقسم السهم في الصفحة الرئيسية، وصفحة المستثمرين وكل الروابط إليها، ومرحلة «الفصل القادم»، ونوع استفسار المستثمرين، وبنود الأوراق المالية في إخلاء المسؤولية. فعّله بعد الإعلان الرسمي عن الإدراج.",
+            )}
+          />
+          <p className="mt-4 flex items-center gap-2 border-t border-ink/[0.07] pt-3 text-[0.78rem]">
+            <span className={cn("h-1.5 w-1.5 rounded-full", initShare.visible ? "bg-leaf" : "bg-ink/30")} />
+            <span className="text-haze">
+              {initShare.visible
+                ? t("Live: listing information is visible on the website.", "منشور: معلومات الإدراج ظاهرة على الموقع.")
+                : t("Live: listing information is hidden from the website.", "منشور: معلومات الإدراج مخفية عن الموقع.")}
+            </span>
+            {share.visible !== initShare.visible && (
+              <span className="font-medium text-amber-700">{t("Save to apply.", "احفظ للتطبيق.")}</span>
+            )}
+          </p>
+        </div>
+
         <Field label={t("Listing status", "حالة الإدراج")}>
           <Segmented
             value={share.status}
@@ -133,7 +162,10 @@ export function SettingsForm({ locale, share: initShare, ir: initIr }: { locale:
       <div className="space-y-6 xl:col-span-4">
         <Card
           title={t("Investor relations contact", "جهة اتصال علاقات المستثمرين")}
-          description={t("Shown on the Investors page.", "تظهر في صفحة المستثمرين.")}
+          description={t(
+            "Shown on the Investors page, while listing information is switched on.",
+            "تظهر في صفحة المستثمرين عند تفعيل إظهار معلومات الإدراج.",
+          )}
           bodyClassName="space-y-5"
         >
           <Field label={`${d.name} — English`} htmlFor="irNameEn">

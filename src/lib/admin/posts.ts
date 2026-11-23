@@ -10,7 +10,7 @@ const schema = z.object({
   id: z.string().optional(),
   slug: z.string().trim().max(100).optional().default(""),
   type: z.enum(["news", "blog", "event", "press", "award"]),
-  company: z.enum(["holding", "aatc", "dopet", "dst", "pemco"]),
+  company: z.enum(["holding", "aatc", "dopet", "pemco", "dst"]),
   status: z.enum(["draft", "published"]),
   featured: z.boolean(),
   titleEn: z.string().trim().min(3, "TITLE_REQUIRED").max(220),

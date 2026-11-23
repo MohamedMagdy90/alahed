@@ -6,11 +6,14 @@ import type { L10n } from "@/i18n/config";
  * Everything here is taken from src/content/site.ts, profiles.ts or group.ts (the companies' own profiles).
  */
 
-/** Hero headline: three verbs (supply → AATC, build → DOPET, inspect → PEMCO). */
+/** Hero headline: four verbs, one per company (`verb` = index in heroOrder). */
 export type HeroSegment = string | { verb: number; text: string };
 
-/** Hero order = logo bands from the inside out (AATC innermost, PEMCO outermost). */
-export const heroOrder: CompanyId[] = ["aatc", "dopet", "dst", "pemco"];
+/**
+ * Hero order = founding order (AATC 1975, DOPET 1981, PEMCO 1987, DOPET S&T 2019), like every other company list
+ * on the site. It is also the logo bands from the inside out: the Group grows outward ring by ring.
+ */
+export const heroOrder: CompanyId[] = ["aatc", "dopet", "pemco", "dst"];
 
 export const heroHeadline: L10n<HeroSegment[]> = {
   en: [
@@ -18,9 +21,9 @@ export const heroHeadline: L10n<HeroSegment[]> = {
     ", ",
     { verb: 1, text: "building" },
     ", ",
-    { verb: 2, text: "equipping" },
+    { verb: 2, text: "inspecting" },
     " and ",
-    { verb: 3, text: "inspecting" },
+    { verb: 3, text: "equipping" },
     " Qatar’s energy infrastructure since 1975.",
   ],
   ar: [
@@ -28,9 +31,9 @@ export const heroHeadline: L10n<HeroSegment[]> = {
     " ",
     { verb: 1, text: "ونبني" },
     " ",
-    { verb: 2, text: "ونجهّز" },
+    { verb: 2, text: "ونفحص" },
     " ",
-    { verb: 3, text: "ونفحص" },
+    { verb: 3, text: "ونجهّز" },
     " منشآت الطاقة في قطر منذ عام 1975.",
   ],
 };
@@ -81,7 +84,7 @@ export const sectorsSentence: L10n = {
  * Doha shows the Group's headquarters building; industrial areas show DOPET's own facilities where available.
  */
 export const siteGeo: Record<string, { lat: number; lon: number; image: string }> = {
-  doha: { lat: 25.2867, lon: 51.5333, image: "/images/hq.png" },
+  doha: { lat: 25.2867, lon: 51.5333, image: "/images/hq.jpg" },
   salwa: { lat: 25.1675, lon: 51.4394, image: "/images/facilities/dopet-valve-shop.jpg" },
   newdoha: { lat: 25.115, lon: 51.465, image: "/images/facilities/dopet-fabrication-shop.jpg" },
   raslaffan: { lat: 25.8575, lon: 51.5389, image: "/images/refinery-towers.jpg" },

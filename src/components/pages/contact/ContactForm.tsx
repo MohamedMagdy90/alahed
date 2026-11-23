@@ -10,7 +10,8 @@ import { CONTACT_SUBJECTS, subjectLabels } from "@/lib/forms";
 
 type Errors = Partial<Record<"name" | "email" | "subject" | "message" | "consent", string>>;
 
-export function ContactForm({ locale }: { locale: Locale }) {
+/** `listing` = listing information switched on in the admin settings (offers the "Investor relations" enquiry type). */
+export function ContactForm({ locale, listing }: { locale: Locale; listing: boolean }) {
   const ar = locale === "ar";
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [errors, setErrors] = useState<Errors>({});
@@ -98,7 +99,7 @@ export function ContactForm({ locale }: { locale: Locale }) {
           <option value="" disabled>
             {ar ? "اختر نوع الاستفسار" : "Select an enquiry type"}
           </option>
-          {CONTACT_SUBJECTS.map((s) => (
+          {CONTACT_SUBJECTS.filter((s) => listing || s !== "investor").map((s) => (
             <option key={s} value={s}>
               {subjectLabels[s][locale]}
             </option>

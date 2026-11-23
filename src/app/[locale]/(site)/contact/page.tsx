@@ -8,6 +8,7 @@ import { Btn, Em, TextLink } from "@/components/site/primitives";
 import { companies, contact } from "@/content/site";
 import { QATAR_PATH, QATAR_VIEWBOX, SITE_POINTS } from "@/content/qatar-map";
 import { type Locale, isLocale } from "@/i18n/config";
+import { getListingVisible } from "@/lib/queries";
 
 type P = { params: Promise<{ locale: string }> };
 
@@ -28,6 +29,7 @@ export default async function ContactPage({ params }: P) {
   const locale: Locale = isLocale(raw) ? raw : "en";
   const ar = locale === "ar";
   const h = contact.holding;
+  const listing = await getListingVisible();
   const tel = (s: string) => `tel:${s.replace(/\s/g, "")}`;
   const [dx, dy] = SITE_POINTS.doha;
 
@@ -51,9 +53,13 @@ export default async function ContactPage({ params }: P) {
           )
         }
         intro={
-          ar
-            ? "للاستفسارات العامة أو علاقات المستثمرين أو الشراكات أو الإعلام، أرسل لنا رسالتك وسيتواصل معك الفريق المختص."
-            : "For general enquiries, investor relations, partnerships or media, send us a message and the right team will respond."
+          listing
+            ? ar
+              ? "للاستفسارات العامة أو علاقات المستثمرين أو الشراكات أو الإعلام، أرسل لنا رسالتك وسيتواصل معك الفريق المختص."
+              : "For general enquiries, investor relations, partnerships or media, send us a message and the right team will respond."
+            : ar
+              ? "للاستفسارات العامة أو الشراكات أو الإعلام، أرسل لنا رسالتك وسيتواصل معك الفريق المختص."
+              : "For general enquiries, partnerships or media, send us a message and the right team will respond."
         }
       />
 
@@ -63,7 +69,7 @@ export default async function ContactPage({ params }: P) {
           <div className="rounded-[2px] border border-ink/10 bg-white p-6 md:p-10 lg:col-span-8">
             <p className="eyebrow mb-3 text-leaf-700">{ar ? "أرسل رسالة" : "Send a message"}</p>
             <h2 className="mb-10 font-display text-display-md font-normal text-ink">{ar ? "كيف يمكننا مساعدتك؟" : "How can we help?"}</h2>
-            <ContactForm locale={locale} />
+            <ContactForm locale={locale} listing={listing} />
           </div>
 
           <Reveal className="lg:col-span-4">

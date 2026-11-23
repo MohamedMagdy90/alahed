@@ -19,8 +19,8 @@ const COMPANIES = heroOrder.map((id) => companyById(id) as Company);
 
 /**
  * heroOrder index → logo band (BANDS[0] is the outer band). The mark has four crescents and the Group has four
- * companies: AATC, the founding company, is the innermost band, then DOPET, DOPET Sales & Technologies and PEMCO
- * outward (greens inside, blues outside, as in the logo). The mark as a whole is the Group.
+ * companies, in founding order from the inside out: AATC (1975) is the innermost band, then DOPET (1981), PEMCO
+ * (1987) and DOPET Sales & Technologies (2019). The mark as a whole is the Group.
  */
 const BAND_FOR = [3, 2, 1, 0];
 /** Company accents tuned for legibility on dark photography (DOPET S&T: a lighter red beside DOPET's). */

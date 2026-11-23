@@ -5,7 +5,7 @@ import { Reveal } from "@/components/motion";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, Em, SectionHeading, TextLink } from "@/components/site/primitives";
-import { companies, sectors } from "@/content/site";
+import { companies, companyRank, sectors } from "@/content/site";
 import { type Locale, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
 
@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   return {
     title: ar ? "شركات المجموعة" : "Group companies",
     description: ar
-      ? "العهد للتجارة والمقاولات ودوبت ودوبت للمبيعات والتكنولوجيا وبمكو للفحص: أربع شركات متخصصة تغطي دورة حياة الأصول في قطاع الطاقة القطري."
-      : "Al-Ahed Trading & Contracting, DOPET, DOPET Sales & Technologies and PEMCO Inspection: four specialist companies covering the asset life cycle in Qatar's energy sector.",
+      ? "العهد للتجارة والمقاولات ودوبت وبمكو للفحص ودوبت للمبيعات والتكنولوجيا: أربع شركات متخصصة تغطي دورة حياة الأصول في قطاع الطاقة القطري."
+      : "Al-Ahed Trading & Contracting, DOPET, PEMCO Inspection and DOPET Sales & Technologies: four specialist companies covering the asset life cycle in Qatar's energy sector.",
     alternates: { languages: { en: "/en/companies", ar: "/ar/companies" } },
   };
 }
@@ -26,9 +26,9 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
 const CHAIN = [
   { id: "aatc", en: "Supply & service", ar: "التوريد والخدمة", den: "Critical process equipment from global principals, with certified local service and repair.", dar: "معدات العمليات الحيوية من الشركاء العالميين، مع خدمات صيانة وإصلاح محلية معتمدة." },
   { id: "dopet", en: "Build & maintain", ar: "الإنشاء والصيانة", den: "EPIC projects, construction, shutdowns and turnarounds, fabrication and skilled manpower.", dar: "مشاريع الهندسة والتوريد والإنشاء، وأعمال الإنشاء والإيقاف والصيانة الشاملة، والتصنيع والقوى العاملة الماهرة." },
-  { id: "dst", en: "Engineer & equip", ar: "الهندسة والتجهيز", den: "Valves, metering, wellhead, power and specialised equipment from the world's leading oilfield suppliers.", dar: "صمامات ووحدات قياس ومعدات رؤوس آبار وطاقة ومعدات متخصصة من كبرى الشركات العالمية لمعدات حقول النفط." },
   { id: "pemco", en: "Inspect & assure", ar: "الفحص والضمان", den: "Independent inspection, NDT and quality assurance that protect asset integrity.", dar: "فحص مستقل واختبارات غير إتلافية وضمان جودة يحمي سلامة الأصول." },
-] as const;
+  { id: "dst", en: "Engineer & equip", ar: "الهندسة والتجهيز", den: "Valves, metering, wellhead, power and specialised equipment from the world's leading oilfield suppliers.", dar: "صمامات ووحدات قياس ومعدات رؤوس آبار وطاقة ومعدات متخصصة من كبرى الشركات العالمية لمعدات حقول النفط." },
+].sort((a, b) => companyRank(a.id) - companyRank(b.id));
 
 export default async function CompaniesPage({ params }: P) {
   const { locale: raw } = await params;

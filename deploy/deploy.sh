@@ -118,6 +118,32 @@ if [ -z "$ok" ]; then
   exit 1
 fi
 echo "    healthy"
+# Warm the image cache: every photo and logo at every width next/image can ask for, one request at a time.
+# Next shares one in-flight job per image variant, so a single job that stalls on a visitor's first request
+# leaves that variant hanging (504) for everyone until the process restarts. That is how the headquarters photo
+# went blank on the home page. Generating every variant here, sequentially, means visitors only read finished
+# files; a variant that still stalls triggers one service restart and a retry.
+warm() {
+  local failed=0 f url code
+  for f in $(cd "$REL/public" && find images brand -type f \( -name '*.jpg' -o -name '*.jpeg' -o -name '*.png' -o -name '*.webp' \)); do
+    for w in 64 96 128 192 256 384 640 828 1080 1280 1600 1920 2560; do
+      url="http://127.0.0.1:3002/_next/image?url=%2F${f//\//%2F}&w=$w&q=75"
+      code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 25 -H "Accept: image/avif,image/webp,*/*" "$url" || true)
+      if [ "$code" != "200" ]; then echo "    image $f w=$w: ${code:-timeout}"; failed=$((failed + 1)); fi
+    done
+  done
+  return $failed
+}
+if ! warm; then
+  echo "    restarting once to clear stalled image jobs"
+  systemctl restart alahed-web
+  for i in $(seq 1 30); do
+    [ "$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 http://127.0.0.1:3002/en || true)" = "200" ] && break
+    sleep 1
+  done
+  warm || echo "!! some image variants still fail (see above); the site is up"
+fi
+echo "    image cache warm"
 # Keep the 5 most recent releases
 ls -1dt $APP/releases/* | tail -n +6 | xargs -r rm -rf
 REMOTE

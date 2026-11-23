@@ -24,7 +24,7 @@ export function Intro({ locale }: { locale: Locale }) {
           <figure className="lg:col-span-5">
             <div className="relative aspect-[4/3] overflow-hidden rounded-[2px] bg-pearl-200">
               <Image
-                src="/images/hq.png"
+                src="/images/hq.jpg"
                 alt={ar ? "مقر العهد القابضة في الدوحة" : "Al-Ahed Holding headquarters, Doha"}
                 fill
                 sizes="(min-width: 1024px) 40vw, 100vw"

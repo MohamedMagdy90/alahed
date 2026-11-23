@@ -1,6 +1,7 @@
 import { CalendarDays, Mail, Phone } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion";
 import { DocumentsBrowser } from "@/components/pages/investors/DocumentsBrowser";
 import { ArcsMark } from "@/components/site/OrbitArcs";
@@ -10,13 +11,15 @@ import { SubscribeForm } from "@/components/site/SubscribeForm";
 import { companies } from "@/content/site";
 import { type Locale, formatDate, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
-import { getDocuments, getIrContact, getShareInfo } from "@/lib/queries";
+import { getDocuments, getIrContact, getListingVisible, getShareInfo } from "@/lib/queries";
 
 type P = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { locale } = await params;
   const ar = locale === "ar";
+  // Hidden until the listing: the page answers 404 and must not leak its title or description.
+  if (!(await getListingVisible())) return { robots: { index: false, follow: false } };
   return {
     title: ar ? "علاقات المستثمرين" : "Investor relations",
     description: ar
@@ -31,6 +34,8 @@ export default async function InvestorsPage({ params }: P) {
   const locale: Locale = isLocale(raw) ? raw : "en";
   const ar = locale === "ar";
   const [share, ir, docs] = await Promise.all([getShareInfo(), getIrContact(), getDocuments()]);
+  // The whole Investors section is switched off in the admin settings until the company is listed.
+  if (share.visible !== true) notFound();
   const listed = share.status === "listed";
   const tba = ar ? "يُعلن لاحقًا" : "To be announced";
   const principals = companies.find((c) => c.id === "aatc")?.partners?.length ?? 0;

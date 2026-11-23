@@ -11,6 +11,7 @@ import { footprint, holdingAbout, oemCentres, oemNote, properties, shareholders,
 import { companies, milestones, mission, values, vision, yearsSince } from "@/content/site";
 import { type Locale, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
+import { getListingVisible } from "@/lib/queries";
 
 type P = { params: Promise<{ locale: string }> };
 
@@ -31,7 +32,8 @@ export default async function AboutPage({ params }: P) {
   const locale: Locale = isLocale(raw) ? raw : "en";
   const ar = locale === "ar";
   const years = yearsSince();
-  const items = milestones.map((m) => ({
+  const listing = await getListingVisible();
+  const items = milestones.filter((m) => listing || !m.listing).map((m) => ({
     year: m.year === "Next" ? (ar ? "القادم" : "Next") : ar && m.year === "2000s" ? "2000+" : m.year,
     title: m.title[locale],
     body: m.body[locale],

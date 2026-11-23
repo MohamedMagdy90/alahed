@@ -6,7 +6,7 @@ import { Logo } from "./Logo";
 import { Arrow, Btn } from "./primitives";
 import { SubscribeForm } from "./SubscribeForm";
 
-export function Footer({ locale }: { locale: Locale }) {
+export function Footer({ locale, listing }: { locale: Locale; listing: boolean }) {
   const t = getDict(locale);
   const year = new Date().getFullYear();
   const ar = locale === "ar";
@@ -30,15 +30,20 @@ export function Footer({ locale }: { locale: Locale }) {
         ...companies.map((c) => ({ href: `/companies/${c.slug}`, label: c.name[locale] })),
       ],
     },
-    {
-      title: t.footer.investors,
-      links: [
-        { href: "/investors", label: t.footer.ir },
-        { href: "/investors#reports", label: t.footer.reports },
-        { href: "/governance", label: t.footer.governance },
-        { href: "/investors#contact", label: t.footer.irContact },
-      ],
-    },
+    // Investor links exist only while listing information is switched on in the admin settings.
+    ...(listing
+      ? [
+          {
+            title: t.footer.investors,
+            links: [
+              { href: "/investors", label: t.footer.ir },
+              { href: "/investors#reports", label: t.footer.reports },
+              { href: "/governance", label: t.footer.governance },
+              { href: "/investors#contact", label: t.footer.irContact },
+            ],
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -62,14 +67,15 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
         <div className="lg:col-span-5 lg:ps-10">
           <p className="font-display text-xl">{t.footer.stayInformed}</p>
-          <p className="mb-6 mt-2 text-[0.95rem] text-white/60">{t.footer.stayInformedBody}</p>
+          <p className="mb-6 mt-2 text-[0.95rem] text-white/60">{listing ? t.footer.stayInformedBody : t.footer.stayInformedBodyNews}</p>
           <SubscribeForm locale={locale} />
         </div>
       </div>
 
       {/* Link columns */}
       <div className="container relative grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12">
-        <div className="lg:col-span-4">
+        {/* Without the Investors column the brand block takes its two columns, so the link columns stay at the end. */}
+        <div className={listing ? "lg:col-span-4" : "lg:col-span-6"}>
           <Logo variant="white" className="w-[190px] md:w-[200px]" />
           <p className="mt-6 max-w-sm text-[0.95rem] leading-relaxed text-white/60">{t.footer.tagline}</p>
           <div className="mt-8 flex gap-2">

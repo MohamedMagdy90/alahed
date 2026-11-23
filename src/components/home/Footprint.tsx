@@ -8,7 +8,7 @@ import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { BANDS, BOWL, MARK_TONES } from "@/components/site/LogoMark";
 import { siteDetails, siteGeo } from "@/content/pages/home";
 import { QATAR_PATH, QATAR_VIEWBOX, SITE_POINTS } from "@/content/qatar-map";
-import { type CompanyId, companyLabels, sites } from "@/content/site";
+import { type CompanyId, companyLabels, companyRank, sites } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 
@@ -289,6 +289,7 @@ export function Footprint({ locale }: { locale: Locale }) {
                       <div className="mt-auto flex flex-wrap items-center gap-x-7 gap-y-4 pt-7">
                         {s.companies
                           .filter((c): c is CompanyId => c !== "holding")
+                          .sort((a, b) => companyRank(a) - companyRank(b))
                           .map((c) => (
                             <CompanyLogo key={c} id={c} locale={locale} tone="white" size={30} className="opacity-90" />
                           ))}

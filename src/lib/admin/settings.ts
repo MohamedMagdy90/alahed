@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { assertSession } from "@/lib/session";
@@ -8,6 +9,7 @@ import { run } from "./result";
 
 const num = z.number().finite().nullable();
 const shareSchema = z.object({
+  visible: z.boolean(),
   status: z.enum(["pre-listing", "listed"]),
   exchange: z.string().trim().max(40),
   ticker: z.string().trim().max(20),
@@ -36,6 +38,8 @@ export async function saveShareInfo(input: z.input<typeof shareSchema>) {
   return run(async () => {
     await assertSession("admin");
     await put(SETTING_KEYS.share, shareSchema.parse(input));
+    // The switch changes the header, footer and several pages: drop any cached copy of every page.
+    revalidatePath("/", "layout");
   });
 }
 

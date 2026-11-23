@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { companies } from "@/content/site";
+import { companies, contact } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import { getDict, href } from "@/i18n/dictionary";
 import { cn } from "@/lib/utils";
@@ -34,7 +34,7 @@ function DohaClock({ locale }: { locale: Locale }) {
   );
 }
 
-export function Header({ locale, listed }: { locale: Locale; listed: boolean }) {
+export function Header({ locale, listing, listed }: { locale: Locale; listing: boolean; listed: boolean }) {
   const t = getDict(locale);
   const pathname = usePathname() || `/${locale}`;
   const [scrolled, setScrolled] = useState(false);
@@ -111,16 +111,27 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
           )}
         >
           <div className="container flex h-9 items-center justify-between gap-6 text-[0.78rem]">
-            <Link href={href(locale, "/investors")} className="group inline-flex items-center gap-2 self-stretch hover:text-white">
-              <span className="h-1.5 w-1.5 rounded-full bg-leaf" />
-              <span className="link-underline">{listed ? t.listed : t.listingStatus}</span>
-            </Link>
+            {listing ? (
+              <Link href={href(locale, "/investors")} className="group inline-flex items-center gap-2 self-stretch hover:text-white">
+                <span className="h-1.5 w-1.5 rounded-full bg-leaf" />
+                <span className="link-underline">{listed ? t.listed : t.listingStatus}</span>
+              </Link>
+            ) : (
+              <a href={`tel:${contact.holding.phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 self-stretch hover:text-white">
+                <span className="text-white/45">{locale === "ar" ? "المقر الرئيسي" : "Head office"}</span>
+                <span className="num" dir="ltr">
+                  {contact.holding.phone}
+                </span>
+              </a>
+            )}
             <div className="hidden items-center gap-6 md:flex">
               <DohaClock locale={locale} />
               <span className="h-3 w-px bg-white/15" />
-              <Link href={href(locale, "/investors")} className="hover:text-white">
-                {t.nav.investors}
-              </Link>
+              {listing && (
+                <Link href={href(locale, "/investors")} className="hover:text-white">
+                  {t.nav.investors}
+                </Link>
+              )}
               <Link href={href(locale, "/careers")} className="hover:text-white">
                 {t.nav.careers}
               </Link>
@@ -182,7 +193,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                 {activeBar(is("/companies"))}
               </button>
               {[
-                { p: "/investors", l: t.nav.investors },
+                ...(listing ? [{ p: "/investors", l: t.nav.investors }] : []),
                 { p: "/news", l: t.nav.news },
                 { p: "/careers", l: t.nav.careers },
               ].map((n) => (
@@ -306,7 +317,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                       </ul>
                       <div className="col-span-3">
                         <div className="relative aspect-[4/3] overflow-hidden rounded-[2px] bg-pearl-100">
-                          <Image src="/images/hq.png" alt="" fill sizes="320px" className="object-cover" />
+                          <Image src="/images/hq.jpg" alt="" fill sizes="320px" className="object-cover" />
                         </div>
                         <p className="mt-3 text-[0.82rem] text-haze">
                           {locale === "ar" ? "المقر الرئيسي للمجموعة · الدوحة" : "Group headquarters · Doha"}
@@ -375,7 +386,7 @@ export function Header({ locale, listed }: { locale: Locale; listed: boolean }) 
                 </motion.div>
               ))}
               {[
-                { p: "/investors", l: t.nav.investors },
+                ...(listing ? [{ p: "/investors", l: t.nav.investors }] : []),
                 { p: "/news", l: t.nav.news },
                 { p: "/careers", l: t.nav.careers },
                 { p: "/contact", l: t.nav.contact },

@@ -49,7 +49,7 @@ export default async function CareersPage({ params, searchParams }: P) {
     { img: "/images/wellhead-dukhan.jpg", en: "Engineering & projects", ar: "الهندسة والمشاريع", den: "Project engineers, planners and project managers for EPIC and construction work.", dar: "مهندسو مشاريع ومخططون ومديرو مشاريع لأعمال الهندسة والتوريد والإنشاء." },
     { img: "/images/fabrication.jpg", en: "Technical & workshop", ar: "الأعمال الفنية والورش", den: "Technicians, fabricators and service specialists in our workshops and on site.", dar: "فنيون ومتخصصون في التصنيع والخدمة في ورشنا وفي المواقع." },
     { img: "/images/offshore.jpg", en: "Inspection & quality", ar: "الفحص والجودة", den: "Inspectors, NDT technicians and QA/QC professionals protecting asset integrity.", dar: "مفتشون وفنيو اختبارات غير إتلافية ومتخصصو ضمان الجودة لحماية سلامة الأصول." },
-    { img: "/images/hq.png", en: "Commercial & corporate", ar: "الوظائف التجارية والمؤسسية", den: "Sales, finance, HR, procurement and other corporate functions.", dar: "المبيعات والمالية والموارد البشرية والمشتريات وغيرها من الوظائف المؤسسية." },
+    { img: "/images/hq.jpg", en: "Commercial & corporate", ar: "الوظائف التجارية والمؤسسية", den: "Sales, finance, HR, procurement and other corporate functions.", dar: "المبيعات والمالية والموارد البشرية والمشتريات وغيرها من الوظائف المؤسسية." },
   ];
 
   const steps = [

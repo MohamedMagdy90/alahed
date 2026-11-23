@@ -15,11 +15,11 @@ export default async function SiteLayout({ children, params }: { children: React
   return (
     <MotionProvider>
       <PageTransitions />
-      <Header locale={locale} listed={share.status === "listed"} />
+      <Header locale={locale} listing={share.visible === true} listed={share.status === "listed"} />
       <main id="main" className="relative">
         {children}
       </main>
-      <Footer locale={locale} />
+      <Footer locale={locale} listing={share.visible === true} />
     </MotionProvider>
   );
 }

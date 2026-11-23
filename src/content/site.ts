@@ -52,7 +52,12 @@ export type Company = {
   contact: { phone: string; fax?: string; email: string; address: L10n };
 };
 
-export const companies: Company[] = [
+/**
+ * The four companies, always in founding order (oldest first): AATC 1975, DOPET 1981, PEMCO 1987, DOPET S&T 2019.
+ * Every list, tab strip, grid and menu on the site loops over this array, so the order is enforced by the sort
+ * below rather than by the position of each entry in the source.
+ */
+export const companies: Company[] = byFounding([
   {
     id: "aatc",
     slug: "al-ahed-trading-contracting",
@@ -337,7 +342,7 @@ export const companies: Company[] = [
   {
     id: "pemco",
     slug: "pemco-inspection",
-    index: "04",
+    index: "03",
     founded: 1987,
     name: { en: "PEMCO Inspection", ar: "بمكو للفحص" },
     short: { en: "PEMCO", ar: "بمكو" },
@@ -407,7 +412,14 @@ export const companies: Company[] = [
       address: { en: "P.O. Box 3266, Doha, Qatar", ar: "ص.ب 3266، الدوحة، قطر" },
     },
   },
-];
+]);
+
+function byFounding(list: Company[]): Company[] {
+  return [...list].sort((a, b) => a.founded - b.founded);
+}
+
+/** Founding-order rank of a company id ("holding" and unknown ids first), for sorting other per-company lists. */
+export const companyRank = (id: string) => companies.findIndex((c) => c.id === id);
 
 export const getCompany = (slug: string) => companies.find((c) => c.slug === slug);
 export const companyById = (id: string) => companies.find((c) => c.id === id);
@@ -480,7 +492,8 @@ export const values: { title: L10n; body: L10n }[] = [
   },
 ];
 
-export const milestones: { year: string; title: L10n; body: L10n }[] = [
+/** `listing: true` = only shown while listing information is switched on in the admin settings. */
+export const milestones: { year: string; title: L10n; body: L10n; listing?: boolean }[] = [
   {
     year: "1975",
     title: { en: "The beginning", ar: "البداية" },
@@ -547,6 +560,7 @@ export const milestones: { year: string; title: L10n; body: L10n }[] = [
   },
   {
     year: "Next",
+    listing: true,
     title: { en: "The next chapter", ar: "الفصل القادم" },
     body: {
       en: "Preparing the Group for a listing on the Qatar Stock Exchange, with strengthened governance and transparency.",
@@ -703,8 +717,8 @@ export const companyLabels: Record<string, L10n> = {
   holding: { en: "Al-Ahed Holding", ar: "العهد القابضة" },
   aatc: { en: "Al-Ahed T&C", ar: "العهد للتجارة والمقاولات" },
   dopet: { en: "DOPET", ar: "دوبت" },
-  dst: { en: "DOPET S&T", ar: "دوبت للمبيعات والتكنولوجيا" },
   pemco: { en: "PEMCO", ar: "بمكو" },
+  dst: { en: "DOPET S&T", ar: "دوبت للمبيعات والتكنولوجيا" },
 };
 
 export const documentCategories: Record<string, L10n> = {

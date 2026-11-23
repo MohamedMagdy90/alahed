@@ -41,7 +41,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <Companies locale={locale} />
       <Footprint locale={locale} />
       <Partners locale={locale} />
-      <InvestorTeaser locale={locale} share={share} />
+      {share.visible === true && <InvestorTeaser locale={locale} share={share} />}
       <LatestNews locale={locale} posts={posts} />
       <CareersCta locale={locale} roles={roles} total={jobs.length} />
     </>

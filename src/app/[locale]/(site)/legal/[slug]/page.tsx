@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHero } from "@/components/site/PageHero";
-import { LEGAL_UPDATED, legal } from "@/content/legal";
+import { LEGAL_UPDATED, legal, legalView } from "@/content/legal";
 import { type Locale, formatDate, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
+import { getListingVisible } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 type P = { params: Promise<{ locale: string; slug: string }> };
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: P): Promise<Metadata> {
   const l: Locale = locale === "ar" ? "ar" : "en";
   return {
     title: legal[slug].title[l],
-    description: legal[slug].intro[l],
+    description: legalView(legal[slug], await getListingVisible()).intro[l],
     alternates: { languages: { en: `/en/legal/${slug}`, ar: `/ar/legal/${slug}` } },
   };
 }
@@ -27,6 +28,7 @@ export default async function LegalPage({ params }: P) {
   const ar = locale === "ar";
   if (!isDoc(slug)) notFound();
   const doc = legal[slug];
+  const view = legalView(doc, await getListingVisible());
 
   return (
     <>
@@ -36,7 +38,7 @@ export default async function LegalPage({ params }: P) {
         eyebrow={ar ? "معلومات قانونية" : "Legal"}
         crumbs={[{ label: doc.title[locale] }]}
         title={doc.title[locale]}
-        intro={doc.intro[locale]}
+        intro={view.intro[locale]}
       />
       <section className="bg-pearl-50 py-20 md:py-28">
         <div className="container grid gap-12 lg:grid-cols-12">
@@ -44,7 +46,7 @@ export default async function LegalPage({ params }: P) {
             <div className="lg:sticky lg:top-32">
               <p className="eyebrow mb-5 text-haze">{ar ? "المحتويات" : "Contents"}</p>
               <ol className="space-y-3 border-s border-ink/10 ps-5 text-[0.92rem]">
-                {doc.sections.map((s, i) => (
+                {view.sections.map((s, i) => (
                   <li key={s.id}>
                     <a href={`#${s.id}`} className="text-ink/70 transition-colors hover:text-ink">
                       <span className="num me-2 font-mono text-xs text-haze">{String(i + 1).padStart(2, "0")}</span>
@@ -72,7 +74,7 @@ export default async function LegalPage({ params }: P) {
               {ar ? "آخر تحديث:" : "Last updated:"} <span className="num">{formatDate(LEGAL_UPDATED, locale)}</span>
             </p>
             <div className="prose-ah max-w-3xl">
-              {doc.sections.map((s, i) => (
+              {view.sections.map((s, i) => (
                 <section key={s.id} id={s.id} className="scroll-mt-32">
                   <h2>
                     <span className="num me-3 font-mono text-sm text-leaf-700">{String(i + 1).padStart(2, "0")}</span>

@@ -1,7 +1,7 @@
 // Shared (client-safe) option lists for the public forms.
 export const CONTACT_SUBJECTS = ["general", "investor", "business", "media", "careers", "supplier"] as const;
 export const CAREER_AREAS = ["engineering", "technical", "inspection", "corporate", "other"] as const;
-export const JOB_COMPANIES = ["holding", "aatc", "dopet", "dst", "pemco"] as const;
+export const JOB_COMPANIES = ["holding", "aatc", "dopet", "pemco", "dst"] as const;
 export const JOB_EMPLOYMENT = ["full-time", "contract", "temporary"] as const;
 export type ContactSubject = (typeof CONTACT_SUBJECTS)[number];
 export type CareerArea = (typeof CAREER_AREAS)[number];

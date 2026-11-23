@@ -6,7 +6,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { Btn, Em, SectionHeading } from "@/components/site/primitives";
 import { type Locale, dirOf, isLocale, pick } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
-import { getPeople } from "@/lib/queries";
+import { getListingVisible, getPeople } from "@/lib/queries";
 
 type P = { params: Promise<{ locale: string }> };
 
@@ -24,7 +24,7 @@ export default async function LeadershipPage({ params }: P) {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const ar = locale === "ar";
-  const [board, management] = await Promise.all([getPeople("board"), getPeople("management")]);
+  const [board, management, listing] = await Promise.all([getPeople("board"), getPeople("management"), getListingVisible()]);
   const view = (rows: typeof board): PersonView[] =>
     rows.map((r) => ({ id: r.id, name: pick(r, "name", locale), role: pick(r, "role", locale), bio: pick(r, "bio", locale), photo: r.photo }));
 
@@ -67,7 +67,7 @@ export default async function LeadershipPage({ params }: P) {
     <>
       <PageHero
         locale={locale}
-        image="/images/hq.png"
+        image="/images/hq.jpg"
         eyebrow={ar ? "من نحن" : "Who we are"}
         crumbs={[{ label: ar ? "القيادة" : "Leadership" }]}
         title={
@@ -106,7 +106,13 @@ export default async function LeadershipPage({ params }: P) {
                   <ArcsMark className="pointer-events-none absolute -end-16 -top-16 h-56 w-56 opacity-[0.08]" />
                   <p className="font-display text-[1.4rem] text-ink">{ar ? "سيتم نشر الملفات التعريفية قريبًا." : "Profiles will be published soon."}</p>
                   <p className="mx-auto mt-3 max-w-md text-[0.95rem] text-haze">
-                    {ar ? "نعمل على تحديث هذا القسم بالتزامن مع استعدادات المجموعة للإدراج." : "This section is being updated as part of the Group's listing preparations."}
+                    {listing
+                      ? ar
+                        ? "نعمل على تحديث هذا القسم بالتزامن مع استعدادات المجموعة للإدراج."
+                        : "This section is being updated as part of the Group's listing preparations."
+                      : ar
+                        ? "نعمل حاليًا على تحديث هذا القسم."
+                        : "This section is currently being updated."}
                   </p>
                 </div>
               </Reveal>

@@ -1,5 +1,6 @@
 import "server-only";
 import type { Post } from "@prisma/client";
+import { cache } from "react";
 import { db } from "./db";
 import { type IrContact, type ShareInfo, SETTING_KEYS, defaultIrContact, defaultShare } from "./settings";
 
@@ -111,5 +112,8 @@ export async function getSetting<T>(key: string, fallback: T): Promise<T> {
   }
 }
 
-export const getShareInfo = () => getSetting<ShareInfo>(SETTING_KEYS.share, defaultShare);
+/** Cached per request: the layout and the page both read it. */
+export const getShareInfo = cache(() => getSetting<ShareInfo>(SETTING_KEYS.share, defaultShare));
+/** Whether anything about the listing (share information, Investors page, IR links) is shown on the website. */
+export const getListingVisible = async () => (await getShareInfo()).visible === true;
 export const getIrContact = () => getSetting<IrContact>(SETTING_KEYS.irContact, defaultIrContact);

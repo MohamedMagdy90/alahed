@@ -9,7 +9,7 @@ import { contact, governancePrinciples } from "@/content/site";
 import { profiles } from "@/content/profiles";
 import { type Locale, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
-import { getDocuments } from "@/lib/queries";
+import { getDocuments, getListingVisible } from "@/lib/queries";
 
 type P = { params: Promise<{ locale: string }> };
 
@@ -29,7 +29,7 @@ export default async function GovernancePage({ params }: P) {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const ar = locale === "ar";
-  const docs = await getDocuments("governance");
+  const [docs, listing] = await Promise.all([getDocuments("governance"), getListingVisible()]);
 
   const framework = [
     { en: "Board of Directors", ar: "مجلس الإدارة", den: "Sets strategy, oversees performance and risk, and is accountable to shareholders.", dar: "يضع الاستراتيجية ويشرف على الأداء والمخاطر، ويخضع للمساءلة أمام المساهمين." },
@@ -115,20 +115,34 @@ export default async function GovernancePage({ params }: P) {
                 </p>
               </div>
               <h2 className="text-balance font-display text-display-lg font-normal text-ink">
-                {ar ? (
+                {listing ? (
+                  ar ? (
+                    <>
+                      إطار يتعزّز <Em className="text-brand">استعدادًا للإدراج.</Em>
+                    </>
+                  ) : (
+                    <>
+                      A framework strengthened <Em className="text-brand">ahead of listing.</Em>
+                    </>
+                  )
+                ) : ar ? (
                   <>
-                    إطار يتعزّز <Em className="text-brand">استعدادًا للإدراج.</Em>
+                    إطار يتعزّز <Em className="text-brand">باستمرار.</Em>
                   </>
                 ) : (
                   <>
-                    A framework strengthened <Em className="text-brand">ahead of listing.</Em>
+                    A framework that is <Em className="text-brand">continually strengthened.</Em>
                   </>
                 )}
               </h2>
               <p className="mt-6 text-pretty text-[1.02rem] leading-relaxed text-haze">
-                {ar
-                  ? "تواصل المجموعة تطوير هيكل حوكمتها وسياساتها وضوابطها بما يتوافق مع متطلبات الشركات المدرجة في دولة قطر."
-                  : "The Group continues to develop its governance structure, policies and controls in line with the requirements for listed companies in the State of Qatar."}
+                {listing
+                  ? ar
+                    ? "تواصل المجموعة تطوير هيكل حوكمتها وسياساتها وضوابطها بما يتوافق مع متطلبات الشركات المدرجة في دولة قطر."
+                    : "The Group continues to develop its governance structure, policies and controls in line with the requirements for listed companies in the State of Qatar."
+                  : ar
+                    ? "تواصل المجموعة تطوير هيكل حوكمتها وسياساتها وضوابطها وفق أفضل الممارسات والأنظمة المعمول بها في دولة قطر."
+                    : "The Group continues to develop its governance structure, policies and controls in line with best practice and the regulations of the State of Qatar."}
               </p>
             </div>
           </div>
@@ -303,9 +317,15 @@ export default async function GovernancePage({ params }: P) {
                 {contact.holding.email}
               </a>
               <div className="mt-8">
-                <Btn href={href(locale, "/investors")} variant="outline-light">
-                  {ar ? "علاقات المستثمرين" : "Investor relations"}
-                </Btn>
+                {listing ? (
+                  <Btn href={href(locale, "/investors")} variant="outline-light">
+                    {ar ? "علاقات المستثمرين" : "Investor relations"}
+                  </Btn>
+                ) : (
+                  <Btn href={href(locale, "/contact")} variant="outline-light">
+                    {ar ? "تواصل معنا" : "Contact us"}
+                  </Btn>
+                )}
               </div>
             </div>
           </Reveal>

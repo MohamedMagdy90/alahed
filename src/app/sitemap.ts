@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { companies } from "@/content/site";
 import { db } from "@/lib/db";
+import { getListingVisible } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -39,5 +40,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch {
     /* database unavailable: static routes only */
   }
-  return [...STATIC.flatMap((p) => entry(p)), ...posts.flatMap((p) => entry(`/news/${p.slug}`, p.updatedAt))];
+  // The Investors page only exists while listing information is switched on in the admin settings.
+  const listing = await getListingVisible();
+  const paths = STATIC.filter((p) => listing || p !== "/investors");
+  return [...paths.flatMap((p) => entry(p)), ...posts.flatMap((p) => entry(`/news/${p.slug}`, p.updatedAt))];
 }

@@ -1,6 +1,24 @@
 import type { L10n } from "@/i18n/config";
 
-export type LegalDoc = { title: L10n; intro: L10n; sections: { id: string; title: L10n; body: L10n<string[]> }[] };
+/**
+ * Listing-related wording depends on the "show listing information" switch in the admin settings:
+ * `introUnlisted` / `bodyUnlisted` replace the text while it is off, and `listingOnly` sections are left out.
+ */
+export type LegalDoc = {
+  title: L10n;
+  intro: L10n;
+  introUnlisted?: L10n;
+  sections: { id: string; title: L10n; body: L10n<string[]>; bodyUnlisted?: L10n<string[]>; listingOnly?: boolean }[];
+};
+
+/** The document as visitors should see it, with or without the listing-related wording. */
+export function legalView(doc: LegalDoc, listing: boolean) {
+  if (listing) return { intro: doc.intro, sections: doc.sections.map((s) => ({ id: s.id, title: s.title, body: s.body })) };
+  return {
+    intro: doc.introUnlisted ?? doc.intro,
+    sections: doc.sections.filter((s) => !s.listingOnly).map((s) => ({ id: s.id, title: s.title, body: s.bodyUnlisted ?? s.body })),
+  };
+}
 
 export const LEGAL_UPDATED = "2026-11-21";
 
@@ -23,6 +41,16 @@ export const legal: Record<"privacy" | "terms" | "disclaimer", LegalDoc> = {
           ar: [
             "نجمع المعلومات التي تختار تقديمها عبر نماذجنا، مثل الاسم والبريد الإلكتروني ورقم الهاتف والشركة ومحتوى رسالتك، وفي حالة طلبات التوظيف سيرتك الذاتية والبيانات المرتبطة بها.",
             "وعند الاشتراك في الأخبار أو تنبيهات المستثمرين، نحتفظ ببريدك الإلكتروني ولغتك المفضلة ونوع القائمة. كما نجمع معلومات تقنية محدودة، مثل نوع المتصفح والصفحات التي تمت زيارتها، للحفاظ على أمان الموقع وحسن عمله.",
+          ],
+        },
+        bodyUnlisted: {
+          en: [
+            "We collect the information you choose to provide through our forms: your name, email address, phone number, company, the content of your message and, for job applications, your CV and related details.",
+            "When you subscribe to our news updates we store your email address and preferred language. We also collect limited technical information, such as browser type and pages visited, to keep the website secure and working properly.",
+          ],
+          ar: [
+            "نجمع المعلومات التي تختار تقديمها عبر نماذجنا، مثل الاسم والبريد الإلكتروني ورقم الهاتف والشركة ومحتوى رسالتك، وفي حالة طلبات التوظيف سيرتك الذاتية والبيانات المرتبطة بها.",
+            "وعند الاشتراك في نشرة الأخبار، نحتفظ ببريدك الإلكتروني ولغتك المفضلة. كما نجمع معلومات تقنية محدودة، مثل نوع المتصفح والصفحات التي تمت زيارتها، للحفاظ على أمان الموقع وحسن عمله.",
           ],
         },
       },
@@ -139,6 +167,10 @@ export const legal: Record<"privacy" | "terms" | "disclaimer", LegalDoc> = {
       en: "Please read this disclaimer carefully, particularly in relation to the investor relations information on this website.",
       ar: "يرجى قراءة إخلاء المسؤولية هذا بعناية، ولا سيما ما يتعلق بمعلومات علاقات المستثمرين الواردة في هذا الموقع.",
     },
+    introUnlisted: {
+      en: "Please read this disclaimer carefully before relying on the information on this website.",
+      ar: "يرجى قراءة إخلاء المسؤولية هذا بعناية قبل الاعتماد على المعلومات الواردة في هذا الموقع.",
+    },
     sections: [
       {
         id: "info",
@@ -150,6 +182,7 @@ export const legal: Record<"privacy" | "terms" | "disclaimer", LegalDoc> = {
       },
       {
         id: "offer",
+        listingOnly: true,
         title: { en: "No offer of securities", ar: "ليس عرضًا للأوراق المالية" },
         body: {
           en: [
@@ -170,6 +203,7 @@ export const legal: Record<"privacy" | "terms" | "disclaimer", LegalDoc> = {
       },
       {
         id: "decisions",
+        listingOnly: true,
         title: { en: "Investment decisions", ar: "القرارات الاستثمارية" },
         body: {
           en: ["Investment decisions should be based solely on official disclosures published through the Qatar Stock Exchange and the Qatar Financial Markets Authority, and investors should seek independent professional advice."],

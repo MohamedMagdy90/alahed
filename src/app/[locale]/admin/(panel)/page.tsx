@@ -231,6 +231,10 @@ export default async function Dashboard({ params }: { params: Promise<{ locale: 
                 <p className="mt-3 font-display text-[1.25rem]">
                   {share.status === "listed" ? `${share.exchange}: ${share.ticker || "—"}` : t("Pre-listing", "ما قبل الإدراج")}
                 </p>
+                <p className="mt-1 inline-flex items-center gap-2 text-[0.78rem] text-white/70">
+                  <span className={cn("h-1.5 w-1.5 rounded-full", share.visible ? "bg-leaf" : "bg-white/35")} />
+                  {share.visible ? t("Shown on the website", "ظاهرة على الموقع") : t("Hidden from the website", "مخفية عن الموقع")}
+                </p>
                 <p className="mt-1 text-[0.78rem] text-white/50">
                   {docs} {t("published documents", "وثيقة منشورة")} · {people} {t("active profiles", "ملف نشط")}
                 </p>
