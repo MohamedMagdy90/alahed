@@ -2,7 +2,8 @@
 
 import { CheckCircle2, FileUp, Loader2, X } from "lucide-react";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Field, Honeypot, inputCls, textareaCls } from "@/components/site/form";
 import { Arrow, btnClass } from "@/components/site/primitives";
 import type { Locale } from "@/i18n/config";
@@ -21,8 +22,20 @@ const MAX = 20 * 1024 * 1024;
 
 type Errors = Partial<Record<"name" | "email" | "phone" | "position" | "cv" | "consent", string>>;
 
-export function CareersForm({ locale, roles = [], initialRole }: { locale: Locale; roles?: FormRole[]; initialRole?: string }) {
+/**
+ * Reads `?role=<id>` from the address bar. The careers page is cached as static HTML, so the role a visitor came
+ * for (from the home page or from a role on this page) is picked up in the browser, not on the server. It sits in
+ * its own Suspense boundary so only this invisible reader waits for the URL, never the form.
+ */
+function RoleFromUrl({ onRole }: { onRole: (role: string) => void }) {
+  const role = useSearchParams().get("role") ?? "";
+  useEffect(() => onRole(role), [role, onRole]);
+  return null;
+}
+
+export function CareersForm({ locale, roles = [] }: { locale: Locale; roles?: FormRole[] }) {
   const ar = locale === "ar";
+  const [initialRole, setInitialRole] = useState("");
   const preset = initialRole && roles.some((r) => r.id === initialRole) ? `${JOB_POSITION_PREFIX}${initialRole}` : "";
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [errors, setErrors] = useState<Errors>({});
@@ -118,6 +131,9 @@ export function CareersForm({ locale, roles = [], initialRole }: { locale: Local
 
   return (
     <form onSubmit={onSubmit} noValidate className="relative grid gap-6 md:grid-cols-2">
+      <Suspense fallback={null}>
+        <RoleFromUrl onRole={setInitialRole} />
+      </Suspense>
       <Honeypot />
       <Field label={t.name} htmlFor="a-name" required error={errors.name}>
         <input id="a-name" name="name" autoComplete="name" className={inputCls} aria-invalid={!!errors.name} />

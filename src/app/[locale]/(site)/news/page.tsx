@@ -15,6 +15,10 @@ type P = {
   searchParams: Promise<{ type?: string; company?: string; q?: string; page?: string }>;
 };
 
+// The only public page rendered per visit: its filters, search and pages come from the address bar. It is a single
+// fast database read, so it stays live while every other public page is served from the cache.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { locale } = await params;
   const ar = locale === "ar";

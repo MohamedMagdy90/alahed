@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     /* database unavailable: static routes only */
   }
   // The Investors page only exists while listing information is switched on in the admin settings.
-  const listing = await getListingVisible();
+  const listing = await getListingVisible().catch(() => false);
   const paths = STATIC.filter((p) => listing || p !== "/investors");
   return [...paths.flatMap((p) => entry(p)), ...posts.flatMap((p) => entry(`/news/${p.slug}`, p.updatedAt))];
 }

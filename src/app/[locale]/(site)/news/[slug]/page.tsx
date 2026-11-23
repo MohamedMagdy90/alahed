@@ -4,16 +4,22 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion";
 import { ShareButtons } from "@/components/pages/news/ShareButtons";
+import { ViewBeacon } from "@/components/pages/news/ViewBeacon";
 import { NewsCard } from "@/components/site/NewsCard";
 import { Arrow, SectionHeading, TextLink } from "@/components/site/primitives";
 import { companyLabels, postTypes } from "@/content/site";
 import { type Locale, formatDate, isLocale, pick } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
-import { db } from "@/lib/db";
+
 import { getPostBySlug, getRelatedPosts } from "@/lib/queries";
 import { cleanHtml, readingMinutes } from "@/lib/sanitize";
 
 type P = { params: Promise<{ locale: string; slug: string }> };
+
+// Cached on first visit, never rendered at build time (see app/[locale]/layout.tsx).
+export function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { locale: raw, slug } = await params;
@@ -43,7 +49,7 @@ export default async function ArticlePage({ params }: P) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
-  db.post.update({ where: { id: post.id }, data: { views: { increment: 1 } } }).catch(() => {});
+  // Views are counted by <ViewBeacon> in the browser: this page is served from the cache, not rendered per visit.
 
   const title = pick(post, "title", locale);
   const excerpt = pick(post, "excerpt", locale);
@@ -55,6 +61,7 @@ export default async function ArticlePage({ params }: P) {
 
   return (
     <article>
+      <ViewBeacon slug={post.slug} />
       {/* Header */}
       <header className="grain relative isolate overflow-hidden bg-ink-900 pb-40 pt-44 text-white md:pb-48">
         <div className="container">

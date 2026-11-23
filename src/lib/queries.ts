@@ -6,6 +6,17 @@ import { type IrContact, type ShareInfo, SETTING_KEYS, defaultIrContact, default
 
 const published = () => ({ status: "published", publishedAt: { lte: new Date() } });
 
+/**
+ * Database errors are logged and passed on, never replaced by empty results. Public pages are cached: when a
+ * background refresh fails, Next keeps serving the last good page and retries on the next visit, whereas an empty
+ * result would have been cached as a page with missing news, people or settings. (In the admin, a failed read now
+ * shows an error instead of a form filled with defaults that could be saved over the real data.)
+ */
+function failed(where: string, e: unknown): never {
+  console.error(`[queries] ${where}`, e);
+  throw e;
+}
+
 export async function getLatestPosts(opts: { limit?: number; type?: string; company?: string; featuredFirst?: boolean } = {}) {
   const { limit = 3, type, company, featuredFirst = false } = opts;
   try {
@@ -15,8 +26,7 @@ export async function getLatestPosts(opts: { limit?: number; type?: string; comp
       take: limit,
     });
   } catch (e) {
-    console.error("[queries] getLatestPosts", e);
-    return [] as Post[];
+    failed("getLatestPosts", e);
   }
 }
 
@@ -35,8 +45,7 @@ export async function getPosts(opts: { type?: string; company?: string; page?: n
     ]);
     return { items, total, pages: Math.max(1, Math.ceil(total / perPage)), page };
   } catch (e) {
-    console.error("[queries] getPosts", e);
-    return { items: [] as Post[], total: 0, pages: 1, page };
+    failed("getPosts", e);
   }
 }
 
@@ -44,8 +53,7 @@ export async function getPostBySlug(slug: string) {
   try {
     return await db.post.findFirst({ where: { slug, ...published() } });
   } catch (e) {
-    console.error("[queries] getPostBySlug", e);
-    return null;
+    failed("getPostBySlug", e);
   }
 }
 
@@ -63,8 +71,8 @@ export async function getRelatedPosts(post: Pick<Post, "id" | "company" | "type"
       take: limit - items.length,
     });
     return [...items, ...more];
-  } catch {
-    return [] as Post[];
+  } catch (e) {
+    failed("getRelatedPosts", e);
   }
 }
 
@@ -75,8 +83,7 @@ export async function getPeople(group?: "board" | "management") {
       orderBy: [{ order: "asc" }, { createdAt: "asc" }],
     });
   } catch (e) {
-    console.error("[queries] getPeople", e);
-    return [];
+    failed("getPeople", e);
   }
 }
 
@@ -87,8 +94,7 @@ export async function getDocuments(category?: string) {
       orderBy: [{ year: "desc" }, { publishedAt: "desc" }],
     });
   } catch (e) {
-    console.error("[queries] getDocuments", e);
-    return [];
+    failed("getDocuments", e);
   }
 }
 
@@ -97,15 +103,20 @@ export async function getOpenJobs(limit?: number) {
   try {
     return await db.job.findMany({ where: { open: true }, orderBy: [{ postedAt: "desc" }], ...(limit ? { take: limit } : {}) });
   } catch (e) {
-    console.error("[queries] getOpenJobs", e);
-    return [];
+    failed("getOpenJobs", e);
   }
 }
 
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {
+  let row: { value: string } | null;
   try {
-    const row = await db.setting.findUnique({ where: { key } });
-    if (!row) return fallback;
+    row = await db.setting.findUnique({ where: { key } });
+  } catch (e) {
+    failed(`getSetting(${key})`, e);
+  }
+  // No row yet = never saved: the defaults apply. A row that cannot be parsed falls back to them as well.
+  if (!row) return fallback;
+  try {
     return { ...fallback, ...(JSON.parse(row.value) as Partial<T>) };
   } catch {
     return fallback;

@@ -18,6 +18,11 @@ import { cn } from "@/lib/utils";
 
 type P = { params: Promise<{ locale: string; slug: string }> };
 
+// Cached on first visit, never rendered at build time (see app/[locale]/layout.tsx).
+export function generateStaticParams() {
+  return [];
+}
+
 export async function generateMetadata({ params }: P): Promise<Metadata> {
   const { locale, slug } = await params;
   const c = getCompany(slug);

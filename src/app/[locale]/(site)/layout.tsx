@@ -5,8 +5,10 @@ import { PageTransitions } from "@/components/site/PageTransitions";
 import { type Locale, isLocale } from "@/i18n/config";
 import { getShareInfo } from "@/lib/queries";
 
-// Public pages read live data (news, people, documents, settings) — always render fresh.
-export const dynamic = "force-dynamic";
+// Public pages are cached. Admin saves refresh them at once; this 60 s background refresh only matters for things
+// that change with time alone, such as a news item scheduled to publish at a set hour. Visitors never wait for it:
+// the cached page is served while the new one renders.
+export const revalidate = 60;
 
 export default async function SiteLayout({ children, params }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;

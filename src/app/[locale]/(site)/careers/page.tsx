@@ -12,7 +12,7 @@ import { href } from "@/i18n/dictionary";
 import { asEmployment, employmentLabels, openRolesLabel } from "@/lib/forms";
 import { getOpenJobs } from "@/lib/queries";
 
-type P = { params: Promise<{ locale: string }>; searchParams: Promise<{ role?: string }> };
+type P = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Pick<P, "params">): Promise<Metadata> {
   const { locale } = await params;
@@ -26,11 +26,11 @@ export async function generateMetadata({ params }: Pick<P, "params">): Promise<M
   };
 }
 
-export default async function CareersPage({ params, searchParams }: P) {
+export default async function CareersPage({ params }: P) {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const ar = locale === "ar";
-  const [{ role }, jobs] = await Promise.all([searchParams, getOpenJobs()]);
+  const jobs = await getOpenJobs();
   const careersHref = href(locale, "/careers");
   const roles: FormRole[] = jobs.map((j) => ({
     id: j.id,
@@ -241,7 +241,7 @@ export default async function CareersPage({ params, searchParams }: P) {
             </div>
           </div>
           <div className="rounded-[2px] border border-ink/10 bg-white p-6 md:p-10 lg:col-span-8">
-            <CareersForm locale={locale} roles={roles} initialRole={role} />
+            <CareersForm locale={locale} roles={roles} />
           </div>
         </div>
       </section>

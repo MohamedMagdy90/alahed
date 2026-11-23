@@ -144,6 +144,15 @@ if ! warm; then
   warm || echo "!! some image variants still fail (see above); the site is up"
 fi
 echo "    image cache warm"
+# Warm the page cache: every release starts with an empty one (pages are cached on their first visit, never at
+# build time), so request every page in the sitemap once. Visitors then always get a cached page.
+pages=0; slow=0
+for path in $(curl -s --max-time 30 http://127.0.0.1:3002/sitemap.xml | grep -o '<loc>[^<]*</loc>' | sed -e 's#<loc>https\?://[^/]*##' -e 's#</loc>##'); do
+  code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "http://127.0.0.1:3002$path" || true)
+  pages=$((pages + 1))
+  [ "$code" = "200" ] || { echo "    page $path: ${code:-timeout}"; slow=$((slow + 1)); }
+done
+echo "    page cache warm ($pages pages, $slow not 200)"
 # Keep the 5 most recent releases
 ls -1dt $APP/releases/* | tail -n +6 | xargs -r rm -rf
 REMOTE

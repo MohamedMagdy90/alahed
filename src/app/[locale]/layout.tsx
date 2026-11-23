@@ -25,8 +25,13 @@ const ARABIC_PRELOAD = ["400-arabic", "500-arabic", "400-latin", "500-latin"].ma
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.alahedholding.com";
 
-// All pages read live data (news, people, IR documents, share info) from the database.
-export const dynamic = "force-dynamic";
+// Pages are cached (ISR), not rebuilt on every visit. Nothing is rendered at build time (the build machine has no
+// database): each page is rendered on its first visit after a deploy, then served from the cache. Admin saves purge
+// the cache (revalidatePath in lib/admin/result.ts) and public pages also refresh in the background every 60 s
+// (see (site)/layout.tsx). The admin area stays fully dynamic (admin/layout.tsx).
+export function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
