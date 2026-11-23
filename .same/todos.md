@@ -108,6 +108,10 @@
 - Build note: workspace node_modules is a real dir now → always deploy with BUILD_DIR=/tmp/alahed-build (fresh bun
   install there) so .next-prod never lands in the workspace. A local run writes ISR pages into the standalone
   folder: delete files newer than the build before shipping.
+- [x] Blank leadership portraits (owner report): PersonCard Portrait joined "relative" + caller "absolute inset-0" in a
+      template string; .relative comes later in the CSS so the box collapsed to 0 px (also hid the initials before).
+      Now cn()/twMerge. Commit b19b4ec, release 20261123-123457. Lesson: merge position classes with cn(), and do not
+      read blank screenshot areas as "scroll animation" without checking the HTML/CSS.
 - [ ] Owner: Chairman/Vice Chairman portraits on the old site are tiny (212 px / 545 px) → upload larger ones.
 - [ ] Owner: switch on Al-Mulla + Larem when the board composition is public (deck marked confidential); add photos.
 - [ ] Owner: messages say "1976" (site says 1975) and have small grammar slips (kept verbatim) → confirm/edit.
