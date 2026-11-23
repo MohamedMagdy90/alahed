@@ -152,3 +152,21 @@
 - Playwright lives in /tmp/pw (wiped on container reset: npm i playwright@1.49.1, npx playwright install chromium,
   bash libs.sh for the no-root .deb libs, then `. ./env.sh`). Scripts: audit, hero, nav2/nav4/nav6, http.sh.
 - [ ] Next step (proposed): ISR instead of force-dynamic (revalidatePath from admin) so links prefetch fully.
+## 2026-11-23 — listing switch, founding order, HQ photo (branch redesign)
+- [x] HQ photo blank: `/_next/image?url=/images/hq.png&w=828` hung (504 after 60 s) while every other width worked =
+      one stalled in-flight optimiser job, shared by all later requests for that variant until restart. Photo now
+      /images/hq.jpg (101 KB). deploy.sh warms every /images + /brand variant (13 widths) sequentially after each
+      release and restarts once if any stalls. Verify with: curl each width, all 200.
+- [x] Companies in founding order everywhere: `companies` is sorted by `founded` (byFounding) → AATC 1975, DOPET 1981,
+      PEMCO 1987, DST 2019. `companyRank(id)` for other per-company lists. heroOrder + headline verbs
+      (supplying, building, inspecting, equipping), companies CHAIN, companyLabels, JOB_COMPANIES, posts enum.
+- [x] Listing switch: ShareInfo.visible (default false; missing in the stored JSON = hidden). Admin Settings toggle.
+      Off hides: header status line (replaced by "Head office +974 4441 4022") + Investors links (utility, main,
+      mobile, footer column), home InvestorTeaser, /investors (404 + noindex), sitemap entry, About "Next" milestone
+      (`listing: true`), Governance listing wording + IR button (→ Contact), Leadership placeholder wording, Contact
+      intro + "investor" enquiry type, disclaimer intro + `listingOnly` sections, privacy `bodyUnlisted`, footer
+      subscribe line. Helper: `getListingVisible()` (lib/queries, request-cached getShareInfo).
+- [x] Commit 3cf3bcc pushed, release 20261123-083607 live. DB backup pre-posts-fix-20261123-084925.db, then
+      deploy/fix-posts-2026-11-23.js: NOV post cover hq.png → hq.jpg; seeded launch article rewritten (four companies,
+      no IR mention; guarded: only if still equal to the seed). Live check: 20 pages EN/AR clean, 0 log errors.
+- [ ] Owner: when listed, Admin → Settings → "Show listing information on the website" → Save.

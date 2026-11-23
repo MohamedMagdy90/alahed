@@ -68,7 +68,7 @@ hero** — use `PageHero` from `@/components/site/PageHero` (it handles breadcru
 - Data (server only): `@/lib/queries` (getLatestPosts, getPosts, getPostBySlug, getRelatedPosts, getPeople,
   getDocuments, getShareInfo, getIrContact). `@/lib/db` (Prisma client). `@/lib/sanitize` (cleanHtml, slugify,
   stripHtml, readingMinutes). `@/lib/storage` (saveUpload(file, "image" | "document" | "cv")). `@/lib/session`.
-- Images in `/public/images`: doha-night, doha-moon, doha-dusk, hq.png, refinery-pipes, refinery-towers,
+- Images in `/public/images`: doha-night, doha-moon, doha-dusk, hq.jpg, refinery-pipes, refinery-towers,
   wellhead-dukhan, offshore, engineer, fabrication, workforce (.jpg). Logos: `/brand/alahed-holding.png`,
   `/brand/aatc.png`, `/brand/dopet.png`, `/brand/pemco.png` (white backgrounds → place on white chips),
   `/brand/icon.png`.
