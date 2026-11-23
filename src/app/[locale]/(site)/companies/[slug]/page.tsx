@@ -1,23 +1,35 @@
-import { MapPin } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion";
-import { Clients, Domains, Facilities, Partnership, Pillars, Portfolio, Projects, ServiceGroups, Showroom, Standards } from "@/components/pages/company/Sections";
+import { Grow } from "@/components/pages/company/Live";
+import { AfterSales, Clients, Domains, Facilities, Partnership, Portfolio, Principles, Projects, Scope, ServiceGroups, Standards } from "@/components/pages/company/Sections";
+import { DohaTime, type MapSite, SiteMap } from "@/components/pages/company/SiteMap";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
-import { GridFill } from "@/components/site/GridFill";
 import { NewsCard } from "@/components/site/NewsCard";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, SectionHeading, TextLink } from "@/components/site/primitives";
+import { siteDetails, siteGeo } from "@/content/pages/home";
 import { profileOf } from "@/content/profiles";
-import { companies, companyById, getCompany } from "@/content/site";
+import { type CompanyId, companies, companyById, getCompany, sites } from "@/content/site";
 import { type Locale, isLocale } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
 import { getLatestPosts } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 type P = { params: Promise<{ locale: string; slug: string }> };
+
+/** Where each company's head office is (the routes on its map start there). */
+const HOME_SITE: Record<CompanyId, string> = { aatc: "doha", dopet: "salwa", dst: "salwa", pemco: "doha" };
+/** Company colours lifted for dark surfaces (the same tints as the home page map). */
+const TINT: Record<CompanyId, string> = { aatc: "#6CC951", dopet: "#EC4B43", dst: "#F59A8F", pemco: "#8EAAE0" };
+
+const rad = (d: number) => (d * Math.PI) / 180;
+function km(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
+  const h = Math.sin(rad(b.lat - a.lat) / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lon - a.lon) / 2) ** 2;
+  return Math.round(2 * 6371 * Math.asin(Math.sqrt(h)));
+}
 
 // Cached on first visit, never rendered at build time (see app/[locale]/layout.tsx).
 export function generateStaticParams() {
@@ -48,7 +60,25 @@ export default async function CompanyPage({ params }: P) {
   const others = companies.filter((x) => x.id !== c.id);
   const posts = await getLatestPosts({ company: c.id, limit: 3 });
   const base = { c, p, locale };
-  const four = c.highlights.length === 4;
+  // The founding year is already in the hero panel, so the overview figures skip it.
+  const figures = c.highlights.filter((h) => h.label.en !== "Established");
+
+  // The company's own locations, head office first, each with what happens there.
+  const homeId = HOME_SITE[c.id];
+  const mapSites: MapSite[] = sites
+    .filter((s) => s.companies.includes(c.id))
+    .map((s) => {
+      const details = (siteDetails[s.id] ?? []).filter((d) => d.company === c.id).map((d) => d.text[locale]);
+      const dist = km(siteGeo[homeId], siteGeo[s.id]);
+      return {
+        id: s.id,
+        name: s.name[locale].split(/ — | – /)[0],
+        details: details.length ? details : s.id === homeId ? [c.contact.address[locale]] : [],
+        distance: s.id === homeId ? (ar ? "المكتب الرئيسي" : "Head office") : ar ? `${dist} كم من المكتب الرئيسي` : `${dist} km from the head office`,
+      };
+    })
+    .filter((s) => s.details.length > 0)
+    .sort((a, b) => (a.id === homeId ? -1 : b.id === homeId ? 1 : 0));
 
   return (
     <>
@@ -100,140 +130,116 @@ export default async function CompanyPage({ params }: P) {
         <span aria-hidden className="mt-10 block h-[3px] w-24" style={{ background: c.accent }} />
       </PageHero>
 
-      {/* Overview */}
+      {/* Overview: the statement, beside the company's figures in a column that stays in view */}
       <section className="bg-pearl-50 py-24 md:py-32">
-        <div className="container grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <p className="eyebrow flex items-center gap-3 text-leaf-700">{ar ? "نظرة عامة" : "Overview"}</p>
-          </div>
-          <div className="lg:col-span-8">
+        <div className="container grid gap-16 lg:grid-cols-12 lg:gap-x-16">
+          <div className="lg:col-span-7 xl:col-span-8">
+            <h2 className="eyebrow text-leaf-700">{ar ? "نظرة عامة" : "Overview"}</h2>
             <Reveal>
-              <p className="text-pretty font-display text-[clamp(1.5rem,2.4vw,2.2rem)] leading-[1.25] text-ink">{c.summary[locale]}</p>
+              <p className="mt-6 text-pretty font-display text-[clamp(1.55rem,2.5vw,2.35rem)] leading-[1.25] tracking-[-0.015em] text-ink">{c.summary[locale]}</p>
             </Reveal>
-            <div className="mt-10 grid gap-8 md:grid-cols-2">
+            <div className="mt-12 grid gap-8 md:grid-cols-2">
               {c.about[locale].map((t, i) => (
                 <Reveal key={t.slice(0, 20)} delay={i * 0.08}>
                   <p className="text-pretty text-[1.02rem] leading-relaxed text-haze">{t}</p>
                 </Reveal>
               ))}
             </div>
-            <div className={cn("mt-14 grid gap-px overflow-hidden rounded-[2px] border border-ink/10 bg-ink/10", four ? "sm:grid-cols-2" : "sm:grid-cols-3")}>
-              {c.highlights.map((h) => (
-                <div key={h.label.en} className="bg-white p-7">
-                  <p className="num font-display text-[2.6rem] leading-none tracking-[-0.03em] text-ink">{h.value}</p>
-                  <p className="mt-3 text-[0.9rem] text-haze">{h.label[locale]}</p>
+          </div>
+          <aside className="lg:col-span-5 xl:col-span-4">
+            <dl className="grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:sticky lg:top-28 lg:grid-cols-1">
+              {figures.map((h, i) => (
+                <div key={h.label.en} className="relative flex flex-col-reverse pb-8 pt-6 lg:pb-9 lg:pt-7">
+                  <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-ink/10" />
+                  <Grow className="absolute inset-x-0 top-0 h-[2px]" style={{ background: c.accent }} delay={0.1 + i * 0.15} duration={1.3} />
+                  <dt className="mt-3 max-w-[16rem] text-[0.92rem] leading-snug text-haze">{h.label[locale]}</dt>
+                  <dd className="num font-display text-[clamp(2.6rem,4.4vw,4.1rem)] leading-none tracking-[-0.035em] text-ink">{h.value}</dd>
                 </div>
               ))}
-              <GridFill count={c.highlights.length} cols={{ sm: four ? 2 : 3 }} className="bg-white" />
-            </div>
-          </div>
+            </dl>
+          </aside>
         </div>
       </section>
 
-      <Pillars {...base} />
-
-      {/* Services: grouped when the profile provides groups, otherwise a simple list. */}
-      {p.serviceGroups ? (
-        <ServiceGroups {...base} />
-      ) : (
-        <section className="bg-pearl-50 py-24 md:py-32">
-          <div className="container">
-            <SectionHeading
-              eyebrow={c.id === "aatc" ? (ar ? "المنتجات والخدمات" : "Products & services") : ar ? "الخدمات" : "Services"}
-              title={ar ? "ما نقدّمه لعملائنا." : "What we deliver for our clients."}
-            />
-            <ul className="mt-14 grid gap-px overflow-hidden rounded-[2px] border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
-              {c.services[locale].map((s, i) => (
-                <Reveal as="li" key={s} delay={(i % 3) * 0.05} className="group relative bg-white p-7 transition-colors duration-500 hover:bg-pearl-50 md:p-8">
-                  <span aria-hidden className="absolute inset-y-0 start-0 w-[3px] origin-top scale-y-0 transition-transform duration-500 group-hover:scale-y-100" style={{ background: c.accent }} />
-                  <p className="font-display text-[1.15rem] leading-snug text-ink">{s}</p>
-                </Reveal>
-              ))}
-              <GridFill as="li" count={c.services[locale].length} cols={{ sm: 2, lg: 3 }} className="bg-white" />
-            </ul>
-          </div>
-        </section>
-      )}
-
+      <Principles {...base} />
+      <Scope {...base} />
+      <ServiceGroups {...base} />
       <Portfolio {...base} />
-      <Showroom {...base} />
+      <AfterSales {...base} />
       <Domains {...base} />
       <Facilities {...base} />
       <Standards {...base} />
-      <Projects {...base} tone={p.serviceGroups && !p.facilities ? "white" : "pearl"} />
+      <Projects {...base} />
       <Clients {...base} />
       <Partnership {...base} />
 
-      {/* Locations, management + contact */}
-      <section className="relative overflow-hidden bg-ink py-24 text-white md:py-32">
-        <div className="container relative grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            {c.facilities[locale].length > 0 && (
-              <>
-                <p className="eyebrow mb-6 text-leaf-300">{ar ? "المواقع" : "Locations"}</p>
-                <ul className="border-t border-white/10">
-                  {c.facilities[locale].map((f) => (
-                    <li key={f} className="flex items-start gap-4 border-b border-white/10 py-5">
-                      <MapPin className="mt-1.5 h-4 w-4 shrink-0" style={{ color: c.accent }} />
-                      <span className="font-display text-[1.15rem] leading-snug md:text-[1.25rem]">{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
+      {/* Locations on a live map, then management + contact */}
+      <section className="relative overflow-hidden bg-ink-900 py-24 text-white md:py-32">
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+        <div className="container relative">
+          <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-8">
+              <p className="eyebrow text-leaf-300">{ar ? "حضورنا في قطر" : "On the ground in Qatar"}</p>
+              <h2 className="mt-4 text-balance font-display text-display-lg font-normal">{ar ? `أين تعمل ${c.short[locale]}` : `Where ${c.short[locale]} works`}</h2>
+            </div>
+            <div className="lg:col-span-4 lg:justify-self-end">
+              <DohaTime ar={ar} />
+            </div>
+          </div>
+          {mapSites.length > 0 && (
+            <div className="mt-14">
+              <SiteMap sites={mapSites} homeId={homeId} tint={TINT[c.id]} label={ar ? "مواقع الشركة" : "Company locations"} ar={ar} />
+            </div>
+          )}
+
+          <div className="mt-20 grid gap-14 border-t border-white/10 pt-14 md:mt-24 lg:grid-cols-12 lg:gap-16">
             {p.people && (
-              <div className={cn(c.facilities[locale].length > 0 && "mt-14")}>
-                <p className="eyebrow mb-6 text-leaf-300">{ar ? "الإدارة" : "Management"}</p>
-                {/* One person = one full-width card; several = two columns, last row completed. */}
-                <ul className={cn("grid gap-px overflow-hidden rounded-[2px] border border-white/10 bg-white/10", p.people.length > 1 && "sm:grid-cols-2")}>
+              <div className="lg:col-span-6">
+                <p className="eyebrow text-white/55">{ar ? "الإدارة" : "Management"}</p>
+                <ul className="mt-6 border-t border-white/10">
                   {p.people.map((m) => (
-                    <li key={m.name.en} className="bg-ink p-6">
-                      <p className="font-display text-[1.15rem]">{m.name[locale]}</p>
-                      <p className="mt-1 text-[0.9rem] text-white/55">{m.role[locale]}</p>
+                    <li key={m.name.en} className="flex flex-col gap-1 border-b border-white/10 py-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8">
+                      <p className="font-display text-[1.3rem] leading-snug">{m.name[locale]}</p>
+                      <p className="text-[0.92rem] text-white/55 sm:text-end">{m.role[locale]}</p>
                     </li>
                   ))}
-                  {p.people.length > 1 && <GridFill as="li" count={p.people.length} cols={{ sm: 2 }} className="bg-ink" />}
                 </ul>
               </div>
             )}
-          </div>
-          <Reveal className="lg:col-span-5">
-            <div className="rounded-[2px] border border-white/15 bg-white/[0.04] p-8">
-              <p className="eyebrow text-white/50">{ar ? "تواصل مع الشركة" : "Contact the company"}</p>
-              <p className="mt-4 font-display text-2xl">{c.name[locale]}</p>
-              <dl className="mt-6 space-y-4 text-[0.95rem]">
-                <div>
+            <Reveal className={cn(p.people ? "lg:col-span-6" : "lg:col-span-8")}>
+              <p className="eyebrow text-white/55">{ar ? "تواصل مع الشركة" : "Contact the company"}</p>
+              <p className="mt-5 font-display text-[1.7rem] leading-tight md:text-[2rem]">{c.name[locale]}</p>
+              <dl className="mt-8 grid gap-x-8 gap-y-6 text-[0.95rem] sm:grid-cols-2">
+                <div className="sm:col-span-2">
                   <dt className="text-white/45">{ar ? "العنوان" : "Address"}</dt>
                   <dd className="mt-1 text-white/85">{c.contact.address[locale]}</dd>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <dt className="text-white/45">{ar ? "الهاتف" : "Phone"}</dt>
+                  <dd className="mt-1">
+                    <a href={`tel:${c.contact.phone.replace(/\s/g, "")}`} dir="ltr" className="num link-underline text-white/85 hover:text-white">
+                      {c.contact.phone}
+                    </a>
+                  </dd>
+                </div>
+                {c.contact.fax && (
                   <div>
-                    <dt className="text-white/45">{ar ? "الهاتف" : "Phone"}</dt>
-                    <dd className="mt-1">
-                      <a href={`tel:${c.contact.phone.replace(/\s/g, "")}`} dir="ltr" className="num text-white/85 hover:text-white">
-                        {c.contact.phone}
-                      </a>
+                    <dt className="text-white/45">{ar ? "الفاكس" : "Fax"}</dt>
+                    <dd className="num mt-1 text-white/85" dir="ltr">
+                      {c.contact.fax}
                     </dd>
                   </div>
-                  {c.contact.fax && (
-                    <div>
-                      <dt className="text-white/45">{ar ? "الفاكس" : "Fax"}</dt>
-                      <dd className="num mt-1 text-white/85" dir="ltr">
-                        {c.contact.fax}
-                      </dd>
-                    </div>
-                  )}
-                </div>
-                <div>
+                )}
+                <div className="sm:col-span-2">
                   <dt className="text-white/45">{ar ? "البريد الإلكتروني" : "Email"}</dt>
                   <dd className="mt-1">
-                    <a href={`mailto:${c.contact.email}`} className="break-all text-white/85 hover:text-white">
+                    <a href={`mailto:${c.contact.email}`} className="link-underline break-all text-white/85 hover:text-white">
                       {c.contact.email}
                     </a>
                   </dd>
                 </div>
               </dl>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-10 flex flex-wrap gap-3">
                 <Btn href={href(locale, "/contact")}>{ar ? "أرسل استفسارًا" : "Send an enquiry"}</Btn>
                 {c.website && (
                   <Btn href={c.website} external variant="outline-light">
@@ -241,8 +247,8 @@ export default async function CompanyPage({ params }: P) {
                   </Btn>
                 )}
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </div>
       </section>
 

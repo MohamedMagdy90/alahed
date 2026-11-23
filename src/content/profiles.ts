@@ -12,11 +12,13 @@ export type Division = { id: string; title: L10n; brands: Brand[] };
 export type Pillar = { title: L10n; body?: L10n };
 export type ServiceGroup = { title: L10n; body?: L10n; items?: L10n<string[]> };
 export type Domain = { id: string; title: L10n; body: L10n; points: L10n<string[]>; image: string };
-export type Facility = { title: L10n; summary: L10n; specs: L10n<string[]>; image?: string };
+export type Facility = { title: L10n; summary: L10n; specs: L10n<string[]>; image?: string; metric?: { value: L10n; label: L10n } };
 export type ProjectRow = { client: string; title: L10n; period: string; scope?: L10n };
 export type ProjectTable = { id: string; title: L10n; rows: ProjectRow[] };
 
 export type Profile = {
+  /** Second photograph, used behind the principles band (the hero keeps the company's main image). */
+  photo?: string;
   vision?: L10n;
   mission?: L10n;
   pillars?: { title: L10n; items: Pillar[] };
@@ -45,6 +47,7 @@ const list = (en: string[], ar: string[]): L10n<string[]> => ({ en, ar });
 export const profiles: Record<CompanyId, Profile> = {
   /* ------------------------------------------------------------------ AATC */
   aatc: {
+    photo: "/images/refinery-towers.jpg",
     vision: t(
       "To be the premier service partner for Qatar's energy sector, driving innovation and excellence.",
       "أن نكون شريك الخدمة الأول لقطاع الطاقة في قطر، دافعين نحو الابتكار والتميّز.",
@@ -145,7 +148,8 @@ export const profiles: Record<CompanyId, Profile> = {
     serviceCentres: [
       {
         title: t("John Crane Service Centre", "مركز خدمة جون كرين"),
-        summary: t("Ras Laffan Industrial City · 1,152 m² built-up area. Qatar's first dry gas seal repair and testing facility.", "مدينة رأس لفان الصناعية · 1,152 م² مساحة مبنية. أول منشأة في قطر لإصلاح واختبار موانع تسرب الغاز الجاف."),
+        summary: t("Ras Laffan Industrial City. Qatar's first dry gas seal repair and testing facility.", "مدينة رأس لفان الصناعية. أول منشأة في قطر لإصلاح واختبار موانع تسرب الغاز الجاف."),
+        metric: { value: t("1,152 m²", "1,152 م²"), label: t("Built-up area", "مساحة مبنية") },
         specs: list(
           ["Repair and testing of dry gas seals in Qatar", "Spare-part stocking", "Repair and balancing of standard and high-pressure couplings", "Shorter lead times and lower shipping costs for customers"],
           ["إصلاح واختبار موانع تسرب الغاز الجاف داخل قطر", "تخزين قطع الغيار", "إصلاح وموازنة الوصلات القياسية وعالية الضغط", "تقليص مدد التوريد وتكاليف الشحن على العملاء"],
@@ -153,12 +157,14 @@ export const profiles: Record<CompanyId, Profile> = {
       },
       {
         title: t("ESAB Service Centre", "مركز خدمة إيساب"),
-        summary: t("Street 47, Salwa Road, Industrial Area · 200 m² covered area. An exclusive, full-fledged ESAB service centre.", "شارع 47، طريق سلوى، المنطقة الصناعية · 200 م² مساحة مغطاة. مركز خدمة حصري ومتكامل لإيساب."),
+        summary: t("Street 47, Salwa Road, Industrial Area. An exclusive, full-fledged ESAB service centre.", "شارع 47، طريق سلوى، المنطقة الصناعية. مركز خدمة حصري ومتكامل لإيساب."),
+        metric: { value: t("200 m²", "200 م²"), label: t("Covered area", "مساحة مغطاة") },
         specs: list(["Service and repair of ESAB welding machines", "Sales of spares and consumables"], ["خدمة وإصلاح ماكينات اللحام من إيساب", "بيع قطع الغيار والمواد الاستهلاكية"]),
       },
       {
         title: t("Sundyne field service", "الخدمة الميدانية لسندين"),
         summary: t("Installation, maintenance and repair of Sundyne pumps and compressors, on site.", "تركيب وصيانة وإصلاح مضخات وضواغط سندين في الموقع."),
+        metric: { value: t("On site", "في الموقع"), label: t("Field service engineers", "مهندسو خدمة ميدانية") },
         specs: list(
           ["Field service engineers trained on Sundyne equipment", "Preventive maintenance, troubleshooting and on-demand repairs", "Upgrades and overhauls that extend equipment life"],
           ["مهندسو خدمة ميدانية مدرّبون على معدات سندين", "صيانة وقائية وتشخيص الأعطال وإصلاحات عند الطلب", "تحديثات وعَمرات تطيل عمر المعدات"],
@@ -202,6 +208,7 @@ export const profiles: Record<CompanyId, Profile> = {
 
   /* ----------------------------------------------------------------- DOPET */
   dopet: {
+    photo: "/images/fabrication.jpg",
     pillars: {
       title: t("Our keys to growth", "مفاتيح نموّنا"),
       items: [
@@ -424,6 +431,7 @@ export const profiles: Record<CompanyId, Profile> = {
 
   /* ------------------------------------------------------------- DOPET S&T */
   dst: {
+    photo: "/images/doha-dusk.jpg",
     pillars: {
       title: t("How we work", "طريقة عملنا"),
       items: [
@@ -497,6 +505,7 @@ export const profiles: Record<CompanyId, Profile> = {
 
   /* ----------------------------------------------------------------- PEMCO */
   pemco: {
+    photo: "/images/workforce.jpg",
     pillars: {
       title: t("Why PEMCO", "لماذا بمكو"),
       items: [
