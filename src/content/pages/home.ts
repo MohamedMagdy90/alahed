@@ -64,12 +64,12 @@ export const aboutStatement: L10n = {
 };
 
 /** Concrete facts only (all present in the content files). */
-export const facts: { value: string; label: L10n }[] = [
+export const facts: { value: string; unit?: L10n; label: L10n }[] = [
   { value: "1975", label: { en: "Founded in Doha", ar: "سنة التأسيس في الدوحة" } },
   { value: "4", label: { en: "Operating companies", ar: "شركات تشغيلية" } },
   { value: "50+", label: { en: "International brands represented", ar: "علامة تجارية عالمية نمثّلها" } },
   { value: "3", label: { en: "OEM-linked service centres", ar: "مراكز خدمة مرتبطة بالمصنّعين" } },
-  { value: "171,500 m²", label: { en: "Workshops, yards and camps", ar: "ورش وساحات ومساكن" } },
+  { value: "171,500", unit: { en: "m²", ar: "م²" }, label: { en: "Workshops, yards and camps", ar: "ورش وساحات ومساكن" } },
 ];
 
 export const sectorsSentence: L10n = {

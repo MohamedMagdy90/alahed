@@ -35,11 +35,21 @@ export function Intro({ locale }: { locale: Locale }) {
           </figure>
         </div>
 
-        <dl className="mt-20 grid grid-cols-2 gap-x-6 gap-y-10 border-t border-ink/10 pt-10 sm:grid-cols-3 lg:grid-cols-5">
-          {facts.map((f) => (
-            <div key={f.label.en} className="flex flex-col-reverse">
+        {/*
+          The longest value ("171,500 m²") is ~4.4x its font size wide (Arabic digits are wider). Number and unit stay on
+          one line, so: below lg the last fact spans the leftover cells (2 cols: its own row, 3 cols: beside the 4th),
+          and in the 5-column row every value is capped to a fifth of the row (cqi of this <dl>), so all five stay the
+          same size and only shrink when the columns get narrow.
+        */}
+        <dl className="mt-20 grid grid-cols-2 gap-x-6 gap-y-10 border-t border-ink/10 pt-10 [container-type:inline-size] sm:grid-cols-3 lg:grid-cols-5">
+          {facts.map((f, i) => (
+            <div key={f.label.en} className={i === facts.length - 1 ? "col-span-2 flex flex-col-reverse justify-end lg:col-span-1" : "flex flex-col-reverse justify-end"}>
               <dt className="mt-3 max-w-[14rem] text-[0.92rem] leading-snug text-haze">{f.label[locale]}</dt>
-              <dd className="num font-display text-[clamp(2.4rem,3.6vw,3.4rem)] leading-none tracking-[-0.03em] text-ink">{f.value}</dd>
+              {/* Number and unit stay on one line; the unit is small beside it (as on About and the company pages). */}
+              <dd className="num whitespace-nowrap font-display text-[clamp(2.4rem,3.6vw,3.4rem)] leading-none tracking-[-0.03em] text-ink lg:[font-size:min(clamp(2.4rem,3.6vw,3.4rem),calc((100cqi_-_6rem)/24))]">
+                {f.value}
+                {f.unit && <span className="ms-1.5 text-[0.4em] tracking-normal text-haze">{f.unit[locale]}</span>}
+              </dd>
             </div>
           ))}
         </dl>
