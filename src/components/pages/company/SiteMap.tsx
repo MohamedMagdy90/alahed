@@ -10,8 +10,19 @@ type Now = { t: number; symbol: string | null };
 
 const VB_W = 336;
 const VB_H = 640;
-/** Which side of its point each label sits on (Doha, Salwa and New Doha are close together, so they face away). */
-const LABEL_SIDE: Record<string, "left" | "right"> = { doha: "right", salwa: "left", newdoha: "right", raslaffan: "left", alkhor: "left", mesaieed: "left", dukhan: "right", karaana: "right" };
+/**
+ * Which side of its point each label sits on. Doha, Salwa and New Doha are close together, so they face away;
+ * Mesaieed faces the sea so it never runs into Al Karaana's label at almost the same latitude.
+ */
+const LABEL_SIDE: Record<string, "left" | "right"> = { doha: "right", salwa: "left", newdoha: "right", raslaffan: "left", alkhor: "left", mesaieed: "right", dukhan: "right", karaana: "right" };
+/** Short place names for the map itself (the full names stay in the list and the detail panel). */
+const MAP_LABEL: Record<string, { en: string; ar: string }> = {
+  newdoha: { en: "New Doha", ar: "الصناعية الجديدة" },
+  raslaffan: { en: "Ras Laffan", ar: "رأس لفان" },
+  alkhor: { en: "Al Khor", ar: "الخور" },
+  karaana: { en: "Al Karaana", ar: "الكرعانة" },
+  mesaieed: { en: "Mesaieed", ar: "مسيعيد" },
+};
 
 function route([x1, y1]: [number, number], [x2, y2]: [number, number]) {
   const k = 0.17;
@@ -257,7 +268,7 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
                       )}
                       style={{ left: `${(x / VB_W) * 100}%`, top: `${(y / VB_H) * 100}%` }}
                     >
-                      <span dir={ar ? "rtl" : "ltr"}>{s.name}</span>
+                      <span dir={ar ? "rtl" : "ltr"}>{MAP_LABEL[s.id]?.[ar ? "ar" : "en"] ?? s.name}</span>
                     </button>
                   );
                 })}

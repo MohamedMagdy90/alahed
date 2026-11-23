@@ -63,7 +63,7 @@ export default async function CompanyPage({ params }: P) {
   // The founding year is already in the hero panel, so the overview figures skip it.
   const figures = c.highlights.filter((h) => h.label.en !== "Established");
 
-  // The company's own locations, head office first, each with what happens there.
+  // The company's own locations, head office first, then nearest to farthest, each with what happens there.
   const homeId = HOME_SITE[c.id];
   const mapSites: MapSite[] = sites
     .filter((s) => s.companies.includes(c.id))
@@ -76,10 +76,12 @@ export default async function CompanyPage({ params }: P) {
         details: details.length ? details : s.id === homeId ? [c.contact.address[locale]] : [],
         distance: s.id === homeId ? (ar ? "المكتب الرئيسي" : "Head office") : ar ? `${dist} كم من المكتب الرئيسي` : `${dist} km from the head office`,
         short: s.id === homeId ? (ar ? "المكتب الرئيسي" : "Head office") : ar ? `${dist} كم` : `${dist} km`,
+        km: s.id === homeId ? -1 : dist,
       };
     })
     .filter((s) => s.details.length > 0)
-    .sort((a, b) => (a.id === homeId ? -1 : b.id === homeId ? 1 : 0));
+    .sort((a, b) => a.km - b.km)
+    .map(({ km: _km, ...s }) => s);
 
   return (
     <>
@@ -262,13 +264,20 @@ export default async function CompanyPage({ params }: P) {
               title={ar ? `أخبار ${c.short[locale]}` : `News from ${c.short[locale]}`}
               action={<TextLink href={href(locale, `/news?company=${c.id}`)}>{ar ? "جميع الأخبار" : "All news"}</TextLink>}
             />
-            <div className="mt-14 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post, i) => (
-                <Reveal key={post.id} delay={i * 0.06}>
-                  <NewsCard post={post} locale={locale} />
-                </Reveal>
-              ))}
-            </div>
+            {/* Columns follow the number of posts so a company with one or two stories never shows an empty slot. */}
+            {posts.length === 1 ? (
+              <Reveal className="mt-14">
+                <NewsCard post={posts[0]} locale={locale} variant="feature" />
+              </Reveal>
+            ) : (
+              <div className={`mt-14 grid gap-10 md:grid-cols-2${posts.length >= 3 ? " lg:grid-cols-3" : " lg:gap-14"}`}>
+                {posts.map((post, i) => (
+                  <Reveal key={post.id} delay={i * 0.06}>
+                    <NewsCard post={post} locale={locale} />
+                  </Reveal>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}
