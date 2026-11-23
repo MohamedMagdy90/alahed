@@ -5,13 +5,16 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { ArcsMark } from "@/components/site/ArcsMark";
 import { Arrow } from "@/components/site/primitives";
+import { cn } from "@/lib/utils";
 import { initials } from "./initials";
 
 export type PersonView = { id: string; name: string; role: string; bio: string; photo: string | null };
 
 function Portrait({ p, className }: { p: PersonView; className?: string }) {
   return (
-    <div className={`relative overflow-hidden bg-gradient-to-br from-navy via-ink to-ink-900 ${className ?? ""}`}>
+    // cn (tailwind-merge) lets a caller's `absolute inset-0` replace the default `relative`; with both classes the
+    // stylesheet order made `relative` win and the portrait collapsed to zero height (blank card).
+    <div className={cn("relative overflow-hidden bg-gradient-to-br from-navy via-ink to-ink-900", className)}>
       {p.photo ? (
         <Image src={p.photo} alt={p.name} fill sizes="(min-width: 1024px) 30vw, 100vw" className="object-cover object-top" />
       ) : (
