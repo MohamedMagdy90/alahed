@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion";
 import { Clients, Domains, Facilities, Partnership, Pillars, Portfolio, Projects, ServiceGroups, Showroom, Standards } from "@/components/pages/company/Sections";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
+import { GridFill } from "@/components/site/GridFill";
 import { NewsCard } from "@/components/site/NewsCard";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, SectionHeading, TextLink } from "@/components/site/primitives";
@@ -123,6 +124,7 @@ export default async function CompanyPage({ params }: P) {
                   <p className="mt-3 text-[0.9rem] text-haze">{h.label[locale]}</p>
                 </div>
               ))}
+              <GridFill count={c.highlights.length} cols={{ sm: four ? 2 : 3 }} className="bg-white" />
             </div>
           </div>
         </div>
@@ -147,6 +149,7 @@ export default async function CompanyPage({ params }: P) {
                   <p className="font-display text-[1.15rem] leading-snug text-ink">{s}</p>
                 </Reveal>
               ))}
+              <GridFill as="li" count={c.services[locale].length} cols={{ sm: 2, lg: 3 }} className="bg-white" />
             </ul>
           </div>
         </section>
@@ -181,13 +184,15 @@ export default async function CompanyPage({ params }: P) {
             {p.people && (
               <div className={cn(c.facilities[locale].length > 0 && "mt-14")}>
                 <p className="eyebrow mb-6 text-leaf-300">{ar ? "الإدارة" : "Management"}</p>
-                <ul className="grid gap-px overflow-hidden rounded-[2px] border border-white/10 bg-white/10 sm:grid-cols-2">
+                {/* One person = one full-width card; several = two columns, last row completed. */}
+                <ul className={cn("grid gap-px overflow-hidden rounded-[2px] border border-white/10 bg-white/10", p.people.length > 1 && "sm:grid-cols-2")}>
                   {p.people.map((m) => (
                     <li key={m.name.en} className="bg-ink p-6">
                       <p className="font-display text-[1.15rem]">{m.name[locale]}</p>
                       <p className="mt-1 text-[0.9rem] text-white/55">{m.role[locale]}</p>
                     </li>
                   ))}
+                  {p.people.length > 1 && <GridFill as="li" count={p.people.length} cols={{ sm: 2 }} className="bg-ink" />}
                 </ul>
               </div>
             )}

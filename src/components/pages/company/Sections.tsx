@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import Image from "next/image";
 import { Reveal } from "@/components/motion";
+import { GridFill } from "@/components/site/GridFill";
 import { Btn, SectionHeading } from "@/components/site/primitives";
 import type { Division, Domain, Facility, Profile, ProjectTable } from "@/content/profiles";
 import type { Company } from "@/content/site";
@@ -45,6 +46,12 @@ export function Pillars({ c, p, locale }: Base) {
                   {it.body && <p className="mt-3 text-pretty text-[0.95rem] leading-relaxed text-haze">{it.body[locale]}</p>}
                 </Reveal>
               ))}
+              <GridFill
+                as="li"
+                count={items.length}
+                cols={items.length === 3 ? { lg: 3 } : items.length === 6 ? { sm: 2, lg: 3 } : { sm: 2, lg: 4 }}
+                className="bg-white"
+              />
             </ul>
           </div>
         )}
@@ -90,6 +97,7 @@ export function ServiceGroups({ c, p, locale }: Base) {
               )}
             </Reveal>
           ))}
+          <GridFill count={p.serviceGroups.groups.length} cols={withLists ? { md: 2, lg: 3 } : { sm: 2, lg: 3 }} className="bg-white" />
         </div>
       </div>
     </section>
@@ -120,6 +128,7 @@ function DivisionPanel({ d, accent, locale }: { d: Division; accent: string; loc
           <p className="mt-4 text-pretty text-[0.93rem] leading-relaxed text-haze">{b.lines[locale]}</p>
         </li>
       ))}
+      <GridFill as="li" count={d.brands.length} cols={{ sm: 2, lg: 3 }} className="bg-white" />
     </ul>
   );
 }
@@ -368,6 +377,7 @@ export function Standards({ c, p, locale }: Base) {
                   <p className="mt-2 text-[0.92rem] leading-snug text-haze">{x.body[locale]}</p>
                 </Reveal>
               ))}
+              <GridFill as="li" count={p.certifications.items.length} cols={{ sm: 2, lg: 4 }} className="bg-white" />
             </ul>
           </>
         )}
@@ -489,6 +499,7 @@ export function Projects({ c, p, locale, tone = "pearl" }: Base & { tone?: "pear
                 <p className="mt-3 text-pretty text-[1rem] leading-relaxed text-ink/85">{x.work[locale]}</p>
               </div>
             ))}
+            <GridFill count={p.partnersNote.items.length} cols={{ md: 2 }} className="bg-white" />
           </div>
         )}
       </div>
@@ -544,6 +555,7 @@ export function Partnership({ c, p, locale }: Base) {
                 {x[locale]}
               </li>
             ))}
+            <GridFill as="li" count={p.partnership.points.length} cols={{ sm: 2 }} className="bg-white" />
           </ul>
         </div>
       </div>
