@@ -76,6 +76,7 @@ export default async function CompanyPage({ params }: P) {
         details: details.length ? details : s.id === homeId ? [c.contact.address[locale]] : [],
         distance: s.id === homeId ? (ar ? "المكتب الرئيسي" : "Head office") : ar ? `${dist} كم من المكتب الرئيسي` : `${dist} km from the head office`,
         short: s.id === homeId ? (ar ? "المكتب الرئيسي" : "Head office") : ar ? `${dist} كم` : `${dist} km`,
+        coords: `${siteGeo[s.id].lat.toFixed(2)}° N  ${siteGeo[s.id].lon.toFixed(2)}° E`,
         km: s.id === homeId ? -1 : dist,
       };
     })

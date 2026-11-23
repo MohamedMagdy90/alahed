@@ -5,8 +5,8 @@ import { useSafeReducedMotion } from "@/components/motion";
 import { QATAR_PATH, QATAR_VIEWBOX, SITE_POINTS } from "@/content/qatar-map";
 import { cn } from "@/lib/utils";
 
-export type MapSite = { id: string; name: string; details: string[]; distance: string; short: string };
-type Now = { t: number; symbol: string | null };
+export type MapSite = { id: string; name: string; details: string[]; distance: string; short: string; coords: string };
+type Now = { t: number; wind: number; dir: number; rh: number; symbol: string | null };
 
 const VB_W = 336;
 const VB_H = 640;
@@ -43,6 +43,12 @@ function sky(symbol: string | null, ar: boolean) {
   if (s === "cloudy") return ar ? "غائم" : "Cloudy";
   return null;
 }
+
+const COMPASS = {
+  en: ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
+  ar: ["شمالية", "شمالية شرقية", "شرقية", "جنوبية شرقية", "جنوبية", "جنوبية غربية", "غربية", "شمالية غربية"],
+};
+const compass = (deg: number, ar: boolean) => COMPASS[ar ? "ar" : "en"][Math.round((((deg % 360) + 360) % 360) / 45) % 8];
 
 function swap(on: boolean): CSSProperties {
   return on
@@ -87,6 +93,7 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
   const [run, setRun] = useState(0);
   const [stopped, setStopped] = useState(false);
   const [wx, setWx] = useState<Record<string, Now | null> | null>(null);
+  const [wxDone, setWxDone] = useState(false);
   const fetched = useRef(false);
   const tour = sites.length > 1;
   const auto = tour && !reduce && !stopped;
@@ -110,7 +117,8 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
     fetch("/api/conditions")
       .then((r) => (r.ok ? r.json() : null))
       .then((j) => j?.ok && setWx(j.sites))
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setWxDone(true));
   }, [inView]);
 
   const cur = sites[active];
@@ -119,9 +127,15 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
 
   return (
     <div ref={ref} className="grid gap-6 lg:grid-cols-12">
-      {/* ---------------- map */}
+      {/* ---------------- map: sized to how many sites it shows; on desktop it also grows with the detail column */}
       <div className="lg:col-span-6">
-        <div dir="ltr" className="relative h-[440px] overflow-hidden rounded-[2px] border border-white/10 bg-[radial-gradient(120%_85%_at_68%_45%,#12224F_0%,#0A1638_45%,#060D22_100%)] md:h-[600px]">
+        <div
+          dir="ltr"
+          className={cn(
+            "relative overflow-hidden rounded-[2px] border border-white/10 bg-[radial-gradient(120%_85%_at_68%_45%,#12224F_0%,#0A1638_45%,#060D22_100%)] lg:h-full",
+            tour ? "h-[440px] md:h-[600px] lg:min-h-[500px]" : "h-[400px] md:h-[500px] lg:min-h-[440px]",
+          )}
+        >
           <div className="absolute inset-0 py-7 md:py-9">
             <div className="relative mx-auto h-full max-w-full" style={{ aspectRatio: `${VB_W} / ${VB_H}` }}>
               <div
@@ -279,24 +293,23 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
       </div>
 
       {/* ---------------- site detail (open, no box) above the ruled list of every site */}
-      <div className="flex flex-col lg:col-span-6 lg:ps-8 xl:ps-12">
-        <div className="grid">
+      <div className={cn("flex flex-col lg:col-span-6 lg:ps-8 xl:ps-12", !tour && "lg:justify-center")}>
+        {/* Every site shares one grid cell, so the block keeps the tallest site's height and the readout sits at the
+            same place for each of them. A single site (no list) is centred beside the map instead. */}
+        <div className={cn("grid", tour && "lg:mb-12")}>
           {sites.map((s, i) => {
             const on = i === active;
             const w = wx?.[s.id] ?? null;
             const cond = w ? sky(w.symbol, ar) : null;
             return (
               <div key={s.id} aria-hidden={!on} className="col-start-1 row-start-1 flex flex-col" style={swap(on)}>
-                <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                   <p className="text-[0.88rem]" style={{ color: tint }}>
                     {s.distance}
                   </p>
-                  {w && (
-                    <p className="inline-flex items-center gap-2 text-[0.82rem] text-white/60">
-                      {ar ? "الآن" : "Now"} <span className="num text-white/90">{Math.round(w.t)}°C</span>
-                      {cond && <span>· {cond}</span>}
-                    </p>
-                  )}
+                  <p dir="ltr" className="num font-mono text-[0.74rem] tracking-wide text-white/45">
+                    {s.coords}
+                  </p>
                 </div>
                 <h3 className="mt-3 text-balance font-display text-[clamp(2rem,3.4vw,3rem)] leading-[1.05] tracking-[-0.02em] text-white">{s.name}</h3>
                 <ul className="mt-7 space-y-3.5">
@@ -307,6 +320,32 @@ export function SiteMap({ sites, homeId, tint, label, ar }: { sites: MapSite[]; 
                     </li>
                   ))}
                 </ul>
+
+                {/* Live conditions at the site. Space is held while they load; dropped only if unavailable. */}
+                {(w || !wxDone) && (
+                  <div className="mt-auto pt-9">
+                    <dl className={cn("grid grid-cols-3 gap-4 border-t border-white/10 pt-5", !w && "invisible")}>
+                      <div>
+                        <dt className="text-[0.78rem] text-white/45">{ar ? "الحرارة" : "Temperature"}</dt>
+                        <dd className="mt-1 text-[0.98rem]">
+                          <span className="num">{w ? `${w.t.toFixed(1)}°C` : "-"}</span>
+                          {cond && <span className="text-white/55"> {cond}</span>}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-[0.78rem] text-white/45">{ar ? "الرياح" : "Wind"}</dt>
+                        <dd className="mt-1 text-[0.98rem]">
+                          <span className="num">{w ? Math.round(w.wind * 3.6) : "-"}</span> {ar ? "كم/س" : "km/h"}{" "}
+                          <span className="text-white/55">{w ? compass(w.dir, ar) : ""}</span>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-[0.78rem] text-white/45">{ar ? "الرطوبة" : "Humidity"}</dt>
+                        <dd className="num mt-1 text-[0.98rem]">{w ? `${Math.round(w.rh)}%` : "-"}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                )}
               </div>
             );
           })}

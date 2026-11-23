@@ -37,7 +37,8 @@ export function Register({ divisions, accent, label, note }: { divisions: Regist
 
   return (
     <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
-      <div className="lg:col-span-4">
+      {/* min-w-0: the phone chip row scrolls inside its column instead of widening the whole grid past the screen */}
+      <div className="min-w-0 lg:col-span-4">
         <div className="lg:sticky lg:top-28">
           <div
             role="tablist"
@@ -82,7 +83,7 @@ export function Register({ divisions, accent, label, note }: { divisions: Regist
         </div>
       </div>
 
-      <div className="lg:col-span-8">
+      <div className="min-w-0 lg:col-span-8">
         {divisions.map((d, i) => {
           const on = i === active;
           return (
