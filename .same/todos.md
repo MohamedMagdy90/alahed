@@ -239,3 +239,16 @@
   /tmp/pw before running. Long runs: nohup + poll (tool calls time out after ~90 s without output).
 - Tooling note: string_replace sometimes reports success without writing (twice in a row on SiteMap.tsx) → grep
   after every edit before type-checking.
+## 2026-11-23 night — HTTP/2 + About structure + Leadership (branch redesign)
+- [x] HTTP/2 ON (owner OK'd via suggestion). Backup /root/nginx-backups/alahed.20261123-191002; `http2` added to the two
+      :443 listen lines of sites-available/alahed only; nginx -t ok (expected warn "protocol options redefined" from
+      bungee-fly), graceful reload. Before/after (tmp/h2check.sh): all 9 URLs same codes, h1.1 → h2; forced HTTP/1.1
+      still works; Chromium loads alahed/crm/bungee all-h2 with 0 console errors; 0 new nginx errors; services active.
+      Rollback: cp the backup back, nginx -t, systemctl reload nginx. Repo template deploy/server/nginx-alahed.conf updated.
+- [ ] About "Group structure": proper ownership chart (aligned connectors, 50%/100% on the lines, richer company
+      cards, phone = rail tree instead of 4 tall cards).
+- [ ] Leadership: messages as speaker tabs, board as annual-report rows with inline bios (no dialog), management =
+      executive cards + company-leadership tiles (logos, no initials boxes). Portraits capped small (Chairman source
+      is 212x220, Vice Chairman 545x376) so they stay sharp. Phone page was ~15,000 px.
+- Local test data: live active people + messages exported to /tmp/people.json and loaded with tmp/people-import.js;
+  portraits copied to storage/uploads/2026/11 (git-ignored).
