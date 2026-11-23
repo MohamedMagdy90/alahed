@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { m, useInView } from "framer-motion";
 import Image from "next/image";
 import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSafeReducedMotion } from "@/components/motion";
@@ -417,7 +417,7 @@ function MapPanel({
               {/* Land: dot matrix + coastline drawing itself */}
               <path d={QATAR_PATH} fill="white" fillOpacity="0.025" />
               <path d={QATAR_PATH} fill="url(#fp-dots)" />
-              <motion.path
+              <m.path
                 d={QATAR_PATH}
                 fill="none"
                 stroke="white"

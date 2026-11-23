@@ -3,7 +3,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { ArcsMark } from "@/components/site/OrbitArcs";
+import { ArcsMark } from "@/components/site/ArcsMark";
 import { Arrow } from "@/components/site/primitives";
 
 export type PersonView = { id: string; name: string; role: string; bio: string; photo: string | null };

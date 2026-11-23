@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/admin/LoginForm";
 import { monoLabel } from "@/components/admin/ui";
 import { Logo } from "@/components/site/Logo";
-import { ArcsMark } from "@/components/site/OrbitArcs";
+import { ArcsMark } from "@/components/site/ArcsMark";
 import { getAdminDict, tx } from "@/i18n/admin";
 import { type Locale, isLocale } from "@/i18n/config";
 import { db } from "@/lib/db";

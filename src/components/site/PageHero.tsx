@@ -5,7 +5,7 @@ import { Reveal } from "@/components/motion";
 import type { Locale } from "@/i18n/config";
 import { getDict, href } from "@/i18n/dictionary";
 import { cn } from "@/lib/utils";
-import { ArcsMark } from "./OrbitArcs";
+import { ArcsMark } from "./ArcsMark";
 
 export type Crumb = { label: string; href?: string };
 

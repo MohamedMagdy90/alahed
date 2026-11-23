@@ -30,6 +30,11 @@ export function Partners({ locale }: { locale: Locale }) {
   const outRefs = useRef<(HTMLLIElement | null)[]>([]);
   const [geo, setGeo] = useState<Geo | null>(null);
   const inView = useInView(wrap, { amount: 0.2 });
+  // The phone/tablet diagram is a separate block: it animates only while it is on screen too (it used to run from
+  // page load, repainting a blurred mask every frame while the visitor was still reading the hero).
+  const flowRef = useRef<HTMLDivElement>(null);
+  const flowInView = useInView(flowRef, { amount: 0.2 });
+  const flowRunning = flowInView && !reduce;
   const [hl, setHl] = useState<{ side: Side; i: number } | null>(null);
   const [pointer, setPointer] = useState(false);
 
@@ -263,11 +268,11 @@ export function Partners({ locale }: { locale: Locale }) {
             ))}
           </ul>
 
-          <div className="flex flex-col items-center py-4" aria-hidden>
-            <FlowLine color={IN} running={!reduce} />
-            <LogoMark className="my-3 h-24 w-24" tone="brand" glint paused={reduce} />
+          <div ref={flowRef} className="flex flex-col items-center py-4" aria-hidden>
+            <FlowLine color={IN} running={flowRunning} />
+            <LogoMark className="my-3 h-24 w-24" tone="brand" glint paused={!flowRunning} />
             <p className="font-display text-[1.05rem] text-ink">{ar ? "العهد القابضة" : "Al-Ahed Holding"}</p>
-            <FlowLine color={OUT} running={!reduce} />
+            <FlowLine color={OUT} running={flowRunning} />
           </div>
 
           {colTitle(ar ? "لمن نعمل" : "Who we work for", ar ? "المشغّلون والحقول" : "Operators and fields", "start")}

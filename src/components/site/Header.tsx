@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { ChevronDown, Globe, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -247,7 +247,7 @@ export function Header({ locale, listing, listed }: { locale: Locale; listing: b
           {/* Mega menus */}
           <AnimatePresence>
             {menu && (
-              <motion.div
+              <m.div
                 key={menu}
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -326,7 +326,7 @@ export function Header({ locale, listing, listed }: { locale: Locale; listing: b
                     </>
                   )}
                 </div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </div>
@@ -335,7 +335,7 @@ export function Header({ locale, listing, listed }: { locale: Locale; listing: b
       {/* Mobile navigation */}
       <AnimatePresence>
         {mobile && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -366,7 +366,7 @@ export function Header({ locale, listing, listed }: { locale: Locale; listing: b
                   ],
                 },
               ].map((g, gi) => (
-                <motion.div
+                <m.div
                   key={g.label}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -383,7 +383,7 @@ export function Header({ locale, listing, listed }: { locale: Locale; listing: b
                       </li>
                     ))}
                   </ul>
-                </motion.div>
+                </m.div>
               ))}
               {[
                 ...(listing ? [{ p: "/investors", l: t.nav.investors }] : []),
@@ -391,7 +391,7 @@ export function Header({ locale, listing, listed }: { locale: Locale; listing: b
                 { p: "/careers", l: t.nav.careers },
                 { p: "/contact", l: t.nav.contact },
               ].map((n, i) => (
-                <motion.div
+                <m.div
                   key={n.p}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -404,7 +404,7 @@ export function Header({ locale, listing, listed }: { locale: Locale; listing: b
                     {n.l}
                     <Arrow className="text-leaf-300" />
                   </Link>
-                </motion.div>
+                </m.div>
               ))}
             </nav>
             <div className="container flex items-center justify-between border-t border-white/10 py-6 text-sm text-white/70">
@@ -415,7 +415,7 @@ export function Header({ locale, listing, listed }: { locale: Locale; listing: b
                 {t.switchLang}
               </Link>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

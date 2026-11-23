@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/motion";
 import { Timeline } from "@/components/pages/about/Timeline";
-import { ArcsMark } from "@/components/site/OrbitArcs";
+import { ArcsMark } from "@/components/site/ArcsMark";
 import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
 import { Arrow, Btn, Em, SectionHeading } from "@/components/site/primitives";

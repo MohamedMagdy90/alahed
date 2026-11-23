@@ -1,7 +1,7 @@
 "use client";
 
 
-import { MotionConfig, motion, useReducedMotion } from "framer-motion";
+import { LazyMotion, MotionConfig, domAnimation, m, useReducedMotion } from "framer-motion";
 import { type ReactNode, useEffect, useState } from "react";
 
 
@@ -18,9 +18,18 @@ export function useSafeReducedMotion() {
   return mounted ? !!prefers : false;
 }
 
-/** Global motion settings: Framer skips transform animations for users who prefer reduced motion. */
+/**
+ * Global motion settings: Framer skips transform animations for users who prefer reduced motion.
+ * LazyMotion + `m` components ship only the animation features the site uses (fades, slides, exit transitions,
+ * in-view reveals: `domAnimation`) instead of the whole library (drag, layout animations...) on every page.
+ * `strict` makes a stray full `motion.*` component fail loudly in development instead of re-adding the weight.
+ */
 export function MotionProvider({ children }: { children: ReactNode }) {
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+  return (
+    <LazyMotion features={domAnimation} strict>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </LazyMotion>
+  );
 }
 
 /** Quiet fade + small rise on first view. Delays are capped so long lists never "cascade". */
@@ -38,7 +47,7 @@ export function Reveal({
   as?: "div" | "li" | "section" | "article" | "span";
 }) {
   const reduce = useSafeReducedMotion();
-  const Comp = motion[as];
+  const Comp = m[as];
   return (
     <Comp
       className={className}

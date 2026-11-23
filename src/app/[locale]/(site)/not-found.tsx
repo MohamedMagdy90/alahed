@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ArcsMark } from "@/components/site/OrbitArcs";
+import { ArcsMark } from "@/components/site/ArcsMark";
 import { Btn } from "@/components/site/primitives";
 
 export default function NotFound() {

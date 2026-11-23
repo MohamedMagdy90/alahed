@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion";
 import { DocumentsBrowser } from "@/components/pages/investors/DocumentsBrowser";
-import { ArcsMark } from "@/components/site/OrbitArcs";
+import { ArcsMark } from "@/components/site/ArcsMark";
 import { PageHero } from "@/components/site/PageHero";
 import { Btn, Em, SectionHeading } from "@/components/site/primitives";
 import { SubscribeForm } from "@/components/site/SubscribeForm";

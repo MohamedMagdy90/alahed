@@ -2,7 +2,7 @@ import { HardHat, Leaf, Scale, ShieldCheck, Users } from "lucide-react";
 import type { Metadata } from "next";
 import { Reveal } from "@/components/motion";
 import { DocumentRow } from "@/components/site/DocumentRow";
-import { ArcsMark } from "@/components/site/OrbitArcs";
+import { ArcsMark } from "@/components/site/ArcsMark";
 import { PageHero } from "@/components/site/PageHero";
 import { Btn, Em, SectionHeading } from "@/components/site/primitives";
 import { contact, governancePrinciples } from "@/content/site";

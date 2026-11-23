@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/motion";
 import { PersonCard, type PersonView } from "@/components/pages/leadership/PersonCard";
-import { ArcsMark } from "@/components/site/OrbitArcs";
+import { ArcsMark } from "@/components/site/ArcsMark";
 import { PageHero } from "@/components/site/PageHero";
 import { Btn, Em, SectionHeading } from "@/components/site/primitives";
 import { type Locale, dirOf, isLocale, pick } from "@/i18n/config";
