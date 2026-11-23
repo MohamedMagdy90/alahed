@@ -112,6 +112,11 @@
       template string; .relative comes later in the CSS so the box collapsed to 0 px (also hid the initials before).
       Now cn()/twMerge. Commit b19b4ec, release 20261123-123457. Lesson: merge position classes with cn(), and do not
       read blank screenshot areas as "scroll animation" without checking the HTML/CSS.
+- [x] Empty tiles in hairline grids (owner report: PEMCO management box half empty). components/site/GridFill.tsx
+      completes the last row per breakpoint (literal hidden/block classes); single manager = full-width card; applied
+      to every data-driven grid on company pages; About values tile shown from sm. Audit of all 44 EN/AR pages:
+      0 grids with empty cells. Releases 20261123-125531 + the About fix (commit 6dea213).
+      Rule: any new `grid gap-px bg-*` grid filled from data needs <GridFill>.
 - [ ] Owner: Chairman/Vice Chairman portraits on the old site are tiny (212 px / 545 px) → upload larger ones.
 - [ ] Owner: switch on Al-Mulla + Larem when the board composition is public (deck marked confidential); add photos.
 - [ ] Owner: messages say "1976" (site says 1975) and have small grammar slips (kept verbatim) → confirm/edit.
