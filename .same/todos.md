@@ -170,3 +170,20 @@
       deploy/fix-posts-2026-11-23.js: NOV post cover hq.png → hq.jpg; seeded launch article rewritten (four companies,
       no IR mention; guarded: only if still equal to the seed). Live check: 20 pages EN/AR clean, 0 log errors.
 - [ ] Owner: when listed, Admin → Settings → "Show listing information on the website" → Save.
+## 2026-11-23 — page caching (ISR) + speed check (branch redesign)
+- [x] Public pages cached: no force-dynamic in [locale]/layout.tsx and (site)/layout.tsx; generateStaticParams → []
+      in [locale]/layout.tsx and the 3 [slug] pages (= nothing rendered at build, which has no DB; each page cached on
+      its first visit); (site)/layout.tsx revalidate = 60 (scheduled posts; verified: appeared 37 s after its time).
+      Admin saves purge everything via revalidatePath("/", "layout") in lib/admin/result.ts run() (+ settings.ts).
+- [x] Stays live: /news (searchParams → export const dynamic = "force-dynamic"), admin (admin/layout.tsx), API, sitemap.
+- [x] Careers ?role= read client-side (RoleFromUrl + Suspense in CareersForm). Article views: ViewBeacon → /api/views
+      (1 per IP+slug per 30 min). lib/queries: DB errors are logged + rethrown (never empty data cached).
+- [x] deploy.sh warms every sitemap page after release (fresh cache per release).
+- [x] Local prod test (/tmp/alahed-build, test DB /tmp/alahed-test.db, /tmp/local-start.sh on :3005; the release lacks the
+      arm64 Prisma engine → copy it in for local runs): 15/15 e2e (Playwright /tmp/pw/e2e.mjs). Server render 40-170 ms →
+      4-18 ms cached. Commit ecc5f87, release 20261123-101749 live (42 pages warmed; live render 7-14 ms, was 40-85 ms).
+- Server: Bengaluru (DO BLR1), nginx 1.24, HTTP/1.1 only. HTTP/2 must be enabled per port (`listen 443 ssl http2`) and
+  would affect the other sites on the droplet → ask owner before changing.
+- Speed check tooling: /tmp/pw (lighthouse 12.2.1, playwright 1.49.1, chromium-1148; libs unpacked into /tmp/pw/libs via
+  apt with a private index in /tmp/pw/apt; `. /tmp/pw/env.sh`). speed.mjs: mobile/desktop, CPU slowdown 1x (this CPU is
+  benchmark ~400-670, slower than the reference phone), median of 3. ~3 min per page per form factor here.
