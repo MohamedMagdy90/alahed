@@ -327,8 +327,8 @@ export default async function AboutPage({ params }: P) {
           </div>
         </div>
       </section>
-      {/* CTA */}
-      <section className="bg-white pb-24 md:pb-32">
+      {/* CTA — follows a dark section, so it needs its own top spacing (bottom-only padding glued it to the section above) */}
+      <section className="bg-white py-24 md:py-32">
         <div className="container">
           <div className="relative overflow-hidden rounded-[2px] bg-ink px-8 py-14 text-white md:px-14">
             <ArcsMark className="pointer-events-none absolute -end-20 -top-20 h-80 w-80 opacity-20" />
