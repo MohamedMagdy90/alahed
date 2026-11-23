@@ -220,7 +220,7 @@
 - Speed check tooling: /tmp/pw (lighthouse 12.2.1, playwright 1.49.1, chromium-1148; libs unpacked into /tmp/pw/libs via
   apt with a private index in /tmp/pw/apt; `. /tmp/pw/env.sh`). speed.mjs: mobile/desktop, CPU slowdown 1x (this CPU is
   benchmark ~400-670, slower than the reference phone), median of 3. ~3 min per page per form factor here.
-## 2026-11-23 evening — company page visual review (branch redesign, NOT deployed yet)
+## 2026-11-23 evening — company page visual review (branch redesign, deployed 18:18 UTC)
 - [x] 7db3aa6 / 308ad0d: every section its own composition; shrunken headings fixed site-wide.
 - [x] 0e25f8f: short map labels (MAP_LABEL), Mesaieed label faces the sea, locations nearest first, news grid sized to
       its post count (1 = full width, 2 = halves, 3 = row).
@@ -228,7 +228,12 @@
       map height by site count (lg grows with the detail column; single site centred). Register.tsx min-w-0 on both
       grid columns (DST phone overflow 909 px → 0). Checked: 4 companies desktop EN, DST AR + phone, AATC/DST phone
       EN/AR overflow 0, lint clean.
-- [ ] Deploy the review commits to the droplet (bash deploy/deploy.sh) once the owner is happy with the local pass.
+- [x] Release 20261123-181841 live (= commit 56cd189; previous live 20261123-131834 = fd52621, so it shipped 7db3aa6,
+      308ad0d incl. the site-wide cn() heading fix, 0e25f8f, e3d9bde). Schema unchanged (sha256 77ba389f…) → no migration.
+      Built with BUILD_DIR=/tmp/alahed-build, dev server stopped first. Image optimiser ok, 44 pages warm / 0 not 200,
+      0 log errors, other services active. Live check: 8 company pages EN/AR carry the new markup, /api/conditions ok,
+      11 other pages 200, admin → 307 login; live Playwright PEMCO desktop + DST phone match local (overflow 0).
+- [ ] Owner review of the live company pages (locations readout, brand register on phones, new section layouts).
 - Reset recovery used again (17:32): .git restored from origin, dev.db malformed → db push + seed. Screenshot helpers
   live in /home/project/tmp (shots.mjs full page, loc.mjs locations section, ovf.mjs phone overflow probe); copy to
   /tmp/pw before running. Long runs: nohup + poll (tool calls time out after ~90 s without output).
