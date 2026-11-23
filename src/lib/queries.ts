@@ -2,7 +2,15 @@ import "server-only";
 import type { Post } from "@prisma/client";
 import { cache } from "react";
 import { db } from "./db";
-import { type IrContact, type ShareInfo, SETTING_KEYS, defaultIrContact, defaultShare } from "./settings";
+import {
+  type IrContact,
+  type LeaderMessages,
+  type ShareInfo,
+  SETTING_KEYS,
+  defaultIrContact,
+  defaultLeaderMessages,
+  defaultShare,
+} from "./settings";
 
 const published = () => ({ status: "published", publishedAt: { lte: new Date() } });
 
@@ -128,3 +136,19 @@ export const getShareInfo = cache(() => getSetting<ShareInfo>(SETTING_KEYS.share
 /** Whether anything about the listing (share information, Investors page, IR links) is shown on the website. */
 export const getListingVisible = async () => (await getShareInfo()).visible === true;
 export const getIrContact = () => getSetting<IrContact>(SETTING_KEYS.irContact, defaultIrContact);
+
+/** Visible leadership messages with their (active or not) person, in the order set in the admin panel. */
+export async function getLeaderMessages() {
+  const { items } = await getSetting<LeaderMessages>(SETTING_KEYS.messages, defaultLeaderMessages);
+  const shown = (Array.isArray(items) ? items : []).filter((m) => m.visible && (m.bodyEn?.trim() || m.bodyAr?.trim()));
+  if (!shown.length) return [];
+  const ids = shown.map((m) => m.personId).filter((id): id is string => !!id);
+  let people: Awaited<ReturnType<typeof db.person.findMany>> = [];
+  try {
+    people = ids.length ? await db.person.findMany({ where: { id: { in: ids } } }) : [];
+  } catch (e) {
+    failed("getLeaderMessages", e);
+  }
+  const byId = new Map(people.map((p) => [p.id, p]));
+  return shown.map((m) => ({ ...m, person: (m.personId && byId.get(m.personId)) || null }));
+}

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/motion";
+import { LeaderMessages } from "@/components/pages/leadership/LeaderMessages";
 import { PersonCard, type PersonView } from "@/components/pages/leadership/PersonCard";
 import { ArcsMark } from "@/components/site/ArcsMark";
 import { PageHero } from "@/components/site/PageHero";
 import { Btn, Em, SectionHeading } from "@/components/site/primitives";
 import { type Locale, dirOf, isLocale, pick } from "@/i18n/config";
 import { href } from "@/i18n/dictionary";
-import { getListingVisible, getPeople } from "@/lib/queries";
+import { getLeaderMessages, getListingVisible, getPeople } from "@/lib/queries";
 
 type P = { params: Promise<{ locale: string }> };
 
@@ -24,7 +25,12 @@ export default async function LeadershipPage({ params }: P) {
   const { locale: raw } = await params;
   const locale: Locale = isLocale(raw) ? raw : "en";
   const ar = locale === "ar";
-  const [board, management, listing] = await Promise.all([getPeople("board"), getPeople("management"), getListingVisible()]);
+  const [board, management, listing, messages] = await Promise.all([
+    getPeople("board"),
+    getPeople("management"),
+    getListingVisible(),
+    getLeaderMessages(),
+  ]);
   const view = (rows: typeof board): PersonView[] =>
     rows.map((r) => ({ id: r.id, name: pick(r, "name", locale), role: pick(r, "role", locale), bio: pick(r, "bio", locale), photo: r.photo }));
 
@@ -88,8 +94,10 @@ export default async function LeadershipPage({ params }: P) {
         }
       />
 
+      <LeaderMessages locale={locale} messages={messages} />
+
       {groups.map((g) => (
-        <section key={g.key} className={`${g.bg} py-24 md:py-32`}>
+        <section key={g.key} id={g.key} className={`${g.bg} scroll-mt-24 py-24 md:py-32`}>
           <div className="container">
             <SectionHeading index={g.index} eyebrow={g.eyebrow} title={g.title} />
             {g.people.length > 0 ? (

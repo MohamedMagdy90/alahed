@@ -51,4 +51,20 @@ export const defaultIrContact: IrContact = {
   phone: "+974 4441 4022",
 };
 
-export const SETTING_KEYS = { share: "share", irContact: "irContact" } as const;
+/**
+ * Messages from the leadership (e.g. Chairman, Vice Chairman & President) shown on the Leadership page. Each message
+ * is linked to a Person, whose portrait, name and position are used, so a new photo only has to be uploaded once.
+ */
+export type LeaderMessage = {
+  id: string;
+  personId: string | null;
+  titleEn: string;
+  titleAr: string;
+  bodyEn: string;
+  bodyAr: string;
+  visible: boolean;
+};
+export type LeaderMessages = { items: LeaderMessage[] };
+export const defaultLeaderMessages: LeaderMessages = { items: [] };
+
+export const SETTING_KEYS = { share: "share", irContact: "irContact", messages: "messages" } as const;

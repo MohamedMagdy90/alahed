@@ -93,6 +93,16 @@
   --no-checkout into /tmp, move its .git into the project, `git reset -q`, then `git status` shows unpushed work.
 - Deploy key now lives in the git-ignored `.deploy/` folder inside the project (never commit it; repo is PUBLIC).
 - Commit + push after every step. Kill the auto-started `next dev` (owner preference + memory).
+## 2026-11-23 — old-site content: messages, portraits, bios, news photos (branch redesign)
+- Source: old site alahedholding.com (curl works with a browser UA; WP media API is public) + owner's investor
+  presentation screenshot (board x7 + executive management x3 bios; marked "Strictly private and confidential").
+- [ ] Leadership messages: Setting key "messages" (no schema change), admin card on /admin/people, public section
+      on /leadership (#messages) above the board; person-linked (photo/name/role come from Person)
+- [ ] Prose: consecutive images in an article render as a 2-column gallery
+- [ ] Data script deploy/content-2026-11-23.js: portraits + bios (EN/AR) for board + management, Jassim/Mohammed added
+      to management, Al-Mulla + Larem added HIDDEN (confidential deck), 2 messages, 3 posts updated with original
+      photos/text/dates, Hilong post created. Images optimised to /srv/alahed/shared/storage/uploads/2026/11/
+- [ ] Build + deploy, run data script (backup first), verify live EN/AR, commit + push
 ## Content gaps to confirm with client
 - Chairman & President messages, full Board list + photos (only MD & CEO seeded)
 - PEMCO services detail, workforce figure
