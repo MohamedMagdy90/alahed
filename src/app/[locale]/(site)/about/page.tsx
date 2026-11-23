@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { Reveal } from "@/components/motion";
+import { GroupStructure } from "@/components/pages/about/GroupStructure";
 import { Timeline } from "@/components/pages/about/Timeline";
 import { ArcsMark } from "@/components/site/ArcsMark";
-import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { PageHero } from "@/components/site/PageHero";
-import { Arrow, Btn, Em, SectionHeading } from "@/components/site/primitives";
+import { Btn, Em, SectionHeading } from "@/components/site/primitives";
 import { footprint, holdingAbout, oemCentres, oemNote, properties, shareholders, workshops, workshopsNote } from "@/content/group";
 import { companies, milestones, mission, values, vision, yearsSince } from "@/content/site";
 import { type Locale, isLocale } from "@/i18n/config";
@@ -192,7 +190,7 @@ export default async function AboutPage({ params }: P) {
         </div>
       </section>
 
-{/* Group structure: shareholders → holding → four wholly owned companies */}
+      {/* Group structure: shareholders → holding → four wholly owned companies */}
       <section className="bg-white py-24 md:py-32">
         <div className="container">
           <SectionHeading
@@ -200,52 +198,21 @@ export default async function AboutPage({ params }: P) {
             title={ar ? "شركة أم واحدة، وأربع شركات مملوكة لها بالكامل." : "One parent company, four wholly owned operating companies."}
             intro={holdingAbout[locale][1]}
           />
-          <Reveal className="mt-16">
-            <p className="text-center text-[0.85rem] text-haze">{ar ? "المساهمون" : "Shareholders"}</p>
-            <div className="mx-auto mt-4 grid max-w-3xl gap-4 sm:grid-cols-2">
-              {shareholders.map((s) => (
-                <div key={s.name.en} className="flex items-center justify-between gap-5 rounded-[2px] border border-ink/10 bg-pearl-50 px-6 py-5">
-                  <div>
-                    <p className="font-display text-[1.1rem] leading-snug text-ink">{s.name[locale]}</p>
-                    <p className="mt-1 text-[0.85rem] text-haze">{s.rep[locale]}</p>
-                  </div>
-                  <p className="num shrink-0 font-display text-[2rem] leading-none text-ink">{s.stake}%</p>
-                </div>
-              ))}
-            </div>
-            <div aria-hidden className="mx-auto hidden h-px w-[calc(50%-1rem)] max-w-[23rem] bg-ink/20 sm:block" />
-            <div aria-hidden className="mx-auto h-10 w-px bg-ink/20" />
-            <div className="mx-auto flex max-w-sm flex-col items-center rounded-[2px] bg-ink-900 px-8 py-7 text-center text-white">
-              <Image src="/brand/alahed-holding.png" alt="" width={176} height={48} className="h-auto w-44 [filter:brightness(0)_invert(1)]" />
-              <p className="mt-4 text-[0.85rem] text-white/55">{ar ? "شركة العهد القابضة ذ.م.م · تأسست عام 2018" : "Al-Ahed Holding W.L.L. · established 2018"}</p>
-            </div>
-            <div aria-hidden className="mx-auto h-10 w-px bg-ink/20" />
-            <div aria-hidden className="mx-auto hidden h-px w-3/4 bg-ink/20 lg:block" />
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {companies.map((c) => {
-                const parent = c.parent ? companies.find((x) => x.id === c.parent) : undefined;
-                return (
-                  <div key={c.id} className="flex flex-col items-center">
-                    <span aria-hidden className="hidden h-10 w-px bg-ink/20 lg:block" />
-                    <Link
-                      href={href(locale, `/companies/${c.slug}`)}
-                      className="group flex h-full w-full flex-col items-center rounded-[2px] border border-ink/10 bg-pearl-50 p-7 text-center transition-colors hover:border-ink/30 hover:bg-white"
-                    >
-                      <span className="grid h-16 w-full place-items-center">
-                        <CompanyLogo id={c.id} locale={locale} size={40} decorative />
-                      </span>
-                      <span className="mt-5 font-display text-[1.15rem] leading-snug text-ink">{c.name[locale]}</span>
-                      <span className="num mt-1 text-[0.85rem] text-haze">{ar ? `منذ ${c.founded} · مملوكة بنسبة 100%` : `Since ${c.founded} · 100% owned`}</span>
-                      {parent && <span className="mt-1 text-[0.85rem] text-haze">{ar ? `تعمل ضمن ${parent.short[locale]}` : `Works within ${parent.short[locale]}`}</span>}
-                      <span className="mt-auto inline-flex items-center gap-2 pt-5 text-[0.85rem] text-ink/70 group-hover:text-ink">
-                        {ar ? "استكشف" : "Explore"} <Arrow className="text-leaf-700" />
-                      </span>
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
-          </Reveal>
+          <div className="mt-16 md:mt-20">
+            <GroupStructure
+              locale={locale}
+              shareholders={shareholders.map((s) => ({ name: s.name[locale], rep: s.rep[locale], stake: s.stake }))}
+              companies={companies.map((c) => ({
+                id: c.id,
+                href: href(locale, `/companies/${c.slug}`),
+                name: c.name[locale],
+                tagline: c.tagline[locale],
+                founded: c.founded,
+                within: c.parent ? companies.find((x) => x.id === c.parent)?.short[locale] : undefined,
+                accent: c.accent,
+              }))}
+            />
+          </div>
         </div>
       </section>
 
