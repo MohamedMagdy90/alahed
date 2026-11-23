@@ -704,6 +704,14 @@ export const sites = [
   { id: "karaana", name: { en: "Al Karaana Industrial Zone", ar: "منطقة الكرعانة الصناعية" } as L10n, companies: ["dopet"] },
   { id: "mesaieed", name: { en: "Mesaieed Industrial City", ar: "مدينة مسيعيد الصناعية" } as L10n, companies: ["dopet"] },
 ];
+/** Short place names for the maps themselves (full names stay in the lists and detail panels). */
+export const MAP_LABEL: Record<string, L10n> = {
+  newdoha: { en: "New Doha", ar: "الصناعية الجديدة" },
+  raslaffan: { en: "Ras Laffan", ar: "رأس لفان" },
+  alkhor: { en: "Al Khor", ar: "الخور" },
+  karaana: { en: "Al Karaana", ar: "الكرعانة" },
+  mesaieed: { en: "Mesaieed", ar: "مسيعيد" },
+};
 
 export const postTypes: Record<string, L10n> = {
   news: { en: "News", ar: "أخبار" },

@@ -8,7 +8,7 @@ import { CompanyLogo } from "@/components/site/CompanyLogo";
 import { BANDS, BOWL, MARK_TONES } from "@/components/site/LogoMark";
 import { siteDetails, siteGeo } from "@/content/pages/home";
 import { QATAR_PATH, QATAR_VIEWBOX, SITE_POINTS } from "@/content/qatar-map";
-import { type CompanyId, companyLabels, companyRank, sites } from "@/content/site";
+import { type CompanyId, MAP_LABEL, companyLabels, companyRank, sites } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 
@@ -26,8 +26,11 @@ const yOfLat = (lat: number) => SITE_POINTS.doha[1] + (siteGeo.doha.lat - lat) *
 const xOfLon = (lon: number) => SITE_POINTS.doha[0] + (lon - siteGeo.doha.lon) * PX_PER_DEG * Math.cos((25.3 * Math.PI) / 180);
 const KM20 = (20 / 111.2) * PX_PER_DEG;
 
-/** Which side of its point each label sits on (Doha and Salwa are close together, so they face away). */
-const LABEL_SIDE: Record<string, "left" | "right"> = { doha: "right", salwa: "left", newdoha: "right", raslaffan: "left", alkhor: "left", mesaieed: "left", dukhan: "right", karaana: "right" };
+/**
+ * Which side of its point each label sits on. Doha and Salwa are close together, so they face away. Al Karaana and
+ * Mesaieed sit at almost the same latitude, so they face away too: Al Karaana inland (west), Mesaieed to the sea (east).
+ */
+const LABEL_SIDE: Record<string, "left" | "right"> = { doha: "right", salwa: "left", newdoha: "right", raslaffan: "left", alkhor: "left", mesaieed: "right", dukhan: "right", karaana: "left" };
 
 const rad = (d: number) => (d * Math.PI) / 180;
 function km(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
@@ -401,9 +404,13 @@ function MapPanel({
                   <line key={lon} y1={-300} y2={940} x1={xOfLon(lon)} x2={xOfLon(lon)} />
                 ))}
               </g>
-              <g className="font-mono max-md:hidden" fill="white" fillOpacity="0.32" fontSize="8.5">
+              {/*
+                Latitudes sit on the west edge: the east edge belongs to Mesaieed's label (the 25°N line runs through it).
+                Always LTR, so on /ar the readings neither run back into the map nor reorder ("km 20").
+              */}
+              <g className="font-mono max-md:hidden" fill="white" fillOpacity="0.32" fontSize="8.5" style={{ direction: "ltr" }}>
                 {[25, 25.5, 26].map((lat) => (
-                  <text key={lat} x={348} y={yOfLat(lat) - 3}>
+                  <text key={lat} x={-12} y={yOfLat(lat) - 3} textAnchor="end">
                     {lat.toFixed(1)}°N
                   </text>
                 ))}
@@ -435,7 +442,7 @@ function MapPanel({
                 <path d="M18 44 L18 22 M14 28 L18 22 L22 28" />
                 <path d={`M6 628 H${6 + KM20} M6 624 V632 M${6 + KM20} 624 V632`} />
               </g>
-              <g className="font-mono max-md:hidden" fill="white" fillOpacity="0.45" fontSize="8.5">
+              <g className="font-mono max-md:hidden" fill="white" fillOpacity="0.45" fontSize="8.5" style={{ direction: "ltr" }}>
                 <text x="18" y="15" textAnchor="middle">
                   N
                 </text>
@@ -582,7 +589,7 @@ function MapPanel({
                     transform: "translateY(-50%)",
                   }}
                 >
-                  {shortName(s.name[locale])}
+                  {MAP_LABEL[s.id]?.[locale] ?? shortName(s.name[locale])}
                 </button>
               );
             })}

@@ -245,10 +245,17 @@
       bungee-fly), graceful reload. Before/after (tmp/h2check.sh): all 9 URLs same codes, h1.1 → h2; forced HTTP/1.1
       still works; Chromium loads alahed/crm/bungee all-h2 with 0 console errors; 0 new nginx errors; services active.
       Rollback: cp the backup back, nginx -t, systemctl reload nginx. Repo template deploy/server/nginx-alahed.conf updated.
-- [ ] About "Group structure": proper ownership chart (aligned connectors, 50%/100% on the lines, richer company
-      cards, phone = rail tree instead of 4 tall cards).
-- [ ] Leadership: messages as speaker tabs, board as annual-report rows with inline bios (no dialog), management =
-      executive cards + company-leadership tiles (logos, no initials boxes). Portraits capped small (Chairman source
-      is 212x220, Vice Chairman 545x376) so they stay sharp. Phone page was ~15,000 px.
+- [x] About "Group structure" (components/pages/about/GroupStructure.tsx): ownership chart (aligned connectors,
+      50%/100% on the lines, richer company cards, phone = rail tree). Checked EN + AR desktop/phone (RTL connectors
+      mirror). AR phone meta: "مملوكة بالكامل" + each part whitespace-nowrap (no lone "100%" line).
+- [x] Leadership: messages = speaker tabs (MessageTabs.tsx, 1 column < sm, sticky list, arrow keys), board =
+      annual-report rows with inline bios (People.tsx), management = executive cards + company-leadership tiles
+      (logo 46 px, job title with trailing company name trimmed EN/AR via jobTitle(), company link in the footer).
+      PersonCard.tsx deleted. Phone page ~15,000 px → ~11,100 px.
+- [x] Home map labels (owner report: Al Karaana × Mesaieed overlap): Al Karaana faces west, Mesaieed east; short
+      names from the shared MAP_LABEL (moved to content/site.ts, SiteMap.tsx imports it). Latitude ticks moved to the
+      west edge (25°N ran under Mesaieed); grid/scale text forced LTR (AR read "km 20"). Measured every site active:
+      EN/AR × 390/1440 0 overlaps / 0 clipped; ticks 768-1920 px.
+- [ ] Commit + push (push still blocked, see Source control) → deploy after owner OK.
 - Local test data: live active people + messages exported to /tmp/people.json and loaded with tmp/people-import.js;
   portraits copied to storage/uploads/2026/11 (git-ignored).

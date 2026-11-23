@@ -3,6 +3,7 @@ import { m, useInView } from "framer-motion";
 import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSafeReducedMotion } from "@/components/motion";
 import { QATAR_PATH, QATAR_VIEWBOX, SITE_POINTS } from "@/content/qatar-map";
+import { MAP_LABEL } from "@/content/site";
 import { cn } from "@/lib/utils";
 
 export type MapSite = { id: string; name: string; details: string[]; distance: string; short: string; coords: string };
@@ -15,14 +16,6 @@ const VB_H = 640;
  * Mesaieed faces the sea so it never runs into Al Karaana's label at almost the same latitude.
  */
 const LABEL_SIDE: Record<string, "left" | "right"> = { doha: "right", salwa: "left", newdoha: "right", raslaffan: "left", alkhor: "left", mesaieed: "right", dukhan: "right", karaana: "right" };
-/** Short place names for the map itself (the full names stay in the list and the detail panel). */
-const MAP_LABEL: Record<string, { en: string; ar: string }> = {
-  newdoha: { en: "New Doha", ar: "الصناعية الجديدة" },
-  raslaffan: { en: "Ras Laffan", ar: "رأس لفان" },
-  alkhor: { en: "Al Khor", ar: "الخور" },
-  karaana: { en: "Al Karaana", ar: "الكرعانة" },
-  mesaieed: { en: "Mesaieed", ar: "مسيعيد" },
-};
 
 function route([x1, y1]: [number, number], [x2, y2]: [number, number]) {
   const k = 0.17;
