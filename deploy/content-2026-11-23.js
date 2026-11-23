@@ -286,6 +286,7 @@ async function main() {
       if (!row.bioEn.trim() || untouched) data.bioEn = u.bio.en;
       if (!row.bioAr.trim() || untouched) data.bioAr = u.bio.ar;
       if (u.rename && row.nameEn !== u.rename && untouched) data.nameEn = u.rename;
+      if (u.rename && untouched && /^السيد\s+/.test(row.nameAr)) data.nameAr = row.nameAr.replace(/^السيد\s+/, "");
       if (!Object.keys(data).length) {
         log(`skip (edited): ${u.group} · ${row.nameEn}`);
         continue;
